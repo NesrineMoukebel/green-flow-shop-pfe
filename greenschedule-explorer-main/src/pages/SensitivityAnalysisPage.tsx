@@ -5,7 +5,7 @@ import { ArrowLeft, Trophy } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ScatterChart, Scatter, Legend } from "recharts";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { loadSensitivityAnalysisData, loadMetricsData, ParetoData, MetricsData } from "@/services/dataService";
+import { loadMetricsData, ParetoData, MetricsData } from "@/services/dataService";
 
 const SensitivityAnalysisPage = () => {
   const navigate = useNavigate();
@@ -14,6 +14,18 @@ const SensitivityAnalysisPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // --- Pareto dominance filter ---
+  const getParetoFront = (points: { makespan: number; tec: number }[]) => {
+    return points.filter((p, i) =>
+      !points.some((q, j) =>
+        j !== i &&
+        q.makespan <= p.makespan &&
+        q.tec <= p.tec &&
+        (q.makespan < p.makespan || q.tec < p.tec)
+      )
+    );
+  };
+
   // Load data on component mount
   useEffect(() => {
     const loadData = async () => {
@@ -21,19 +33,82 @@ const SensitivityAnalysisPage = () => {
       setError(null);
       
       try {
-        // Load Pareto data for different price profiles
-        const paretoResults = await loadSensitivityAnalysisData(10, 5, 1);
-        setParetoData(paretoResults);
-        
-        // Load metrics data for multiple configurations
-        const metricsResults = [];
-        for (let i = 1; i <= 2; i++) {
-          const metrics = await loadMetricsData(10, 5, i);
-          if (metrics && metrics.length > 0) {
-            metricsResults.push(...metrics);
+        // Load Pareto data from DATA_page CSVs
+        const base = "/DATA/DATA_page/Sensitivity_analysis";
+        const files = [
+          { name: 'HNSGA-II-6CW', path: `${base}/NFS_HNSGA_6CW/M20_J200_config_6CW_4.csv` },
+          { name: 'HNSGA-II-6CWI', path: `${base}/NFS_HNSGA_6CWI/M20_J200_config_6CWI_4.csv` },
+          { name: 'HNSGA-II-6CWD', path: `${base}/NFS_HNSGA_6CWD/M20_J200_config_6CWD_4.csv` }
+        ];
+
+        const fetched: ParetoData[] = [];
+        for (const f of files) {
+          try {
+            const res = await fetch(f.path);
+            if (!res.ok) throw new Error(`Failed to fetch ${f.path}`);
+            const text = await res.text();
+            const lines = text.trim().split('\n');
+
+            // Parse points from CSV
+            const pointsRaw = lines.slice(1).map(line => {
+              const parts = line.split(',');
+              return {
+                makespan: parseFloat(parts[0]),
+                tec: parseFloat(parts[1]),
+                pareto: false,
+                executionTime: 0
+              };
+            });
+
+            // Filter nondominated points
+            const nondominated = getParetoFront(pointsRaw).map(p => ({
+              ...p,
+              pareto: true,
+              executionTime: 0
+            }));
+
+            fetched.push({ algorithm: f.name, points: nondominated });
+          } catch (e) {
+            console.warn('Sensitivity CSV load error:', e);
           }
         }
-        setMetricsData(metricsResults);
+        setParetoData(fetched);
+
+        // Load metrics from JSON (converted from xlsx) if available, fallback to existing loader
+        try {
+          const metricsJsonRes = await fetch(`${base}/Tariff_profile_metrics.json`);
+          if (metricsJsonRes.ok) {
+            const json: any[] = await metricsJsonRes.json();
+            const normalized: MetricsData[] = json.map(row => ({
+              instance: row.instance,
+              machines: row.machines,
+              jobs: row.jobs,
+              algorithm: row.algorithm,
+              igd: Number(row.igd),
+              gd: 0,
+              sns: Number(row.sns),
+              nps: Number(row.nps),
+              exec_time: Number(row.exec_time),
+            }));
+            
+            setMetricsData(normalized);
+          } else {
+            const fallback = [] as MetricsData[];
+            for (let i = 1; i <= 2; i++) {
+              const m = await loadMetricsData(10, 5, i);
+              if (m && m.length > 0) fallback.push(...m);
+            }
+            setMetricsData(fallback);
+          }
+        } catch (e) {
+          console.warn('Metrics JSON load error, using fallback:', e);
+          const fallback = [] as MetricsData[];
+          for (let i = 1; i <= 2; i++) {
+            const m = await loadMetricsData(10, 5, i);
+            if (m && m.length > 0) fallback.push(...m);
+          }
+          setMetricsData(fallback);
+        }
         
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load sensitivity analysis data');
@@ -53,7 +128,7 @@ const SensitivityAnalysisPage = () => {
       durations: ["H/6", "H/12", "H/4", "H/12", "H/6", "H/4"],
       prices: [0.12, 0.08, 0.04, 0.08, 0.12, 0.08],
       color: "#ef4444",
-      durationValues: [1/6, 1/12, 1/4, 1/12, 1/6, 1/4] // For relative widths
+      durationValues: [1/6, 1/12, 1/4, 1/12, 1/6, 1/4]
     },
     {
       name: "Normal (6CW)",
@@ -81,18 +156,36 @@ const SensitivityAnalysisPage = () => {
   );
 
   const algorithmColors = {
-    "HNSGA-II-6CW": "#22c55e",
-    "HNSGA-II-6CWD": "#ef4444",
-    "HNSGA-II-6CWI": "#8D70FF"
-  };
+    "HNSGA-II-6CW": "#3b82f6",
+    "HNSGA-II-6CWI": "#ef4444",
+    "HNSGA-II-6CWD": "#22c55e"
+  } as const;
 
-  // Helper function to determine if a value is the best (lowest for IGD and execTime, highest for others)
   const isBest = (value: number, column: string, allValues: number[]) => {
-    if (column === 'igd' || column === 'exec') {
+    if (column === 'igd' || column === 'exec_time') {
       return value === Math.min(...allValues);
     }
     return value === Math.max(...allValues);
   };
+
+  const variantOrder = ["HNSGA-II-6CW", "HNSGA-II-6CWI", "HNSGA-II-6CWD"] as const;
+  const metricsByVariant = variantOrder.map(v => metricsData.find(m => m.algorithm === v)).filter(Boolean) as MetricsData[];
+
+  // Group rows by jobs/machines/instance and span variants per metric
+  const groupedRows = (() => {
+    const map = new Map<string, { jobs: number; machines: number; instance: number; values: Record<string, { igd: number; sns: number; nps: number; exec_time: number }> }>();
+    for (const m of metricsData) {
+      if (!variantOrder.includes(m.algorithm as any)) continue;
+      const key = `${m.jobs}-${m.machines}-${m.instance}`;
+      let entry = map.get(key);
+      if (!entry) {
+        entry = { jobs: m.jobs, machines: m.machines, instance: m.instance, values: {} };
+        map.set(key, entry);
+      }
+      entry.values[m.algorithm] = { igd: m.igd, sns: m.sns, nps: m.nps, exec_time: m.exec_time };
+    }
+    return Array.from(map.values());
+  })();
 
   if (loading) {
     return (
@@ -103,11 +196,11 @@ const SensitivityAnalysisPage = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => navigate("/multi-objective")}
+                onClick={() => navigate("/multi-objective/data")}
                 className="hover:bg-muted"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Menu
+                Back to Problem Data
               </Button>
               <div>
                 <h1 className="text-2xl font-bold text-foreground">
@@ -138,11 +231,11 @@ const SensitivityAnalysisPage = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => navigate("/multi-objective")}
+                onClick={() => navigate("/multi-objective/data")}
                 className="hover:bg-muted"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Menu
+                Back to Problem Data
               </Button>
               <div>
                 <h1 className="text-2xl font-bold text-foreground">
@@ -173,11 +266,11 @@ const SensitivityAnalysisPage = () => {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => navigate("/multi-objective")}
+              onClick={() => navigate("/multi-objective/data")}
               className="hover:bg-muted"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Menu
+              Back to Problem Data
             </Button>
             <div>
               <h1 className="text-2xl font-bold text-foreground">
@@ -244,9 +337,7 @@ const SensitivityAnalysisPage = () => {
             ) : (
               <div className="h-96">
                 <ResponsiveContainer width="100%" height="100%">
-                  <ScatterChart
-                    margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
-                  >
+                  <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis 
                       dataKey="makespan" 
@@ -262,13 +353,22 @@ const SensitivityAnalysisPage = () => {
                       domain={['dataMin', 'dataMax']}
                       tick={{ fontSize: 12 }}
                     />
-                    <Tooltip 
-                      cursor={{ strokeDasharray: '3 3' }}
-                      formatter={(value: any, name: any) => [
-                        value.toFixed(2), 
-                        name === 'makespan' ? 'Makespan' : 'TEC'
-                      ]}
-                    />
+                    <Tooltip
+  cursor={{ strokeDasharray: "3 3" }}
+  content={({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const point = payload[0].payload;
+      return (
+        <div className="bg-white p-2 border rounded shadow">
+          <div>Makespan: {point.makespan}</div>
+          <div>TEC: {point.tec}</div>
+        </div>
+      );
+    }
+    return null;
+  }}
+/>
+
                     <Legend />
                     
                     {paretoData.map(algorithm => (
@@ -305,87 +405,90 @@ const SensitivityAnalysisPage = () => {
               </div>
             ) : (
               <>
-                <div className="border rounded-lg overflow-hidden">
+                <div className="border rounded-lg overflow-auto">
                   <Table>
                     <TableHeader>
                       <TableRow className="bg-muted/50">
                         <TableHead rowSpan={2} className="font-semibold align-middle border-r">Instance</TableHead>
                         <TableHead rowSpan={2} className="font-semibold align-middle border-r">Jobs</TableHead>
                         <TableHead rowSpan={2} className="font-semibold align-middle border-r">Machines</TableHead>
-                        <TableHead rowSpan={2} className="font-semibold align-middle border-r">Algorithm</TableHead>
-                        <TableHead colSpan={1} className="text-center font-semibold border-b">
-                          IGD
-                          <div className="text-xs font-normal text-muted-foreground">
-                            Inverted Generational Distance
-                          </div>
-                        </TableHead>
-                        <TableHead colSpan={1} className="text-center font-semibold border-b">
-                          GD
-                          <div className="text-xs font-normal text-muted-foreground">
-                            Generational Distance
-                          </div>
-                        </TableHead>
-                        <TableHead colSpan={1} className="text-center font-semibold border-b">
-                          SNS
-                          <div className="text-xs font-normal text-muted-foreground">
-                            Spacing to Nearest Solution
-                          </div>
-                        </TableHead>
-                        <TableHead colSpan={1} className="text-center font-semibold border-b">
-                          NPS
-                          <div className="text-xs font-normal text-muted-foreground">
-                            Number of Pareto Solutions
-                          </div>
-                        </TableHead>
-                        <TableHead colSpan={1} className="text-center font-semibold border-b">
-                          Exec Time
-                          <div className="text-xs font-normal text-muted-foreground">
-                            Execution Time (seconds)
-                          </div>
-                        </TableHead>
+                        <TableHead colSpan={3} className="text-center font-semibold border-b border-l">IGD</TableHead>
+                        <TableHead colSpan={3} className="text-center font-semibold border-b border-l">SNS</TableHead>
+                        <TableHead colSpan={3} className="text-center font-semibold border-b border-l">NPS</TableHead>
+                        <TableHead colSpan={3} className="text-center font-semibold border-b border-l">Exec Time</TableHead>
+                      </TableRow>
+                      <TableRow className="bg-muted/30">
+                        {variantOrder.map((v, i) => (
+                          <TableHead key={`igd-${v}`} className={`text-center ${i === 0 ? 'border-l border-border' : ''}`}>{v}</TableHead>
+                        ))}
+                        {variantOrder.map((v, i) => (
+                          <TableHead key={`sns-${v}`} className={`text-center ${i === 0 ? 'border-l border-border' : ''}`}>{v}</TableHead>
+                        ))}
+                        {variantOrder.map((v, i) => (
+                          <TableHead key={`nps-${v}`} className={`text-center ${i === 0 ? 'border-l border-border' : ''}`}>{v}</TableHead>
+                        ))}
+                        {variantOrder.map((v, i) => (
+                          <TableHead key={`exec-${v}`} className={`text-center ${i === 0 ? 'border-l border-border' : ''}`}>{v}</TableHead>
+                        ))}
                       </TableRow>
                     </TableHeader>
+
                     <TableBody>
-                      {metricsData.map((metric, index) => {
-                        // Get all values for the same metric type to determine best values
-                        const sameMetricType = metricsData.filter(m => 
-                          m.instance === metric.instance && 
-                          m.jobs === metric.jobs && 
-                          m.machines === metric.machines
-                        );
-                        
-                        const igdValues = sameMetricType.map(m => m.igd);
-                        const gdValues = sameMetricType.map(m => m.gd);
-                        const snsValues = sameMetricType.map(m => m.sns);
-                        const npsValues = sameMetricType.map(m => m.nps);
-                        const execTimeValues = sameMetricType.map(m => m.exec_time);
-                        
+                      {groupedRows.map((row, idx) => {
+                        const igdVals = variantOrder.map(v => row.values[v]?.igd ?? Number.POSITIVE_INFINITY);
+                        const snsVals = variantOrder.map(v => row.values[v]?.sns ?? Number.NEGATIVE_INFINITY);
+                        const npsVals = variantOrder.map(v => row.values[v]?.nps ?? Number.NEGATIVE_INFINITY);
+                        const execVals = variantOrder.map(v => row.values[v]?.exec_time ?? Number.POSITIVE_INFINITY);
+
                         return (
-                          <TableRow key={index} className="hover:bg-muted/30">
-                            <TableCell className="border-r font-medium">{metric.instance}</TableCell>
-                            <TableCell className="border-r">{metric.jobs}</TableCell>
-                            <TableCell className="border-r">{metric.machines}</TableCell>
-                            <TableCell className="border-r font-medium">{metric.algorithm}</TableCell>
-                            <TableCell className={`text-center ${isBest(metric.igd, 'igd', igdValues) ? 'bg-primary/10 font-bold text-primary' : ''}`}>
-                              {metric.igd.toFixed(6)}
-                              {isBest(metric.igd, 'igd', igdValues) && <Trophy className="w-3 h-3 inline ml-1 text-primary" />}
-                            </TableCell>
-                            <TableCell className={`text-center ${isBest(metric.gd, 'gd', gdValues) ? 'bg-primary/10 font-bold text-primary' : ''}`}>
-                              {metric.gd.toFixed(6)}
-                              {isBest(metric.gd, 'gd', gdValues) && <Trophy className="w-3 h-3 inline ml-1 text-primary" />}
-                            </TableCell>
-                            <TableCell className={`text-center ${isBest(metric.sns, 'sns', snsValues) ? 'bg-primary/10 font-bold text-primary' : ''}`}>
-                              {metric.sns.toFixed(6)}
-                              {isBest(metric.sns, 'sns', snsValues) && <Trophy className="w-3 h-3 inline ml-1 text-primary" />}
-                            </TableCell>
-                            <TableCell className={`text-center ${isBest(metric.nps, 'nps', npsValues) ? 'bg-primary/10 font-bold text-primary' : ''}`}>
-                              {metric.nps}
-                              {isBest(metric.nps, 'nps', npsValues) && <Trophy className="w-3 h-3 inline ml-1 text-primary" />}
-                            </TableCell>
-                            <TableCell className={`text-center ${isBest(metric.exec_time, 'exec_time', execTimeValues) ? 'bg-primary/10 font-bold text-primary' : ''}`}>
-                              {metric.exec_time.toFixed(6)}
-                              {isBest(metric.exec_time, 'exec_time', execTimeValues) && <Trophy className="w-3 h-3 inline ml-1 text-primary" />}
-                            </TableCell>
+                          <TableRow key={idx} className="hover:bg-muted/30">
+                            <TableCell className="border-r font-medium">{row.instance}</TableCell>
+                            <TableCell className="border-r">{row.jobs}</TableCell>
+                            <TableCell className="border-r">{row.machines}</TableCell>
+
+                            {/* IGD */}
+                            {variantOrder.map((v, i) => (
+                              <TableCell
+                                key={`igdv-${i}`}
+                                className={`text-center ${isBest(row.values[v]?.igd ?? Number.POSITIVE_INFINITY, 'igd', igdVals) ? 'bg-primary/10 font-bold text-primary' : ''} ${i === 0 ? 'border-l border-border' : ''}`}
+                              >
+                                {(row.values[v]?.igd ?? 0).toFixed(2)}
+                                {isBest(row.values[v]?.igd ?? Number.POSITIVE_INFINITY, 'igd', igdVals) && <Trophy className="w-3 h-3 inline ml-1 text-primary" />}
+                              </TableCell>
+                            ))}
+
+                            {/* SNS */}
+                            {variantOrder.map((v, i) => (
+                              <TableCell
+                                key={`snsv-${i}`}
+                                className={`text-center ${isBest(row.values[v]?.sns ?? Number.NEGATIVE_INFINITY, 'sns', snsVals) ? 'bg-primary/10 font-bold text-primary' : ''} ${i === 0 ? 'border-l border-border' : ''}`}
+                              >
+                                {(row.values[v]?.sns ?? 0).toFixed(2)}
+                                {isBest(row.values[v]?.sns ?? Number.NEGATIVE_INFINITY, 'sns', snsVals) && <Trophy className="w-3 h-3 inline ml-1 text-primary" />}
+                              </TableCell>
+                            ))}
+
+                            {/* NPS */}
+                            {variantOrder.map((v, i) => (
+                              <TableCell
+                                key={`npsv-${i}`}
+                                className={`text-center ${isBest(row.values[v]?.nps ?? Number.NEGATIVE_INFINITY, 'nps', npsVals) ? 'bg-primary/10 font-bold text-primary' : ''} ${i === 0 ? 'border-l border-border' : ''}`}
+                              >
+                                {row.values[v]?.nps ?? 0}
+                                {isBest(row.values[v]?.nps ?? Number.NEGATIVE_INFINITY, 'nps', npsVals) && <Trophy className="w-3 h-3 inline ml-1 text-primary" />}
+                              </TableCell>
+                            ))}
+
+                            {/* Exec Time */}
+                            {variantOrder.map((v, i) => (
+                              <TableCell
+                                key={`execv-${i}`}
+                                className={`text-center ${isBest(row.values[v]?.exec_time ?? Number.POSITIVE_INFINITY, 'exec_time', execVals) ? 'bg-primary/10 font-bold text-primary' : ''} ${i === 0 ? 'border-l border-border' : ''}`}
+                              >
+                                {(row.values[v]?.exec_time ?? 0).toFixed(2)}
+                                {isBest(row.values[v]?.exec_time ?? Number.POSITIVE_INFINITY, 'exec_time', execVals) && <Trophy className="w-3 h-3 inline ml-1 text-primary" />}
+                              </TableCell>
+                            ))}
                           </TableRow>
                         );
                       })}
@@ -393,22 +496,22 @@ const SensitivityAnalysisPage = () => {
                   </Table>
                 </div>
 
-                {/* Legend */}
-                <div className="mt-4 p-3 bg-muted/30 rounded-lg">
-                  <div className="text-sm">
-                    <div className="font-medium mb-2">Metric Descriptions:</div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-muted-foreground">
-                      <div><strong>IGD (Inverted Generational Distance):</strong> Lower values indicate better convergence to true Pareto front</div>
-                      <div><strong>GD (Generational Distance):</strong> Lower values indicate better convergence</div>
-                      <div><strong>SNS (Spacing to Nearest Solution):</strong> Higher values indicate better distribution of solutions</div>
-                      <div><strong>NPS (Number of Pareto Solutions):</strong> Higher values indicate more non-dominated solutions found</div>
-                      <div><strong>Exec Time (Execution Time):</strong> Lower values indicate faster algorithm performance</div>
-                    </div>
-                  </div>
-                </div>
               </>
             )}
+
+            <div className="mt-4 p-3 bg-muted/30 rounded-lg">
+                          <div className="text-sm">
+                            <div className="font-medium mb-2">Metric Descriptions:</div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-muted-foreground">
+                              <div><strong>IGD (Inverted Generational Distance):</strong> Lower values indicate better convergence to true Pareto front</div>
+                              <div><strong>SNS (Spacing to Nearest Solution):</strong> Higher values indicate better distribution of solutions</div>
+                              <div><strong>NPS (Number of Pareto Solutions):</strong> Higher values indicate more non-dominated solutions found</div>
+                              <div><strong>Exec Time (Execution Time):</strong> Lower values indicate faster algorithm performance</div>
+                            </div>
+                          </div>
+              </div>
           </CardContent>
+
         </Card>
       </div>
     </div>

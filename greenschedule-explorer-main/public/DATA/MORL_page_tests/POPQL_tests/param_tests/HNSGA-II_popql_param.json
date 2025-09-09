@@ -1,0 +1,65 @@
+[
+    {
+      "No_Jobs": "10",
+      "No_Machines": "5",
+      "Instance": "3",
+      "IGD": { "QL-HNSGA-II": "0.0037", "QL1-HNSGA-II": "0.0131", "QL2-HNSGA-II": "0.0251" },
+      "SNS": { "QL-HNSGA-II": "0.7947", "QL1-HNSGA-II": "0.7789", "QL2-HNSGA-II": "0.7666" },
+      "NPS": { "QL-HNSGA-II": "85", "QL1-HNSGA-II": "81", "QL2-HNSGA-II": "66" },
+      "Exec_Time(s)": { "QL-HNSGA-II": "2,6729", "QL1-HNSGA-II": "3,1435", "QL2-HNSGA-II": "2,8529" }
+    },
+    {
+      "No_Jobs": "30",
+      "No_Machines": "15",
+      "Instance": "4",
+      "IGD": { "QL-HNSGA-II": "0.0028", "QL1-HNSGA-II": "0.0046", "QL2-HNSGA-II": "0.0090" },
+      "SNS": { "QL-HNSGA-II": "0.8082", "QL1-HNSGA-II": "0.8052", "QL2-HNSGA-II": "0.7764" },
+      "NPS": { "QL-HNSGA-II": "147", "QL1-HNSGA-II": "144", "QL2-HNSGA-II": "75" },
+      "Exec_Time(s)": { "QL-HNSGA-II": "15,234", "QL1-HNSGA-II": "16,643", "QL2-HNSGA-II": "18,9832" }
+    },
+    {
+      "No_Jobs": "60",
+      "No_Machines": "20",
+      "Instance": "1",
+      "IGD": { "QL-HNSGA-II": "0.0017", "QL1-HNSGA-II": "0.0024", "QL2-HNSGA-II": "0.0866" },
+      "SNS": { "QL-HNSGA-II": "0.8268", "QL1-HNSGA-II": "0.8199", "QL2-HNSGA-II": "0.8176" },
+      "NPS": { "QL-HNSGA-II": "179", "QL1-HNSGA-II": "134", "QL2-HNSGA-II": "46" },
+      "Exec_Time(s)": { "QL-HNSGA-II": "29,89", "QL1-HNSGA-II": "30,12", "QL2-HNSGA-II": "32,86" }
+    },
+    {
+      "No_Jobs": "100",
+      "No_Machines": "20",
+      "Instance": "9",
+      "IGD": { "QL-HNSGA-II": "0", "QL1-HNSGA-II": "0.1200", "QL2-HNSGA-II": "0.1588" },
+      "SNS": { "QL-HNSGA-II": "0.8023", "QL1-HNSGA-II": "0.7588", "QL2-HNSGA-II": "0.6995" },
+      "NPS": { "QL-HNSGA-II": "162", "QL1-HNSGA-II": "111", "QL2-HNSGA-II": "25" },
+      "Exec_Time(s)": { "QL-HNSGA-II": "141,3472", "QL1-HNSGA-II": "139,1754", "QL2-HNSGA-II": "145,2398" }
+    },
+    {
+      "No_Jobs": "200",
+      "No_Machines": "40",
+      "Instance": "1",
+      "IGD": { "QL-HNSGA-II": "0.0009", "QL1-HNSGA-II": "0.0125", "QL2-HNSGA-II": "0.0304" },
+      "SNS": { "QL-HNSGA-II": "0.7920", "QL1-HNSGA-II": "0.7721", "QL2-HNSGA-II": "0.7511" },
+      "NPS": { "QL-HNSGA-II": "175", "QL1-HNSGA-II": "108", "QL2-HNSGA-II": "65" },
+      "Exec_Time(s)": { "QL-HNSGA-II": "392,8972", "QL1-HNSGA-II": "374,1254", "QL2-HNSGA-II": "369,9854" }
+    },
+    {
+      "No_Jobs": "300",
+      "No_Machines": "60",
+      "Instance": "7",
+      "IGD": { "QL-HNSGA-II": "0.0001", "QL1-HNSGA-II": "0.0258", "QL2-HNSGA-II": "0.0355" },
+      "SNS": { "QL-HNSGA-II": "0.8041", "QL1-HNSGA-II": "0.7402", "QL2-HNSGA-II": "0.7762" },
+      "NPS": { "QL-HNSGA-II": "129", "QL1-HNSGA-II": "66", "QL2-HNSGA-II": "78" },
+      "Exec_Time(s)": { "QL-HNSGA-II": "569.2345", "QL1-HNSGA-II": "595.985", "QL2-HNSGA-II": "601,3876" }
+    },
+    {
+      "AVG": {
+        "IGD": { "QL-HNSGA-II": "0.001533", "QL1-HNSGA-II": "0.029733", "QL2-HNSGA-II": "0.057567" },
+        "SNS": { "QL-HNSGA-II": "0.804683", "QL1-HNSGA-II": "0.779183", "QL2-HNSGA-II": "0.764567" },
+        "NPS": { "QL-HNSGA-II": "146.1667", "QL1-HNSGA-II": "107.3333", "QL2-HNSGA-II": "59.1667" },
+        "Exec_Time(s)": { "QL-HNSGA-II": "191.8793", "QL1-HNSGA-II": "193.1987", "QL2-HNSGA-II": "195.2182" }
+      }
+    }
+  ]
+  

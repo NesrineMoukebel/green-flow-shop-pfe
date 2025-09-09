@@ -8,28 +8,22 @@ const MultiObjectiveMenuPage = () => {
 
   const analysisOptions = [
     {
+      title: "Problem Data",
+      description: "Benchmark, energy considerations, parameters and datasets",
+      icon: Settings,
+      route: "/multi-objective/data"
+    },
+    {
       title: "Solution Representation",
       description: "Visualize a schedule's Gantt chart and its data representation",
       icon: BarChart3,
       route: "/multi-objective/solution-representation"
     },
     {
-      title: "Sensitivity Analysis",
-      description: "Show how the distribution of the prices affects the solution quality",
+      title: "Metaheuristics Components",
+      description: "Constructives, M-VND, TEC reducer, HMOSA & HNSGA-II tests",
       icon: TrendingUp,
-      route: "/multi-objective/sensitivity"
-    },
-    {
-      title: "Constructive Heuristics",
-      description: "Compare constructive heuristics for each metaheuristic variant",
-      icon: BarChart3,
-      route: "/multi-objective/constructive-heuristics"
-    },
-    {
-      title: "M-VND Comparison",
-      description: "Compare M-VND variants against standard and non-M-VND baselines",
-      icon: BarChart3,
-      route: "/multi-objective/mvnd"
+      route: "/multi-objective/meta"
     },
     {
       title: "ILP Model Tests",
@@ -44,22 +38,10 @@ const MultiObjectiveMenuPage = () => {
       route: "/multi-objective/morl"
     },
     {
-      title: "TEC Reduction Operator",
-      description: "Show how the TEC-reducer works in detail and effects of shift strategies",
-      icon: Settings,
-      route: "/multi-objective/tec-reduction"
-    },
-    {
       title: "Hybrid MHs Comparison",
       description: "Compare hybrid metaheuristics in terms of performance metrics",
       icon: BarChart3,
       route: "/multi-objective/comparison"
-    },
-    {
-      title: "Simulated Annealing Tests",
-      description: "Restart mechanism and dynamic vs fixed weights",
-      icon: BarChart3,
-      route: "/multi-objective/sa-tests"
     }
   ];
 
@@ -89,7 +71,7 @@ const MultiObjectiveMenuPage = () => {
         </div>
 
         {/* Analysis Options */}
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {analysisOptions.map((option, index) => (
             <Card 
               key={index}

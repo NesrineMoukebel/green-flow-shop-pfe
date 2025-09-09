@@ -1,0 +1,205 @@
+[
+  {
+    "No_Jobs": 10,
+    "No_of_machines": 5,
+    "Instance": 4,
+    "IGD": {
+      "QL1-HMOSA": 0.0076,
+      "QL2-HMOSA": 0.009,
+      "QL3-HMOSA": 0.009,
+      "QL-HMOSA": 0.0056
+    },
+    "SNS": {
+      "QL1-HMOSA": 0.7816,
+      "QL2-HMOSA": 0.7972,
+      "QL3-HMOSA": 0.782,
+      "QL-HMOSA": 0.8127
+    },
+    "NPS": {
+      "QL1-HMOSA": 91,
+      "QL2-HMOSA": 99,
+      "QL3-HMOSA": 85,
+      "QL-HMOSA": 108
+    },
+    "Exec_Time": {
+      "QL1-HMOSA": 2.44,
+      "QL2-HMOSA": 4.45,
+      "QL3-HMOSA": 7.34,
+      "QL-HMOSA": 2.6712
+    }
+  },
+  {
+    "No_Jobs": 30,
+    "No_of_machines": 10,
+    "Instance": 2,
+    "IGD": {
+      "QL1-HMOSA": 0.0091,
+      "QL2-HMOSA": 0.0069,
+      "QL3-HMOSA": 0.0111,
+      "QL-HMOSA": 0.0027
+    },
+    "SNS": {
+      "QL1-HMOSA": 0.7902,
+      "QL2-HMOSA": 0.7896,
+      "QL3-HMOSA": 0.7785,
+      "QL-HMOSA": 0.8036
+    },
+    "NPS": {
+      "QL1-HMOSA": 114,
+      "QL2-HMOSA": 149,
+      "QL3-HMOSA": 103,
+      "QL-HMOSA": 162
+    },
+    "Exec_Time": {
+      "QL1-HMOSA": 15.23,
+      "QL2-HMOSA": 24.12,
+      "QL3-HMOSA": 28.67,
+      "QL-HMOSA": 10.19
+    }
+  },
+  {
+    "No_Jobs": 60,
+    "No_of_machines": 20,
+    "Instance": 1,
+    "IGD": {
+      "QL1-HMOSA": 0.0151,
+      "QL2-HMOSA": 0.0042,
+      "QL3-HMOSA": 0.007,
+      "QL-HMOSA": 0.003
+    },
+    "SNS": {
+      "QL1-HMOSA": 0.7696,
+      "QL2-HMOSA": 0.8214,
+      "QL3-HMOSA": 0.8067,
+      "QL-HMOSA": 0.8068
+    },
+    "NPS": {
+      "QL1-HMOSA": 50,
+      "QL2-HMOSA": 166,
+      "QL3-HMOSA": 113,
+      "QL-HMOSA": 175
+    },
+    "Exec_Time": {
+      "QL1-HMOSA": 30.98,
+      "QL2-HMOSA": 32.78,
+      "QL3-HMOSA": 43.56,
+      "QL-HMOSA": 31.78
+    }
+  },
+  {
+    "No_Jobs": 100,
+    "No_of_machines": 20,
+    "Instance": 2,
+    "IGD": {
+      "QL1-HMOSA": 0.1292,
+      "QL2-HMOSA": 0.0678,
+      "QL3-HMOSA": 0.0082,
+      "QL-HMOSA": 0.0031
+    },
+    "SNS": {
+      "QL1-HMOSA": 0.7274,
+      "QL2-HMOSA": 0.7638,
+      "QL3-HMOSA": 0.7895,
+      "QL-HMOSA": 0.8202
+    },
+    "NPS": {
+      "QL1-HMOSA": 48,
+      "QL2-HMOSA": 120,
+      "QL3-HMOSA": 160,
+      "QL-HMOSA": 181
+    },
+    "Exec_Time": {
+      "QL1-HMOSA": 129.67,
+      "QL2-HMOSA": 228.23,
+      "QL3-HMOSA": 389.56,
+      "QL-HMOSA": 139.3142
+    }
+  },
+  {
+    "No_Jobs": 200,
+    "No_of_machines": 20,
+    "Instance": 6,
+    "IGD": {
+      "QL1-HMOSA": 0.0254,
+      "QL2-HMOSA": 0.084,
+      "QL3-HMOSA": 0.0392,
+      "QL-HMOSA": 0.001
+    },
+    "SNS": {
+      "QL1-HMOSA": 0.7843,
+      "QL2-HMOSA": 0.7594,
+      "QL3-HMOSA": 0.7747,
+      "QL-HMOSA": 0.7989
+    },
+    "NPS": {
+      "QL1-HMOSA": 103,
+      "QL2-HMOSA": 103,
+      "QL3-HMOSA": 148,
+      "QL-HMOSA": 166
+    },
+    "Exec_Time": {
+      "QL1-HMOSA": 398.45,
+      "QL2-HMOSA": 366.23,
+      "QL3-HMOSA": 510.221,
+      "QL-HMOSA": 368.8492
+    }
+  },
+  {
+    "No_Jobs": 300,
+    "No_of_machines": 20,
+    "Instance": 8,
+    "IGD": {
+      "QL1-HMOSA": 0.0397,
+      "QL2-HMOSA": 0.0637,
+      "QL3-HMOSA": 0.0084,
+      "QL-HMOSA": 0.0006
+    },
+    "SNS": {
+      "QL1-HMOSA": 0.7718,
+      "QL2-HMOSA": 0.8273,
+      "QL3-HMOSA": 0.8021,
+      "QL-HMOSA": 0.8273
+    },
+    "NPS": {
+      "QL1-HMOSA": 66,
+      "QL2-HMOSA": 80,
+      "QL3-HMOSA": 89,
+      "QL-HMOSA": 114
+    },
+    "Exec_Time": {
+      "QL1-HMOSA": 496.39,
+      "QL2-HMOSA": 532.86,
+      "QL3-HMOSA": 611.34,
+      "QL-HMOSA": 484.55
+    }
+  },
+  {
+    "No_Jobs": "",
+    "No_of_machines": "",
+    "Instance": "AVG",
+    "IGD": {
+      "QL1-HMOSA": 0.037,
+      "QL2-HMOSA": 0.039,
+      "QL3-HMOSA": 0.013,
+      "QL-HMOSA": 0.002
+    },
+    "SNS": {
+      "QL1-HMOSA": 0.77,
+      "QL2-HMOSA": 0.79,
+      "QL3-HMOSA": 0.78,
+      "QL-HMOSA": 0.81
+    },
+    "NPS": {
+      "QL1-HMOSA": 78.66,
+      "QL2-HMOSA": 119.5,
+      "QL3-HMOSA": 116.33,
+      "QL-HMOSA": 151
+    },
+    "Exec_Time": {
+      "QL1-HMOSA": 178.86,
+      "QL2-HMOSA": 198.11,
+      "QL3-HMOSA": 265.1,
+      "QL-HMOSA": 172.8
+    }
+  }
+]

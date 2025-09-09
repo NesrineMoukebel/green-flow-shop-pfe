@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Info } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const SCENARIOS = [
@@ -101,36 +101,15 @@ const ILPModelTestsPage = () => {
 
   const avg = (arr: number[]) => (arr.reduce((a, b) => a + b, 0) / arr.length);
 
-  return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="border-b border-border bg-card">
-        <div className="p-6">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate("/multi-objective")}
-              className="hover:bg-muted"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Menu
-            </Button>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">ILP Model Tests</h1>
-              <p className="text-muted-foreground">Compare ILP model results against proposed algorithms and literature</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="p-6 space-y-8">
+  return (<div className="min-h-screen bg-background flex">
+      {/* Sidebar */}
+      <div className="w-80 h-screen bg-card border-r border-border p-6 overflow-y-auto sticky top-0">
         <Card>
           <CardHeader>
             <CardTitle>Configuration</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="max-w-sm">
+            <div className="space-y-4">
               <Select value={scenario} onValueChange={setScenario}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select scenario" />
@@ -141,9 +120,43 @@ const ILPModelTestsPage = () => {
                   ))}
                 </SelectContent>
               </Select>
+              <Button variant="hero" className="w-full">Run Simulation</Button>
             </div>
           </CardContent>
         </Card>
+
+        <Card className="mt-6">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm flex items-center gap-2"><Info className="w-4 h-4 text-purple-500" /> Objective-specific models</CardTitle>
+          </CardHeader>
+          <CardContent className="text-sm text-muted-foreground">We employ distinct ILP models for each objective (Cmax and TEC).</CardContent>
+        </Card>
+        <Card className="mt-3">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm flex items-center gap-2"><Info className="w-4 h-4 text-purple-500" /> Cmax lower bounds</CardTitle>
+          </CardHeader>
+          <CardContent className="text-sm text-muted-foreground">Cmax lower bounds are taken from (Benavides & Ritt, 2018).</CardContent>
+        </Card>
+        <Button variant="ghost" size="sm" onClick={() => navigate("/multi-objective/meta")} className="mt-4 w-full">
+          <ArrowLeft className="w-4 h-4 mr-2" /> Back to Components
+        </Button>
+      </div>
+
+      {/* Main */}
+      <div className="flex-1 overflow-auto">
+        {/* Header */}
+        <div className="border-b border-border bg-card">
+          <div className="p-6">
+            <div className="flex items-center gap-4">
+              <div>
+                <h1 className="text-2xl font-bold text-foreground">ILP Model Tests</h1>
+                <p className="text-muted-foreground">Compare ILP model results against proposed algorithms and literature</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="p-6 space-y-8">
 
         {scenario === 'cmax' && (
           <Card>
@@ -293,6 +306,7 @@ const ILPModelTestsPage = () => {
             </CardContent>
           </Card>
         )}
+        </div>
       </div>
     </div>
   );

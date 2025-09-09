@@ -1,0 +1,122 @@
+[
+  {
+    "jobs": 10,
+    "machines": 5,
+    "instance": 6,
+    "algorithm": "MOSA",
+    "igd": 0.0003,
+    "sns": 0.7899,
+    "nps": 71.0,
+    "exec_time": 7.4195
+  },
+  {
+    "jobs": 10,
+    "machines": 5,
+    "instance": 6,
+    "algorithm": "HMOSA",
+    "igd": 0.1098,
+    "sns": 0.7313,
+    "nps": 25.0,
+    "exec_time": 10.0743
+  },
+  {
+    "jobs": 30,
+    "machines": 15,
+    "instance": 8,
+    "algorithm": "MOSA",
+    "igd": 0.0085,
+    "sns": 0.8124,
+    "nps": 151.0,
+    "exec_time": 21.0277
+  },
+  {
+    "jobs": 30,
+    "machines": 15,
+    "instance": 8,
+    "algorithm": "HMOSA",
+    "igd": 0.0739,
+    "sns": 0.7946,
+    "nps": 118.0,
+    "exec_time": 120.7099
+  },
+  {
+    "jobs": 60,
+    "machines": 10,
+    "instance": 10,
+    "algorithm": "MOSA",
+    "igd": 0.0014,
+    "sns": 0.8531,
+    "nps": 164.0,
+    "exec_time": 69.6643
+  },
+  {
+    "jobs": 60,
+    "machines": 10,
+    "instance": 10,
+    "algorithm": "HMOSA",
+    "igd": 0.0331,
+    "sns": 0.8151,
+    "nps": 87.0,
+    "exec_time": 138.934
+  },
+  {
+    "jobs": 100,
+    "machines": 20,
+    "instance": 5,
+    "algorithm": "MOSA",
+    "igd": 0.0,
+    "sns": 0.8125,
+    "nps": 133.0,
+    "exec_time": 101.1471
+  },
+  {
+    "jobs": 100,
+    "machines": 20,
+    "instance": 5,
+    "algorithm": "HMOSA",
+    "igd": 0.107,
+    "sns": 0.7861,
+    "nps": 63.0,
+    "exec_time": 408.2273
+  },
+  {
+    "jobs": 200,
+    "machines": 40,
+    "instance": 7,
+    "algorithm": "MOSA",
+    "igd": 0.0012,
+    "sns": 0.7871,
+    "nps": 69.0,
+    "exec_time": 217.6731
+  },
+  {
+    "jobs": 200,
+    "machines": 40,
+    "instance": 7,
+    "algorithm": "HMOSA",
+    "igd": 0.1403,
+    "sns": 0.7466,
+    "nps": 45.0,
+    "exec_time": 637.2636
+  },
+  {
+    "jobs": 300,
+    "machines": 60,
+    "instance": 7,
+    "algorithm": "MOSA",
+    "igd": 0.0005,
+    "sns": 0.7984,
+    "nps": 91.0,
+    "exec_time": 267.9892
+  },
+  {
+    "jobs": 300,
+    "machines": 60,
+    "instance": 7,
+    "algorithm": "HMOSA",
+    "igd": 0.1451,
+    "sns": 0.6832,
+    "nps": 20.0,
+    "exec_time": 579.3082
+  }
+]

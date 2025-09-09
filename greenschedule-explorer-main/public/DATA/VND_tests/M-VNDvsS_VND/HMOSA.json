@@ -1,0 +1,122 @@
+[
+  {
+    "jobs": 10,
+    "machines": 20,
+    "instance": 10,
+    "algorithm": "HMOSA",
+    "igd": 0.0039,
+    "sns": 0.82,
+    "nps": 65.0,
+    "exec_time": 16.37
+  },
+  {
+    "jobs": 10,
+    "machines": 20,
+    "instance": 10,
+    "algorithm": "S-HMOSA",
+    "igd": 0.0196,
+    "sns": 0.78,
+    "nps": 84.0,
+    "exec_time": 19.54
+  },
+  {
+    "jobs": 20,
+    "machines": 10,
+    "instance": 5,
+    "algorithm": "HMOSA",
+    "igd": 0.0013,
+    "sns": 0.8,
+    "nps": 103.0,
+    "exec_time": 14.91
+  },
+  {
+    "jobs": 20,
+    "machines": 10,
+    "instance": 5,
+    "algorithm": "S-HMOSA",
+    "igd": 0.0156,
+    "sns": 0.78,
+    "nps": 114.0,
+    "exec_time": 15.15
+  },
+  {
+    "jobs": 60,
+    "machines": 10,
+    "instance": 2,
+    "algorithm": "HMOSA",
+    "igd": 0.0004,
+    "sns": 0.81,
+    "nps": 156.0,
+    "exec_time": 48.29
+  },
+  {
+    "jobs": 60,
+    "machines": 10,
+    "instance": 2,
+    "algorithm": "S-HMOSA",
+    "igd": 0.012,
+    "sns": 0.79,
+    "nps": 92.0,
+    "exec_time": 61.32
+  },
+  {
+    "jobs": 100,
+    "machines": 20,
+    "instance": 9,
+    "algorithm": "HMOSA",
+    "igd": 0.0015,
+    "sns": 0.79,
+    "nps": 108.0,
+    "exec_time": 52.89
+  },
+  {
+    "jobs": 100,
+    "machines": 20,
+    "instance": 9,
+    "algorithm": "S-HMOSA",
+    "igd": 0.04,
+    "sns": 0.77,
+    "nps": 87.0,
+    "exec_time": 57.56
+  },
+  {
+    "jobs": 200,
+    "machines": 60,
+    "instance": 1,
+    "algorithm": "HMOSA",
+    "igd": 0.0005,
+    "sns": 0.79,
+    "nps": 122.0,
+    "exec_time": 101.99
+  },
+  {
+    "jobs": 200,
+    "machines": 60,
+    "instance": 1,
+    "algorithm": "S-HMOSA",
+    "igd": 0.0385,
+    "sns": 0.77,
+    "nps": 47.0,
+    "exec_time": 185.17
+  },
+  {
+    "jobs": 400,
+    "machines": 20,
+    "instance": 2,
+    "algorithm": "HMOSA",
+    "igd": 0.0037,
+    "sns": 0.78,
+    "nps": 75.0,
+    "exec_time": 306.01
+  },
+  {
+    "jobs": 400,
+    "machines": 20,
+    "instance": 2,
+    "algorithm": "S-HMOSA",
+    "igd": 0.0164,
+    "sns": 0.77,
+    "nps": 61.0,
+    "exec_time": 308.05
+  }
+]

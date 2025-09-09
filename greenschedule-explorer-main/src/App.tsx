@@ -14,9 +14,11 @@ import ConstructiveHeuristicsPage from "./pages/ConstructiveHeuristicsPage";
 import MVNDComparisonPage from "./pages/MVNDComparisonPage";
 import ILPModelTestsPage from "./pages/ILPModelTestsPage";
 import MORLPage from "./pages/MORLPage";
-import SATestsMenuPage from "./pages/SATestsMenuPage";
-import SARestartPage from "./pages/SARestartPage";
-import SAWeightsPage from "./pages/SAWeightsPage";
+import HMOSAComponentsPage from "./pages/HMOSAComponentsPage";
+import HNSGAIIComponentsPage from "./pages/HNSGAIIComponentsPage";
+import ProblemDataPage from "./pages/ProblemDataPage";
+import AdditionalDataPage from "./pages/AdditionalDataPage";
+import MetaheuristicsComponentsMenuPage from "./pages/MetaheuristicsComponentsMenuPage";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +31,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/multi-objective" element={<MultiObjectiveMenuPage />} />
+          <Route path="/multi-objective/meta" element={<MetaheuristicsComponentsMenuPage />} />
           <Route path="/multi-objective/sensitivity" element={<SensitivityAnalysisPage />} />
           <Route path="/multi-objective/tec-reduction" element={<TECReductionPage />} />
           <Route path="/multi-objective/comparison" element={<HybridMHsComparisonPage />} />
@@ -37,9 +40,10 @@ const App = () => (
           <Route path="/multi-objective/mvnd" element={<MVNDComparisonPage />} />
           <Route path="/multi-objective/ilp" element={<ILPModelTestsPage />} />
           <Route path="/multi-objective/morl" element={<MORLPage />} />
-          <Route path="/multi-objective/sa-tests" element={<SATestsMenuPage />} />
-          <Route path="/multi-objective/sa-tests/restart" element={<SARestartPage />} />
-          <Route path="/multi-objective/sa-tests/weights" element={<SAWeightsPage />} />
+          <Route path="/multi-objective/data" element={<ProblemDataPage />} />
+          <Route path="/multi-objective/data/additional" element={<AdditionalDataPage />} />
+          <Route path="/multi-objective/sa-tests" element={<HMOSAComponentsPage />} />
+          <Route path="/multi-objective/hnsga-components" element={<HNSGAIIComponentsPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

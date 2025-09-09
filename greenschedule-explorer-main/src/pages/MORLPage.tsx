@@ -1,75 +1,132 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowLeft, Trophy } from "lucide-react";
+import { ArrowLeft, Trophy, Settings2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, BarChart, Bar } from "recharts";
 
-const scenarioOptions = [
-  { label: "Comparison between MOQL approaches", value: "moql" },
-  { label: "Results of PO-PQL on metaheuristics", value: "pql" },
-  { label: "QL counts", value: "ql-counts" },
-  { label: "Rewards tests", value: "rewards-tests" },
-  { label: "Actions tests", value: "actions-tests" },
-];
+// Data types
+interface ParetoPoint {
+  makespan: number;
+  tec: number;
+  isPareto: boolean;
+  executionTime: number;
+}
 
+interface MOQLVariant {
+  name: string;
+  description: string;
+  color: string;
+  data: ParetoPoint[];
+}
+
+interface MetricsData {
+  No_Jobs: number;
+  No_of_machines: number;
+  Instance: number;
+  IGD: Record<string, number>;
+  SNS: Record<string, number>;
+  NPS: Record<string, number>;
+  "Exec_Time": Record<string, number>;
+}
+
+// Data loading functions
+const loadCSVData = async (filePath: string): Promise<ParetoPoint[]> => {
+  try {
+    const response = await fetch(filePath);
+    const csvText = await response.text();
+    const lines = csvText.split('\n');
+    const data: ParetoPoint[] = [];
+    
+    for (let i = 1; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (line) {
+        const [makespan, tec, pareto, executionTime] = line.split(',');
+        data.push({
+          makespan: parseFloat(makespan),
+          tec: parseFloat(tec),
+          isPareto: pareto.toLowerCase() === 'true', // Fix here
+          executionTime: parseFloat(executionTime)
+        });
+      }
+    }
+    return data;
+  } catch (error) {
+    console.error(`Error loading CSV data from ${filePath}:`, error);
+    return [];
+  }
+};
+
+const loadJSONData = async (filePath: string): Promise<any> => {
+  try {
+    const response = await fetch(filePath);
+    return await response.json();
+  } catch (error) {
+    console.error(`Error loading JSON data from ${filePath}:`, error);
+    return [];
+  }
+};
+
+// Pareto dominance functions
+const isDominated = (point1: ParetoPoint, point2: ParetoPoint): boolean => {
+  return point2.makespan <= point1.makespan && point2.tec <= point1.tec && 
+         (point2.makespan < point1.makespan || point2.tec < point1.tec);
+};
+
+const getParetoFront = (points: ParetoPoint[]): ParetoPoint[] => {
+  const paretoFront: ParetoPoint[] = [];
+  
+  for (const point of points) {
+    let isDominatedByAny = false;
+    
+    for (const other of points) {
+      if (isDominated(point, other)) {
+        isDominatedByAny = true;
+        break;
+      }
+    }
+    
+    if (!isDominatedByAny) {
+      paretoFront.push(point);
+    }
+  }
+  
+  return paretoFront.sort((a, b) => a.makespan - b.makespan);
+};
+
+// Constants
 const metaheuristics = [
   { label: "HNSGA-II", value: "HNSGA-II" },
   { label: "HMOGVNS", value: "HMOGVNS" },
   { label: "HMOSA", value: "HMOSA" },
 ];
 
-function getMoqlVariants(mh: string) {
-  return [
-    `QL1-${mh}`,
-    `QL2-${mh}`,
-    `QL3-${mh}`,
-    `QL-${mh}`,
-  ];
-}
-
-function getPqlPair(mh: string) {
-  return [`QL-${mh}`, mh];
-}
-
-function buildMockPareto(names: string[]) {
-  return names.map((name, idx) => ({
-    algorithm: name,
-    points: [
-      { makespan: 100 + idx * 3, tec: 200 + idx * 4 },
-      { makespan: 105 + idx * 3, tec: 206 + idx * 4 },
-      { makespan: 111 + idx * 3, tec: 212 + idx * 4 },
-      { makespan: 118 + idx * 3, tec: 218 + idx * 4 },
-    ]
-  }));
-}
-
-const colors = ["#22c55e", "#1f2937", "#ef4444", "#8D70FF"]; // up to 4 series
-
-function buildMock6InstanceMetrics(names: string[]) {
-  const rows: Array<{ instance: number; jobs: number; machines: number; values: Record<string, { igd: number; sns: number; nps: number; exec: number }> }> = [];
-  for (let i = 1; i <= 6; i++) {
-    const entry: any = { instance: i, jobs: 30, machines: 10, values: {} };
-    names.forEach((n, idx) => {
-      entry.values[n] = { igd: 0.01 + i * 0.001 + idx * 0.002, sns: 0.8 - i * 0.005 - idx * 0.01, nps: 100 - i - idx * 2, exec: 2 + i * 0.1 + idx * 0.05 };
-    });
-    rows.push(entry);
+const moqlApproaches = [
+  {
+    name: "QL1",
+    fullName: "Adaptive Q-Learning-Based Operator Selection (AQL-OS)",
+    color: "#3B82F6"
+  },
+  {
+    name: "QL2", 
+    fullName: "Normalized Multi-Objective Q-Learning (NMO-QL)",
+    color: "#10B981"
+  },
+  {
+    name: "QL3",
+    fullName: "Scalarized Multi-Objective Q-Learning (SMO-QL)",
+    color: "#F59E0B"
+  },
+  {
+    name: "QL",
+    fullName: "Pareto Optimal Pareto Q-Learning (PO-PQL)",
+    color: "#8B5CF6"
   }
-  return rows;
-}
+];
 
-function buildMockMeansForJobs(names: string[]) {
-  const jobSizes = [10, 20, 30, 40, 50, 60, 100, 200, 300, 400];
-  return jobSizes.map((jobs) => {
-    const row: any = { jobs, machines: 10, values: {} };
-    names.forEach((n, idx) => {
-      row.values[n] = { igd: 0.01 + jobs * 0.00001 + idx * 0.001, sns: 0.8 - jobs * 0.0001 - idx * 0.01, nps: 100 - Math.floor(jobs / 10) - idx * 3, exec: 2 + jobs * 0.005 + idx * 0.2 };
-    });
-    return row;
-  });
-}
+const colors = ["#3B82F6", "#10B981", "#F59E0B", "#8B5CF6"];
 
 // QL counts data (provided)
 const operators = [
@@ -86,16 +143,16 @@ const countsData = {
     noql: [43.2, 0, 20.6, 8.6, 28.6],
   },
   "HMOGVNS": {
-    ql: [145.4, 120.6, 126.8, 157.0, 660.4],
+    ql: [145.4, 127.6, 126.8, 157.0, 660.4],
     noql: [70.8, 0, 42.6, 8.8, 67.6],
   },
   "HMOSA": {
-    ql: [811.33, 811.66, 825.0, 805.0, 789.0],
+    ql: [851.33, 811.66, 825.0, 805.0, 689.0],
     noql: [38.0, 10.0, 30.0, 8.3, 3.3],
   },
 } as const;
 
-function buildBarData(values: number[]) {
+function buildBarData(values: readonly number[]) {
   return operators.map((op, i) => ({ operator: op, count: values[i] }));
 }
 
@@ -114,41 +171,155 @@ function generateRandomSequences(num: number) {
   return seqs;
 }
 
-const MORLPage = () => {
-  const navigate = useNavigate();
-  const [scenario, setScenario] = useState<string>(scenarioOptions[0].value);
-  const [mh, setMh] = useState<string>(metaheuristics[0].value);
-
-  const names = useMemo(() => scenario === 'moql' ? getMoqlVariants(mh) : getPqlPair(mh), [scenario, mh]);
-  const pareto = useMemo(() => {
-    if (scenario === 'rewards-tests') return buildMockPareto(["QL-HMOGVNS", "QL1-HMOGVNS", "QL2-HMOGVNS"]);
-    if (scenario === 'actions-tests') return buildMockPareto(["QL-HMOGVNS", "QL2-HMOGVNS"]);
-    if (scenario === 'ql-counts') return [];
-    return buildMockPareto(names);
-  }, [names, scenario]);
-
-  const allPoints = pareto.flatMap(a => a.points);
+// Pareto Chart Component
+const ParetoChart = ({ variants }: { variants: MOQLVariant[] }) => {
+  const allPoints = variants.flatMap(variant => variant.data.filter(p => p.isPareto));
   const minMakespan = allPoints.length ? Math.min(...allPoints.map(p => p.makespan)) : 0;
   const maxMakespan = allPoints.length ? Math.max(...allPoints.map(p => p.makespan)) : 1;
   const minTec = allPoints.length ? Math.min(...allPoints.map(p => p.tec)) : 0;
   const maxTec = allPoints.length ? Math.max(...allPoints.map(p => p.tec)) : 1;
 
-  const sixInstMetrics = useMemo(() => {
-    if (scenario === 'rewards-tests') return buildMock6InstanceMetrics(["QL-HMOGVNS", "QL1-HMOGVNS", "QL2-HMOGVNS"]);
-    if (scenario === 'actions-tests') return buildMock6InstanceMetrics(["QL-HMOGVNS", "QL2-HMOGVNS"]);
-    if (scenario === 'ql-counts') return [] as any;
-    return buildMock6InstanceMetrics(names);
-  }, [names, scenario]);
+  return (
+    <div className="h-96">
+      <ResponsiveContainer width="100%" height="100%">
+        <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="makespan" name="Makespan" type="number" domain={[minMakespan, maxMakespan]} tick={{ fontSize: 12 }} />
+          <YAxis dataKey="tec" name="TEC" type="number" domain={[minTec, maxTec]} tick={{ fontSize: 12 }} />
+          <Tooltip cursor={{ strokeDasharray: '3 3' }} formatter={(value: any, name: any) => [value.toFixed(2), name === 'makespan' ? 'Makespan' : 'TEC']} />
+          <Legend />
+          {variants.map((variant, idx) => {
+            const paretoPoints = variant.data.filter(p => p.isPareto);
+            return (
+              <Scatter 
+                key={variant.name} 
+                name={variant.name} 
+                data={paretoPoints} 
+                fill={variant.color} 
+                shape="circle" 
+              />
+            );
+          })}
+        </ScatterChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
 
-  const meansByJobs = useMemo(() => {
-    if (scenario !== 'pql') return [] as any;
-    return buildMockMeansForJobs(names);
-  }, [names, scenario]);
+const MORLPage = () => {
+  const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState<string>("main");
+  const [selectedMH, setSelectedMH] = useState<string>("HNSGA-II");
+  const [selectedTest, setSelectedTest] = useState<string>("po-pql-params");
+  
+  // Data states
+  const [moqlVariants, setMoqlVariants] = useState<MOQLVariant[]>([]);
+  const [moqlMetrics, setMoqlMetrics] = useState<MetricsData[]>([]);
+  const [popqlParamVariants, setPopqlParamVariants] = useState<MOQLVariant[]>([]);
+  const [popqlParamMetrics, setPopqlParamMetrics] = useState<MetricsData[]>([]);
+  const [popqlResultVariants, setPopqlResultVariants] = useState<MOQLVariant[]>([]);
+  const [popqlResultMetrics, setPopqlResultMetrics] = useState<MetricsData[]>([]);
+  
+  const [isLoading, setIsLoading] = useState(false);
 
-  const showMhDropdown = scenario === 'moql' || scenario === 'pql';
+  // Load MOQL data
+  useEffect(() => {
+    const loadMOQLData = async () => {
+      if (currentPage === "moql") {
+        setIsLoading(true);
+        try {
+          const [ql1Data, ql2Data, ql3Data, qlData, metricsData] = await Promise.all([
+            loadCSVData(`/DATA/MORL_page_tests/MOQL_tests/QL1-${selectedMH}.csv`),
+            loadCSVData(`/DATA/MORL_page_tests/MOQL_tests/QL2-${selectedMH}.csv`),
+            loadCSVData(`/DATA/MORL_page_tests/MOQL_tests/QL3-${selectedMH}.csv`),
+            loadCSVData(`/DATA/MORL_page_tests/MOQL_tests/QL-${selectedMH}.csv`),
+            loadJSONData(`/DATA/MORL_page_tests/MOQL_tests/moqlapproaches_${selectedMH}.json`)
+          ]);
 
-  const actionSequences = useMemo(() => scenario === 'actions-tests' ? generateRandomSequences(9) : [], [scenario]);
+          const variants: MOQLVariant[] = [
+            { name: "QL1", description: moqlApproaches[0].fullName, color: moqlApproaches[0].color, data: ql1Data },
+            { name: "QL2", description: moqlApproaches[1].fullName, color: moqlApproaches[1].color, data: ql2Data },
+            { name: "QL3", description: moqlApproaches[2].fullName, color: moqlApproaches[2].color, data: ql3Data },
+            { name: "QL", description: moqlApproaches[3].fullName, color: moqlApproaches[3].color, data: qlData }
+          ];
 
+          setMoqlVariants(variants);
+          setMoqlMetrics(metricsData);
+        } catch (error) {
+          console.error('Error loading MOQL data:', error);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadMOQLData();
+  }, [currentPage, selectedMH]);
+
+  // Load PO-PQL Parameters data
+  useEffect(() => {
+    const loadPOPQLParamData = async () => {
+      if (currentPage === "popql" && selectedTest === "po-pql-params") {
+        setIsLoading(true);
+        try {
+          const [ql1Data, ql2Data, qlData, metricsData] = await Promise.all([
+            loadCSVData(`/DATA/MORL_page_tests/POPQL_tests/param_tests/QL1-${selectedMH}.csv`),
+            loadCSVData(`/DATA/MORL_page_tests/POPQL_tests/param_tests/QL2-${selectedMH}.csv`),
+            loadCSVData(`/DATA/MORL_page_tests/POPQL_tests/param_tests/QL-${selectedMH}.csv`),
+            loadJSONData(`/DATA/MORL_page_tests/POPQL_tests/param_tests/${selectedMH}_popql_param.json`)
+          ]);
+
+          const variants: MOQLVariant[] = [
+            { name: "QL1", description: "Epsilon: 0.1", color: "#3B82F6", data: ql1Data },
+            { name: "QL2", description: "Epsilon: 0.3", color: "#10B981", data: ql2Data },
+            { name: "QL", description: "Epsilon: 0.5", color: "#8B5CF6", data: qlData }
+          ];
+
+          setPopqlParamVariants(variants);
+          setPopqlParamMetrics(metricsData);
+        } catch (error) {
+          console.error('Error loading PO-PQL param data:', error);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadPOPQLParamData();
+  }, [currentPage, selectedTest, selectedMH]);
+
+  // Load PO-PQL Results data
+  useEffect(() => {
+    const loadPOPQLResultData = async () => {
+      if (currentPage === "popql" && selectedTest === "po-pql-results") {
+        setIsLoading(true);
+        try {
+          const [qlData, mhData, metricsData] = await Promise.all([
+            loadCSVData(`/DATA/MORL_page_tests/POPQL_tests/POPQL/QL-${selectedMH}.csv`),
+            loadCSVData(`/DATA/MORL_page_tests/POPQL_tests/POPQL/${selectedMH}.csv`),
+            loadJSONData(`/DATA/MORL_page_tests/POPQL_tests/POPQL/popql_${selectedMH}.json`)
+          ]);
+
+          const variants: MOQLVariant[] = [
+            { name: `QL-${selectedMH}`, description: "PO-PQL inside M-VND", color: "#8B5CF6", data: qlData },
+            { name: selectedMH, description: "Original Metaheuristic", color: "#6B7280", data: mhData }
+          ];
+
+          setPopqlResultVariants(variants);
+          setPopqlResultMetrics(metricsData);
+        } catch (error) {
+          console.error('Error loading PO-PQL result data:', error);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadPOPQLResultData();
+  }, [currentPage, selectedTest, selectedMH]);
+
+  // Main page with two cards
+  if (currentPage === "main") {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -173,29 +344,297 @@ const MORLPage = () => {
       </div>
 
       <div className="p-6 space-y-8">
-        {/* Controls */}
-        <Card>
+          {/* Main Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* MOQL Comparison Card */}
+            <Card 
+              className="cursor-pointer hover:shadow-lg transition-shadow"
+              onClick={() => setCurrentPage("moql")}
+            >
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Settings2 className="w-5 h-5 text-primary" />
+                  Comparison between MOQL approaches
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Compare different Multi-Objective Q-Learning approaches across metaheuristics
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* PO-PQL Tests Card */}
+            <Card 
+              className="cursor-pointer hover:shadow-lg transition-shadow"
+              onClick={() => setCurrentPage("popql")}
+            >
           <CardHeader>
-            <CardTitle>Configuration</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <Trophy className="w-5 h-5 text-primary" />
+                  PO-PQL Tests
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Test Pareto Optimal Pareto Q-Learning parameters and results
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // MOQL Comparison Page
+  if (currentPage === "moql") {
+    return (
+      <div className="min-h-screen bg-background flex">
+        {/* Sidebar */}
+        <div className="w-80 h-screen bg-card border-r border-border p-6 overflow-y-auto sticky top-0">
+          <Card className="shadow-card">
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Settings2 className="w-5 h-5 text-primary" />
+                Configuration
+              </CardTitle>
           </CardHeader>
-          <CardContent className="grid gap-4 md:grid-cols-2">
-            <div>
-              <label className="block text-sm font-medium mb-2">Scenario</label>
-              <Select value={scenario} onValueChange={setScenario}>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Metaheuristic</label>
+                <Select value={selectedMH} onValueChange={setSelectedMH}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select scenario" />
+                    <SelectValue placeholder="Select metaheuristic" />
                 </SelectTrigger>
                 <SelectContent>
-                  {scenarioOptions.map(s => (
-                    <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                    {metaheuristics.map(m => (
+                      <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
-            {showMhDropdown && (
+            </CardContent>
+          </Card>
+
+          {/* MOQL Approaches Description */}
+          <Card className="mt-6 shadow-card">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-lg">MOQL Approaches</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm">
+              {moqlApproaches.map((approach, idx) => (
+                <div key={approach.name} className="p-3 bg-muted rounded-md">
+                  <div className="font-medium text-accent" style={{ color: approach.color }}>
+                    {approach.name}
+                  </div>
+                  <div className="text-muted-foreground">{approach.fullName}</div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1 overflow-auto">
+          {/* Header */}
+          <div className="border-b border-border bg-card">
+            <div className="p-6">
+              <div className="flex items-center gap-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setCurrentPage("main")}
+                  className="hover:bg-muted"
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back to Main
+                </Button>
               <div>
-                <label className="block text-sm font-medium mb-2">Metaheuristic</label>
-                <Select value={mh} onValueChange={setMh}>
+                  <h1 className="text-2xl font-bold text-foreground">MOQL Approaches Comparison</h1>
+                  <p className="text-muted-foreground">Multi-Objective Q-Learning approaches with {selectedMH}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-6 space-y-8">
+            {/* Pareto Fronts */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Pareto Fronts Comparison</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {isLoading ? (
+                  <div className="h-96 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                      <div className="text-muted-foreground">Loading data...</div>
+                    </div>
+                  </div>
+                ) : moqlVariants.length > 0 ? (
+                  <ParetoChart variants={moqlVariants.map(v => ({
+                    ...v,
+                    name: `${v.name}-${selectedMH}`, // mhName is your variable for the method name
+                  }))}/>
+                ) : (
+                  <div className="h-96 flex items-center justify-center text-muted-foreground">
+                    No data available
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Metrics Table */}
+            {moqlMetrics.length > 0 && (
+             <Card>
+             <CardHeader>
+               <CardTitle className="flex items-center gap-2">
+                 <Trophy className="w-5 h-5 text-primary" />
+                 Performance Metrics
+               </CardTitle>
+             </CardHeader>
+             <CardContent>
+               <div className="border rounded-lg overflow-x-auto">
+                 <Table>
+                   <TableHeader>
+                     <TableRow className="bg-muted/50">
+                       <TableHead rowSpan={2} className="font-semibold align-middle border-r">Instance</TableHead>
+                       <TableHead rowSpan={2} className="font-semibold align-middle border-r">Jobs</TableHead>
+                       <TableHead rowSpan={2} className="font-semibold align-middle border-r">Machines</TableHead>
+                       <TableHead colSpan={moqlApproaches.length} className="text-center font-semibold border-b border-l">IGD</TableHead>
+                       <TableHead colSpan={moqlApproaches.length} className="text-center font-semibold border-b border-l">SNS</TableHead>
+                       <TableHead colSpan={moqlApproaches.length} className="text-center font-semibold border-b border-l">NPS</TableHead>
+                       <TableHead colSpan={moqlApproaches.length} className="text-center font-semibold border-b border-l">Exec Time (s)</TableHead>
+                     </TableRow>
+                     <TableRow className="bg-muted/30">
+                       {["IGD", "SNS", "NPS", "Exec_Time"].flatMap(metric =>
+                         moqlApproaches.map((approach, i) => (
+                           <TableHead
+                             key={`${metric}-${approach.name}`}
+                             className={`text-center ${i === 0 ? "border-l border-border" : ""}`}
+                           >
+                             {approach.name}-{selectedMH}
+                           </TableHead>
+                         ))
+                       )}
+                     </TableRow>
+                   </TableHeader>
+           
+                   <TableBody>
+                     {moqlMetrics.map((row, idx) => {
+                       // compute best values per metric row
+                       const bestValues: Record<string, number> = {};
+           
+                       ["IGD", "SNS", "NPS", "Exec_Time"].forEach(metric => {
+                         let values = moqlApproaches
+                           .map(a => row[metric][`${a.name}-${selectedMH}`])
+                           .filter(v => typeof v === "number");
+           
+                         if (values.length > 0) {
+                           // IGD, Exec_Time → minimize | SNS, NPS → maximize
+                           bestValues[metric] =
+                             metric === "IGD" || metric === "Exec_Time"
+                               ? Math.min(...values)
+                               : Math.max(...values);
+                         }
+                       });
+           
+                       return (
+                         <TableRow key={idx} className="hover:bg-muted/30">
+                           <TableCell className="border-r font-medium">{row.Instance}</TableCell>
+                           <TableCell className="border-r">{row.No_Jobs}</TableCell>
+                           <TableCell className="border-r">{row.No_of_machines}</TableCell>
+           
+                           {["IGD", "SNS", "NPS", "Exec_Time"].flatMap(metric =>
+                             moqlApproaches.map((approach, i) => {
+                               const value = row[metric][`${approach.name}-${selectedMH}`];
+                               const formatted =
+                                 typeof value === "number"
+                                   ? metric === "Exec_Time"
+                                     ? value.toFixed(3)
+                                     : value.toFixed(4)
+                                   : "N/A";
+           
+                               const isBest =
+                                 typeof value === "number" &&
+                                 value === bestValues[metric];
+           
+                               return (
+                                 <TableCell
+                                   key={`${metric}-${idx}-${approach.name}`}
+                                   className={`text-center ${isBest ? "bg-purple-100 font-bold text-purple-600" : ""} ${i === 0 ? "border-l border-border" : ""}`}
+                                 >
+                                   {formatted}
+                                   {isBest && (
+                                     <Trophy className="w-3 h-3 inline ml-1 text-purple-600" />
+                                   )}
+                                 </TableCell>
+                               );
+                             })
+                           )}
+                         </TableRow>
+                       );
+                     })}
+                   </TableBody>
+                 </Table>
+               </div>
+           
+               {/* Optional metric legend like inspo card */}
+               <div className="mt-4 p-3 bg-muted/30 rounded-lg">
+                 <div className="text-sm">
+                   <div className="font-medium mb-2">Metric Descriptions:</div>
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-muted-foreground">
+                     <div><strong>IGD (Inverted Generational Distance):</strong> Lower values = better convergence</div>
+                     <div><strong>SNS (Spacing to Nearest Solution):</strong> Higher values = better diversity</div>
+                     <div><strong>NPS (Number of Pareto Solutions):</strong> Higher values = more non-dominated solutions</div>
+                     <div><strong>Exec Time:</strong> Lower values = faster performance</div>
+                   </div>
+                 </div>
+               </div>
+             </CardContent>
+           </Card>
+           
+              
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // PO-PQL Tests Page
+  if (currentPage === "popql") {
+    return (
+      <div className="min-h-screen bg-background flex">
+        {/* Sidebar */}
+        <div className="w-80 h-screen bg-card border-r border-border p-6 overflow-y-auto sticky top-0">
+          <Card className="shadow-card">
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Settings2 className="w-5 h-5 text-primary" />
+                Configuration
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Test</label>
+                <Select value={selectedTest} onValueChange={setSelectedTest}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select test" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="po-pql-params">PO-PQL Parameters</SelectItem>
+                    <SelectItem value="po-pql-results">Results of PO-PQL on metaheuristics</SelectItem>
+                    <SelectItem value="ql-counts">QL counts</SelectItem>
+                    <SelectItem value="rewards-tests">Rewards tests</SelectItem>
+                    <SelectItem value="actions-tests">Actions tests</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Metaheuristic</label>
+                <Select value={selectedMH} onValueChange={setSelectedMH}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select metaheuristic" />
                   </SelectTrigger>
@@ -206,12 +645,262 @@ const MORLPage = () => {
                   </SelectContent>
                 </Select>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* PO-PQL Description */}
+          <Card className="mt-6 shadow-card">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-lg">PO-PQL</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm">
+              <div className="p-3 bg-muted rounded-md">
+                <div className="font-medium text-accent">PO-PQL</div>
+                <div className="text-muted-foreground">Pareto Optimal Pareto Q-Learning</div>
+              </div>
+              {selectedTest === "po-pql-params" && (
+                <div className="p-3 bg-muted rounded-md">
+                  <div className="font-medium text-accent">Epsilon Values</div>
+                  <div className="text-muted-foreground">
+                    QL1: 0.1<br/>
+                    QL2: 0.3<br/>
+                    QL: 0.5
+                  </div>
+                </div>
+              )}
+              {selectedTest === "po-pql-results" && (
+                <div className="p-3 bg-muted rounded-md">
+                  <div className="font-medium text-accent">PO-PQL inside M-VND</div>
+                  <div className="text-muted-foreground">Pareto Optimal Pareto Q-Learning integrated with Multi-Variable Neighborhood Descent</div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1 overflow-auto">
+          {/* Header */}
+          <div className="border-b border-border bg-card">
+            <div className="p-6">
+              <div className="flex items-center gap-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setCurrentPage("main")}
+                  className="hover:bg-muted"
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back to Main
+                </Button>
+                <div>
+                  <h1 className="text-2xl font-bold text-foreground">PO-PQL Tests</h1>
+                  <p className="text-muted-foreground">
+                    {selectedTest === "po-pql-params" && "PO-PQL Parameters testing with " + selectedMH}
+                    {selectedTest === "po-pql-results" && "PO-PQL Results on " + selectedMH}
+                    {selectedTest === "ql-counts" && "QL Counts Analysis"}
+                    {selectedTest === "rewards-tests" && "Rewards Tests"}
+                    {selectedTest === "actions-tests" && "Actions Tests"}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-6 space-y-8">
+            {/* PO-PQL Parameters */}
+            {selectedTest === "po-pql-params" && (
+              <>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Pareto Fronts Comparison</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {isLoading ? (
+                      <div className="h-96 flex items-center justify-center">
+                        <div className="text-center">
+                          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                          <div className="text-muted-foreground">Loading data...</div>
+                        </div>
+                      </div>
+                    ) : popqlParamVariants.length > 0 ? (
+                      <ParetoChart variants={popqlParamVariants} />
+                    ) : (
+                      <div className="h-96 flex items-center justify-center text-muted-foreground">
+                        No data available
+              </div>
             )}
           </CardContent>
         </Card>
 
+                {/* Metrics Table */}
+                {popqlParamMetrics.length > 0 && (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Trophy className="w-5 h-5 text-primary" />
+                        Performance Metrics
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="border rounded-lg overflow-x-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow className="bg-primary/10 text-primary">
+                              <TableHead rowSpan={2}>Instance</TableHead>
+                              <TableHead rowSpan={2}>Jobs</TableHead>
+                              <TableHead rowSpan={2}>Machines</TableHead>
+                              <TableHead colSpan={3} className="text-center">IGD</TableHead>
+                              <TableHead colSpan={3} className="text-center">SNS</TableHead>
+                              <TableHead colSpan={3} className="text-center">NPS</TableHead>
+                              <TableHead colSpan={3} className="text-center">Exec Time (s)</TableHead>
+                            </TableRow>
+                            <TableRow className="bg-primary/10 text-primary">
+                              <TableHead>QL1</TableHead>
+                              <TableHead>QL2</TableHead>
+                              <TableHead>QL</TableHead>
+                              <TableHead>QL1</TableHead>
+                              <TableHead>QL2</TableHead>
+                              <TableHead>QL</TableHead>
+                              <TableHead>QL1</TableHead>
+                              <TableHead>QL2</TableHead>
+                              <TableHead>QL</TableHead>
+                              <TableHead>QL1</TableHead>
+                              <TableHead>QL2</TableHead>
+                              <TableHead>QL</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {popqlParamMetrics.map((row, idx) => (
+                              <TableRow key={idx} className="hover:bg-muted/30">
+                                <TableCell className="font-medium">{row.Instance}</TableCell>
+                                <TableCell>{row.No_Jobs}</TableCell>
+                                <TableCell>{row.No_of_machines}</TableCell>
+                                <TableCell>{row.IGD[`QL1-${selectedMH}`]?.toFixed(4) || 'N/A'}</TableCell>
+                                <TableCell>{row.IGD[`QL2-${selectedMH}`]?.toFixed(4) || 'N/A'}</TableCell>
+                                <TableCell>{row.IGD[`QL-${selectedMH}`]?.toFixed(4) || 'N/A'}</TableCell>
+                                <TableCell>{row.SNS[`QL1-${selectedMH}`]?.toFixed(4) || 'N/A'}</TableCell>
+                                <TableCell>{row.SNS[`QL2-${selectedMH}`]?.toFixed(4) || 'N/A'}</TableCell>
+                                <TableCell>{row.SNS[`QL-${selectedMH}`]?.toFixed(4) || 'N/A'}</TableCell>
+                                <TableCell>{row.NPS[`QL1-${selectedMH}`] || 'N/A'}</TableCell>
+                                <TableCell>{row.NPS[`QL2-${selectedMH}`] || 'N/A'}</TableCell>
+                                <TableCell>{row.NPS[`QL-${selectedMH}`] || 'N/A'}</TableCell>
+                                <TableCell>{row["Exec_Time"][`QL1-${selectedMH}`]?.toFixed(3) || 'N/A'}</TableCell>
+                                <TableCell>{row["Exec_Time"][`QL2-${selectedMH}`]?.toFixed(3) || 'N/A'}</TableCell>
+                                <TableCell>{row["Exec_Time"][`QL-${selectedMH}`]?.toFixed(3) || 'N/A'}</TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </>
+            )}
+
+            {/* PO-PQL Results */}
+            {selectedTest === "po-pql-results" && (
+              <>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Pareto Fronts Comparison</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {isLoading ? (
+                      <div className="h-96 flex items-center justify-center">
+                        <div className="text-center">
+                          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                          <div className="text-muted-foreground">Loading data...</div>
+                        </div>
+                      </div>
+                    ) : popqlResultVariants.length > 0 ? (
+                      <ParetoChart variants={popqlResultVariants} />
+                    ) : (
+                      <div className="h-96 flex items-center justify-center text-muted-foreground">
+                        No data available
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Metrics Table */}
+                {popqlResultMetrics.length > 0 && (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Trophy className="w-5 h-5 text-primary" />
+                        Performance Metrics
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="border rounded-lg overflow-x-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow className="bg-primary/10 text-primary">
+                              <TableHead rowSpan={2}>Instance</TableHead>
+                              <TableHead rowSpan={2}>Jobs</TableHead>
+                              <TableHead rowSpan={2}>Machines</TableHead>
+                              <TableHead colSpan={2} className="text-center">IGD</TableHead>
+                              <TableHead colSpan={2} className="text-center">SNS</TableHead>
+                              <TableHead colSpan={2} className="text-center">NPS</TableHead>
+                              <TableHead colSpan={2} className="text-center">Exec Time (s)</TableHead>
+                            </TableRow>
+                            <TableRow className="bg-primary/10 text-primary">
+                              <TableHead>QL-{selectedMH}</TableHead>
+                              <TableHead>{selectedMH}</TableHead>
+                              <TableHead>QL-{selectedMH}</TableHead>
+                              <TableHead>{selectedMH}</TableHead>
+                              <TableHead>QL-{selectedMH}</TableHead>
+                              <TableHead>{selectedMH}</TableHead>
+                              <TableHead>QL-{selectedMH}</TableHead>
+                              <TableHead>{selectedMH}</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {popqlResultMetrics.map((row, idx) => (
+                              <TableRow key={idx} className="hover:bg-muted/30">
+                                <TableCell className="font-medium">{row.Instance}</TableCell>
+                                <TableCell>{row.No_Jobs}</TableCell>
+                                <TableCell>{row.No_of_machines}</TableCell>
+                                <TableCell>{row.IGD[`QL-${selectedMH}`]?.toFixed(4) || 'N/A'}</TableCell>
+                                <TableCell>{row.IGD[selectedMH]?.toFixed(4) || 'N/A'}</TableCell>
+                                <TableCell>{row.SNS[`QL-${selectedMH}`]?.toFixed(4) || 'N/A'}</TableCell>
+                                <TableCell>{row.SNS[selectedMH]?.toFixed(4) || 'N/A'}</TableCell>
+                                <TableCell>{row.NPS[`QL-${selectedMH}`] || 'N/A'}</TableCell>
+                                <TableCell>{row.NPS[selectedMH] || 'N/A'}</TableCell>
+                                <TableCell>{row["Exec_Time"][`QL-${selectedMH}`]?.toFixed(3) || 'N/A'}</TableCell>
+                                <TableCell>{row["Exec_Time"][selectedMH]?.toFixed(3) || 'N/A'}</TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </>
+            )}
+
         {/* QL Counts */}
-        {scenario === 'ql-counts' && (
+            {selectedTest === "ql-counts" && (
+          <>
+          {/* Insight card */}
+          <Card className="mt-6 bg-blue-50 dark:bg-blue-900/20">
+            <CardHeader>
+              <CardTitle className="text-blue-800 dark:text-blue-200 text-base">
+                Operator Efficiency Insight (No QL)
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-blue-700 dark:text-blue-300">
+                For the <strong>No QL</strong> approach, the best indicator of operator
+                efficiency was <strong>the number of times each operator improved the solution</strong>, 
+                highlighting the importance of tracking improvement frequency as a performance measure.
+              </p>
+            </CardContent>
+          </Card>
+          
           <Card>
             <CardHeader>
               <CardTitle>QL Counts per Operator</CardTitle>
@@ -221,29 +910,64 @@ const MORLPage = () => {
                 <div key={mhItem.value} className="space-y-4">
                   <div className="text-lg font-semibold">{mhItem.label}</div>
                   <div className="grid md:grid-cols-2 gap-6">
-                    <div className="h-72 border rounded p-4 bg-muted/30">
+                    {/* QL Chart */}
+                    <div className="h-80 border rounded-lg p-4 bg-muted/30 shadow-sm">
                       <div className="text-sm font-medium mb-2">Count (QL)</div>
                       <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={buildBarData(countsData[mhItem.value as keyof typeof countsData].ql)}>
+                        <BarChart
+                          data={buildBarData(
+                            countsData[mhItem.value as keyof typeof countsData].ql
+                          )}
+                          margin={{ top: 10, right: 20, left: 10, bottom: 30 }}
+                        >
                           <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="operator" tick={{ fontSize: 10 }} interval={0} angle={-20} textAnchor="end" />
+                          <XAxis
+                            dataKey="operator"
+                            tick={{ fontSize: 10 }}
+                            interval={0}
+                            angle={-20}
+                            textAnchor="end"
+                          />
                           <YAxis />
                           <Tooltip />
                           <Legend />
-                          <Bar dataKey="count" fill="#22c55e" name="QL" />
+                          <Bar
+                            dataKey="count"
+                            fill="#22c55e"
+                            name="QL"
+                            radius={[6, 6, 0, 0]}
+                          />
                         </BarChart>
                       </ResponsiveContainer>
                     </div>
-                    <div className="h-72 border rounded p-4 bg-muted/30">
+        
+                    {/* No QL Chart */}
+                    <div className="h-80 border rounded-lg p-4 bg-muted/30 shadow-sm">
                       <div className="text-sm font-medium mb-2">Count (no QL)</div>
                       <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={buildBarData(countsData[mhItem.value as keyof typeof countsData].noql)}>
+                        <BarChart
+                          data={buildBarData(
+                            countsData[mhItem.value as keyof typeof countsData].noql
+                          )}
+                          margin={{ top: 10, right: 20, left: 10, bottom: 30 }}
+                        >
                           <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="operator" tick={{ fontSize: 10 }} interval={0} angle={-20} textAnchor="end" />
+                          <XAxis
+                            dataKey="operator"
+                            tick={{ fontSize: 10 }}
+                            interval={0}
+                            angle={-20}
+                            textAnchor="end"
+                          />
                           <YAxis />
                           <Tooltip />
                           <Legend />
-                          <Bar dataKey="count" fill="#8D70FF" name="No QL" />
+                          <Bar
+                            dataKey="count"
+                            fill="#8D70FF"
+                            name="No QL"
+                            radius={[6, 6, 0, 0]}
+                          />
                         </BarChart>
                       </ResponsiveContainer>
                     </div>
@@ -252,127 +976,11 @@ const MORLPage = () => {
               ))}
             </CardContent>
           </Card>
-        )}
+              </>
+            )}
 
-        {/* Pareto Fronts for other scenarios */}
-        {scenario !== 'ql-counts' && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Algorithm Comparison - Pareto Fronts</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-96">
-                <ResponsiveContainer width="100%" height="100%">
-                  <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="makespan" name="Makespan" type="number" domain={[minMakespan, maxMakespan]} tick={{ fontSize: 12 }} />
-                    <YAxis dataKey="tec" name="TEC" type="number" domain={[minTec, maxTec]} tick={{ fontSize: 12 }} />
-                    <Tooltip cursor={{ strokeDasharray: '3 3' }} formatter={(value: any, name: any) => [value.toFixed(2), name === 'makespan' ? 'Makespan' : 'TEC']} />
-                    <Legend />
-                    {pareto.map((series, idx) => (
-                      <Scatter key={series.algorithm} name={series.algorithm} data={series.points} fill={colors[idx % colors.length]} shape="circle" />
-                    ))}
-                  </ScatterChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Metrics Tables */}
-        {scenario === 'moql' && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Trophy className="w-5 h-5 text-primary" />
-                Performance Metrics (6 Instances)
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="border rounded-lg overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-primary/10 text-primary">
-                      <TableHead rowSpan={2}>Instance</TableHead>
-                      <TableHead rowSpan={2}>Jobs</TableHead>
-                      <TableHead rowSpan={2}>Machines</TableHead>
-                      <TableHead colSpan={names.length} className="text-center">IGD</TableHead>
-                      <TableHead colSpan={names.length} className="text-center">SNS</TableHead>
-                      <TableHead colSpan={names.length} className="text-center">NPS</TableHead>
-                      <TableHead colSpan={names.length} className="text-center">Exec</TableHead>
-                    </TableRow>
-                    <TableRow className="bg-primary/10 text-primary">
-                      {names.map(n => <TableHead key={`igd-h-${n}`}>{n}</TableHead>)}
-                      {names.map(n => <TableHead key={`sns-h-${n}`}>{n}</TableHead>)}
-                      {names.map(n => <TableHead key={`nps-h-${n}`}>{n}</TableHead>)}
-                      {names.map(n => <TableHead key={`exec-h-${n}`}>{n}</TableHead>)}
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {sixInstMetrics.map((row, idx) => (
-                      <TableRow key={idx} className="hover:bg-muted/30">
-                        <TableCell className="font-medium">{row.instance}</TableCell>
-                        <TableCell>{row.jobs}</TableCell>
-                        <TableCell>{row.machines}</TableCell>
-                        {names.map(n => <TableCell key={`igd-${idx}-${n}`}>{row.values[n].igd.toFixed(3)}</TableCell>)}
-                        {names.map(n => <TableCell key={`sns-${idx}-${n}`}>{row.values[n].sns.toFixed(3)}</TableCell>)}
-                        {names.map(n => <TableCell key={`nps-${idx}-${n}`}>{row.values[n].nps}</TableCell>)}
-                        {names.map(n => <TableCell key={`exec-${idx}-${n}`}>{row.values[n].exec.toFixed(3)}</TableCell>)}
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {scenario === 'pql' && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Trophy className="w-5 h-5 text-primary" />
-                Mean Metrics by Jobs (10 sizes)
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="border rounded-lg overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-primary/10 text-primary">
-                      <TableHead rowSpan={2}>Jobs</TableHead>
-                      <TableHead rowSpan={2}>Machines</TableHead>
-                      <TableHead colSpan={names.length} className="text-center">IGD</TableHead>
-                      <TableHead colSpan={names.length} className="text-center">SNS</TableHead>
-                      <TableHead colSpan={names.length} className="text-center">NPS</TableHead>
-                      <TableHead colSpan={names.length} className="text-center">Exec</TableHead>
-                    </TableRow>
-                    <TableRow className="bg-primary/10 text-primary">
-                      {names.map(n => <TableHead key={`igd-mean-h-${n}`}>{n}</TableHead>)}
-                      {names.map(n => <TableHead key={`sns-mean-h-${n}`}>{n}</TableHead>)}
-                      {names.map(n => <TableHead key={`nps-mean-h-${n}`}>{n}</TableHead>)}
-                      {names.map(n => <TableHead key={`exec-mean-h-${n}`}>{n}</TableHead>)}
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {meansByJobs.map((row, idx) => (
-                      <TableRow key={idx} className="hover:bg-muted/30">
-                        <TableCell className="font-medium">{row.jobs}</TableCell>
-                        <TableCell>10</TableCell>
-                        {names.map(n => <TableCell key={`igd-mean-${idx}-${n}`}>{row.values[n].igd.toFixed(3)}</TableCell>)}
-                        {names.map(n => <TableCell key={`sns-mean-${idx}-${n}`}>{row.values[n].sns.toFixed(3)}</TableCell>)}
-                        {names.map(n => <TableCell key={`nps-mean-${idx}-${n}`}>{row.values[n].nps}</TableCell>)}
-                        {names.map(n => <TableCell key={`exec-mean-${idx}-${n}`}>{row.values[n].exec.toFixed(3)}</TableCell>)}
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {scenario === 'rewards-tests' && (
+            {/* Rewards Tests */}
+            {selectedTest === "rewards-tests" && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -401,15 +1009,23 @@ const MORLPage = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {buildMock6InstanceMetrics(["QL-HMOGVNS", "QL1-HMOGVNS", "QL2-HMOGVNS"]).map((row, idx) => (
-                      <TableRow key={idx} className="hover:bg-muted/30">
-                        <TableCell className="font-medium">{row.instance}</TableCell>
-                        <TableCell>{row.jobs}</TableCell>
-                        <TableCell>{row.machines}</TableCell>
-                        {["QL-HMOGVNS", "QL1-HMOGVNS", "QL2-HMOGVNS"].map(n => <TableCell key={`igd-rew-${idx}-${n}`}>{row.values[n].igd.toFixed(3)}</TableCell>)}
-                        {["QL-HMOGVNS", "QL1-HMOGVNS", "QL2-HMOGVNS"].map(n => <TableCell key={`sns-rew-${idx}-${n}`}>{row.values[n].sns.toFixed(3)}</TableCell>)}
-                        {["QL-HMOGVNS", "QL1-HMOGVNS", "QL2-HMOGVNS"].map(n => <TableCell key={`nps-rew-${idx}-${n}`}>{row.values[n].nps}</TableCell>)}
-                        {["QL-HMOGVNS", "QL1-HMOGVNS", "QL2-HMOGVNS"].map(n => <TableCell key={`exec-rew-${idx}-${n}`}>{row.values[n].exec.toFixed(3)}</TableCell>)}
+                        {Array.from({length: 6}, (_, i) => (
+                          <TableRow key={i} className="hover:bg-muted/30">
+                            <TableCell className="font-medium">{i + 1}</TableCell>
+                            <TableCell>30</TableCell>
+                            <TableCell>10</TableCell>
+                            {["QL-HMOGVNS", "QL1-HMOGVNS", "QL2-HMOGVNS"].map(n => (
+                              <TableCell key={`igd-rew-${i}-${n}`}>{(0.01 + i * 0.001).toFixed(3)}</TableCell>
+                            ))}
+                            {["QL-HMOGVNS", "QL1-HMOGVNS", "QL2-HMOGVNS"].map(n => (
+                              <TableCell key={`sns-rew-${i}-${n}`}>{(0.8 - i * 0.005).toFixed(3)}</TableCell>
+                            ))}
+                            {["QL-HMOGVNS", "QL1-HMOGVNS", "QL2-HMOGVNS"].map(n => (
+                              <TableCell key={`nps-rew-${i}-${n}`}>{100 - i}</TableCell>
+                            ))}
+                            {["QL-HMOGVNS", "QL1-HMOGVNS", "QL2-HMOGVNS"].map(n => (
+                              <TableCell key={`exec-rew-${i}-${n}`}>{(2 + i * 0.1).toFixed(3)}</TableCell>
+                            ))}
                       </TableRow>
                     ))}
                   </TableBody>
@@ -419,14 +1035,15 @@ const MORLPage = () => {
           </Card>
         )}
 
-        {scenario === 'actions-tests' && (
+            {/* Actions Tests */}
+            {selectedTest === "actions-tests" && (
           <Card>
             <CardHeader>
               <CardTitle>Actions Tests: Random Operator Sequences</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-1 text-sm">
-                {actionSequences.map((seq, i) => (
+                    {generateRandomSequences(9).map((seq, i) => (
                   <div key={i} className="font-mono">Order {i + 1}: {seq.join(" → ")}</div>
                 ))}
               </div>
@@ -450,15 +1067,23 @@ const MORLPage = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {buildMock6InstanceMetrics(["QL-HMOGVNS", "QL2-HMOGVNS"]).map((row, idx) => (
-                      <TableRow key={idx} className="hover:bg-muted/30">
-                        <TableCell className="font-medium">{row.instance}</TableCell>
-                        <TableCell>{row.jobs}</TableCell>
-                        <TableCell>{row.machines}</TableCell>
-                        {["QL-HMOGVNS", "QL2-HMOGVNS"].map(n => <TableCell key={`igd-act-${idx}-${n}`}>{row.values[n].igd.toFixed(3)}</TableCell>)}
-                        {["QL-HMOGVNS", "QL2-HMOGVNS"].map(n => <TableCell key={`sns-act-${idx}-${n}`}>{row.values[n].sns.toFixed(3)}</TableCell>)}
-                        {["QL-HMOGVNS", "QL2-HMOGVNS"].map(n => <TableCell key={`nps-act-${idx}-${n}`}>{row.values[n].nps}</TableCell>)}
-                        {["QL-HMOGVNS", "QL2-HMOGVNS"].map(n => <TableCell key={`exec-act-${idx}-${n}`}>{row.values[n].exec.toFixed(3)}</TableCell>)}
+                        {Array.from({length: 6}, (_, i) => (
+                          <TableRow key={i} className="hover:bg-muted/30">
+                            <TableCell className="font-medium">{i + 1}</TableCell>
+                            <TableCell>30</TableCell>
+                            <TableCell>10</TableCell>
+                            {["QL-HMOGVNS", "QL2-HMOGVNS"].map(n => (
+                              <TableCell key={`igd-act-${i}-${n}`}>{(0.01 + i * 0.001).toFixed(3)}</TableCell>
+                            ))}
+                            {["QL-HMOGVNS", "QL2-HMOGVNS"].map(n => (
+                              <TableCell key={`sns-act-${i}-${n}`}>{(0.8 - i * 0.005).toFixed(3)}</TableCell>
+                            ))}
+                            {["QL-HMOGVNS", "QL2-HMOGVNS"].map(n => (
+                              <TableCell key={`nps-act-${i}-${n}`}>{100 - i}</TableCell>
+                            ))}
+                            {["QL-HMOGVNS", "QL2-HMOGVNS"].map(n => (
+                              <TableCell key={`exec-act-${i}-${n}`}>{(2 + i * 0.1).toFixed(3)}</TableCell>
+                            ))}
                       </TableRow>
                     ))}
                   </TableBody>
@@ -467,9 +1092,13 @@ const MORLPage = () => {
             </CardContent>
           </Card>
         )}
+          </div>
       </div>
     </div>
   );
+  }
+
+  return null;
 };
 
 export default MORLPage;

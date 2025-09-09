@@ -1,0 +1,192 @@
+[
+  {
+    "instance": "3",
+    "jobs": 10,
+    "machines": 5,
+    "algorithms": {
+      "2PT-HNSGA-II": {
+        "igd": 0.0111,
+        "sns": 0.7836,
+        "nps": 57,
+        "exec_time": 3.1
+      },
+      "PMX-HNSGA-II": {
+        "igd": 0.0033,
+        "sns": 0.8046,
+        "nps": 87,
+        "exec_time": 6.17092
+      }
+    }
+  },
+  {
+    "instance": "6",
+    "jobs": 20,
+    "machines": 10,
+    "algorithms": {
+      "2PT-HNSGA-II": {
+        "igd": 0.0061,
+        "sns": 0.7858,
+        "nps": 101,
+        "exec_time": 4.6563
+      },
+      "PMX-HNSGA-II": {
+        "igd": 0.0046,
+        "sns": 0.8098,
+        "nps": 128,
+        "exec_time": 8.08
+      }
+    }
+  },
+  {
+    "instance": "1",
+    "jobs": 30,
+    "machines": 15,
+    "algorithms": {
+      "2PT-HNSGA-II": {
+        "igd": 0.0092,
+        "sns": 0.7797,
+        "nps": 108,
+        "exec_time": 5.3614
+      },
+      "PMX-HNSGA-II": {
+        "igd": 0.0033,
+        "sns": 0.8078,
+        "nps": 126,
+        "exec_time": 9.361445665
+      }
+    }
+  },
+  {
+    "instance": "5",
+    "jobs": 40,
+    "machines": 20,
+    "algorithms": {
+      "2PT-HNSGA-II": {
+        "igd": 0.0074,
+        "sns": 0.7899,
+        "nps": 116,
+        "exec_time": 6.09
+      },
+      "PMX-HNSGA-II": {
+        "igd": 0.0032,
+        "sns": 0.8053,
+        "nps": 137,
+        "exec_time": 11.6049
+      }
+    }
+  },
+  {
+    "instance": "7",
+    "jobs": 50,
+    "machines": 5,
+    "algorithms": {
+      "2PT-HNSGA-II": {
+        "igd": 0.0075,
+        "sns": 0.8261,
+        "nps": 165,
+        "exec_time": 5.6233
+      },
+      "PMX-HNSGA-II": {
+        "igd": 0.0025,
+        "sns": 0.8531,
+        "nps": 246,
+        "exec_time": 8.0203
+      }
+    }
+  },
+  {
+    "instance": "8",
+    "jobs": 60,
+    "machines": 10,
+    "algorithms": {
+      "2PT-HNSGA-II": {
+        "igd": 0.0052,
+        "sns": 0.819,
+        "nps": 162,
+        "exec_time": 10.578
+      },
+      "PMX-HNSGA-II": {
+        "igd": 0.0048,
+        "sns": 0.8214,
+        "nps": 198,
+        "exec_time": 20.6269
+      }
+    }
+  },
+  {
+    "instance": "10",
+    "jobs": 100,
+    "machines": 40,
+    "algorithms": {
+      "2PT-HNSGA-II": {
+        "igd": 0.0104,
+        "sns": 0.7861,
+        "nps": 91,
+        "exec_time": 19.987
+      },
+      "PMX-HNSGA-II": {
+        "igd": 0.0005,
+        "sns": 0.8081,
+        "nps": 126,
+        "exec_time": 48.1203
+      }
+    }
+  },
+  {
+    "instance": "2",
+    "jobs": 200,
+    "machines": 40,
+    "algorithms": {
+      "2PT-HNSGA-II": {
+        "igd": 0.0067,
+        "sns": 0.7613,
+        "nps": 178,
+        "exec_time": 98.917
+      },
+      "PMX-HNSGA-II": {
+        "igd": 0.0012,
+        "sns": 0.8043,
+        "nps": 195,
+        "exec_time": 154.0199
+      }
+    }
+  },
+  {
+    "instance": "4",
+    "jobs": 300,
+    "machines": 20,
+    "algorithms": {
+      "2PT-HNSGA-II": {
+        "igd": 0.0067,
+        "sns": 0.8014,
+        "nps": 188,
+        "exec_time": 122.3547
+      },
+      "PMX-HNSGA-II": {
+        "igd": 0.0025,
+        "sns": 0.8184,
+        "nps": 231,
+        "exec_time": 284.8016
+      }
+    }
+  },
+  {
+    "instance": "9",
+    "jobs": 400,
+    "machines": 20,
+    "algorithms": {
+      "2PT-HNSGA-II": {
+        "igd": 0.0046,
+        "sns": 0.8049,
+        "nps": 223,
+        "exec_time": 113.839
+      },
+      "PMX-HNSGA-II": {
+        "igd": 0.0008,
+        "sns": 0.8358,
+        "nps": 245,
+        "exec_time": 223.0
+      }
+    }
+  }
+]

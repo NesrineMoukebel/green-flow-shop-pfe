@@ -134,13 +134,14 @@ const HybridMHsComparisonPage = () => {
                         domain={['dataMin', 'dataMax']}
                         tick={{ fontSize: 12 }}
                       />
-                      <Tooltip 
+                      <Tooltip
                         cursor={{ strokeDasharray: '3 3' }}
-                        formatter={(value: any, name: any) => [
-                          value.toFixed(2), 
-                          name === 'makespan' ? 'Makespan' : 'TEC'
+                        formatter={(value: any, name: any, props: any) => [
+                          (value as number).toFixed(2),
+                          props.dataKey === 'makespan' ? 'Makespan' : 'TEC'
                         ]}
                       />
+
                       <Legend />
                       
                       {paretoData.map(algorithm => (

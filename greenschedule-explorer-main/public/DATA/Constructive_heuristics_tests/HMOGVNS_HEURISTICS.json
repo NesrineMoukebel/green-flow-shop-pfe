@@ -1,0 +1,162 @@
+[
+  {
+    "jobs": 100,
+    "machines": 20,
+    "instance": 1,
+    "algorithm": "NFS-HMOGVNS",
+    "igd": 0.0059,
+    "sns": 0.8037,
+    "nps": 122.0,
+    "exec_time": 39.5152
+  },
+  {
+    "jobs": 100,
+    "machines": 20,
+    "instance": 1,
+    "algorithm": "NEH-HMOGVNS",
+    "igd": 0.066,
+    "sns": 0.7937,
+    "nps": 65.0,
+    "exec_time": 203.9743
+  },
+  {
+    "jobs": 100,
+    "machines": 20,
+    "instance": 1,
+    "algorithm": "WNEH-HMOGVNS",
+    "igd": 0.0324,
+    "sns": 0.7515,
+    "nps": 51.0,
+    "exec_time": 504.4826
+  },
+  {
+    "jobs": 100,
+    "machines": 20,
+    "instance": 1,
+    "algorithm": "R-HMOGVNS",
+    "igd": 0.092,
+    "sns": 0.8034,
+    "nps": 95.0,
+    "exec_time": 31.6099
+  },
+  {
+    "jobs": 100,
+    "machines": 40,
+    "instance": 1,
+    "algorithm": "NFS-HMOGVNS",
+    "igd": 0.003,
+    "sns": 0.8257,
+    "nps": 124.0,
+    "exec_time": 54.2824
+  },
+  {
+    "jobs": 100,
+    "machines": 40,
+    "instance": 1,
+    "algorithm": "NEH-HMOGVNS",
+    "igd": 0.038,
+    "sns": 0.78,
+    "nps": 89.0,
+    "exec_time": 352.3442
+  },
+  {
+    "jobs": 100,
+    "machines": 40,
+    "instance": 1,
+    "algorithm": "WNEH-HMOGVNS",
+    "igd": 0.022,
+    "sns": 0.8186,
+    "nps": 45.0,
+    "exec_time": 741.3993
+  },
+  {
+    "jobs": 100,
+    "machines": 40,
+    "instance": 1,
+    "algorithm": "R-HMOGVNS",
+    "igd": 0.0129,
+    "sns": 0.8191,
+    "nps": 59.0,
+    "exec_time": 62.4308
+  },
+  {
+    "jobs": 30,
+    "machines": 5,
+    "instance": 8,
+    "algorithm": "NFS-HMOGVNS",
+    "igd": 0.0019,
+    "sns": 0.8199,
+    "nps": 117.0,
+    "exec_time": 3.9698
+  },
+  {
+    "jobs": 30,
+    "machines": 5,
+    "instance": 8,
+    "algorithm": "NEH-HMOGVNS",
+    "igd": 0.0332,
+    "sns": 0.8108,
+    "nps": 54.0,
+    "exec_time": 26.2079
+  },
+  {
+    "jobs": 30,
+    "machines": 5,
+    "instance": 8,
+    "algorithm": "WNEH-HMOGVNS",
+    "igd": 0.0217,
+    "sns": 0.8103,
+    "nps": 78.0,
+    "exec_time": 56.3684
+  },
+  {
+    "jobs": 30,
+    "machines": 5,
+    "instance": 8,
+    "algorithm": "R-HMOGVNS",
+    "igd": 0.0963,
+    "sns": 0.7117,
+    "nps": 48.0,
+    "exec_time": 6.9597
+  },
+  {
+    "jobs": 30,
+    "machines": 10,
+    "instance": 5,
+    "algorithm": "NFS-HMOGVNS",
+    "igd": 0.0025,
+    "sns": 0.789,
+    "nps": 88.0,
+    "exec_time": 5.8478
+  },
+  {
+    "jobs": 30,
+    "machines": 10,
+    "instance": 5,
+    "algorithm": "NEH-HMOGVNS",
+    "igd": 0.0207,
+    "sns": 0.6578,
+    "nps": 37.0,
+    "exec_time": 23.0619
+  },
+  {
+    "jobs": 30,
+    "machines": 10,
+    "instance": 5,
+    "algorithm": "WNEH-HMOGVNS",
+    "igd": 0.0249,
+    "sns": 0.7601,
+    "nps": 50.0,
+    "exec_time": 116.2335
+  },
+  {
+    "jobs": 30,
+    "machines": 10,
+    "instance": 5,
+    "algorithm": "R-HMOGVNS",
+    "igd": 0.0364,
+    "sns": 0.7791,
+    "nps": 47.0,
+    "exec_time": 3.5234
+  }
+]

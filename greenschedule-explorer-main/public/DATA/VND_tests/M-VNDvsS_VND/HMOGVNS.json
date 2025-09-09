@@ -1,0 +1,122 @@
+[
+  {
+    "jobs": 20,
+    "machines": 5,
+    "instance": 5,
+    "algorithm": "HMOGVNS",
+    "igd": 0.0034,
+    "sns": 0.82,
+    "nps": 115.0,
+    "exec_time": 2.0225
+  },
+  {
+    "jobs": 20,
+    "machines": 5,
+    "instance": 5,
+    "algorithm": "S-HMOGVNS",
+    "igd": 0.0144,
+    "sns": 0.8,
+    "nps": 98.0,
+    "exec_time": 2.12
+  },
+  {
+    "jobs": 50,
+    "machines": 10,
+    "instance": 4,
+    "algorithm": "HMOGVNS",
+    "igd": 0.0016,
+    "sns": 0.83,
+    "nps": 136.0,
+    "exec_time": 8.82
+  },
+  {
+    "jobs": 50,
+    "machines": 10,
+    "instance": 4,
+    "algorithm": "S-HMOGVNS",
+    "igd": 0.015,
+    "sns": 0.8,
+    "nps": 101.0,
+    "exec_time": 11.4
+  },
+  {
+    "jobs": 60,
+    "machines": 20,
+    "instance": 9,
+    "algorithm": "HMOGVNS",
+    "igd": 0.001,
+    "sns": 0.82,
+    "nps": 139.0,
+    "exec_time": 15.85
+  },
+  {
+    "jobs": 60,
+    "machines": 20,
+    "instance": 9,
+    "algorithm": "S-HMOGVNS",
+    "igd": 0.01,
+    "sns": 0.81,
+    "nps": 110.0,
+    "exec_time": 18.42
+  },
+  {
+    "jobs": 100,
+    "machines": 40,
+    "instance": 1,
+    "algorithm": "HMOGVNS",
+    "igd": 0.0008,
+    "sns": 0.8,
+    "nps": 117.0,
+    "exec_time": 54.28
+  },
+  {
+    "jobs": 100,
+    "machines": 40,
+    "instance": 1,
+    "algorithm": "S-HMOGVNS",
+    "igd": 0.0335,
+    "sns": 0.79,
+    "nps": 76.0,
+    "exec_time": 91.45
+  },
+  {
+    "jobs": 200,
+    "machines": 20,
+    "instance": 3,
+    "algorithm": "HMOGVNS",
+    "igd": 0.0008,
+    "sns": 0.8,
+    "nps": 110.0,
+    "exec_time": 126.06
+  },
+  {
+    "jobs": 200,
+    "machines": 20,
+    "instance": 3,
+    "algorithm": "S-HMOGVNS",
+    "igd": 0.0954,
+    "sns": 0.77,
+    "nps": 81.0,
+    "exec_time": 202.44
+  },
+  {
+    "jobs": 300,
+    "machines": 60,
+    "instance": 1,
+    "algorithm": "HMOGVNS",
+    "igd": 0.0026,
+    "sns": 0.8,
+    "nps": 80.0,
+    "exec_time": 312.98
+  },
+  {
+    "jobs": 300,
+    "machines": 60,
+    "instance": 1,
+    "algorithm": "S-HMOGVNS",
+    "igd": 0.1418,
+    "sns": 0.75,
+    "nps": 31.0,
+    "exec_time": 696.9
+  }
+]
