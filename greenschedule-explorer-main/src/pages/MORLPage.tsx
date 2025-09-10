@@ -33,6 +33,32 @@ interface MetricsData {
 }
 
 // Data loading functions
+// const loadCSVData = async (filePath: string): Promise<ParetoPoint[]> => {
+//   try {
+//     const response = await fetch(filePath);
+//     const csvText = await response.text();
+//     const lines = csvText.split('\n');
+//     const data: ParetoPoint[] = [];
+    
+//     for (let i = 1; i < lines.length; i++) {
+//       const line = lines[i].trim();
+//       if (line) {
+//         const [makespan, tec, pareto, executionTime] = line.split(',');
+//         data.push({
+//           makespan: parseFloat(makespan),
+//           tec: parseFloat(tec),
+//           isPareto: pareto.toLowerCase() === 'true', // Fix here
+//           executionTime: parseFloat(executionTime)
+//         });
+//       }
+//     }
+//     return data;
+//   } catch (error) {
+//     console.error(`Error loading CSV data from ${filePath}:`, error);
+//     return [];
+//   }
+// };
+
 const loadCSVData = async (filePath: string): Promise<ParetoPoint[]> => {
   try {
     const response = await fetch(filePath);
@@ -43,12 +69,24 @@ const loadCSVData = async (filePath: string): Promise<ParetoPoint[]> => {
     for (let i = 1; i < lines.length; i++) {
       const line = lines[i].trim();
       if (line) {
-        const [makespan, tec, pareto, executionTime] = line.split(',');
+        const values = line.split(',');
+        
+        // Skip if we don't have enough values
+        if (values.length < 4) continue;
+        
+        const makespan = parseFloat(values[0]);
+        const tec = parseFloat(values[1]);
+        const pareto = values[2] ? values[2].toLowerCase() : 'false';
+        const executionTime = parseFloat(values[3]);
+        
+        // Skip if we have invalid numeric values
+        if (isNaN(makespan) || isNaN(tec) || isNaN(executionTime)) continue;
+        
         data.push({
-          makespan: parseFloat(makespan),
-          tec: parseFloat(tec),
-          isPareto: pareto.toLowerCase() === 'true', // Fix here
-          executionTime: parseFloat(executionTime)
+          makespan: makespan,
+          tec: tec,
+          isPareto: pareto === 'true',
+          executionTime: executionTime
         });
       }
     }
@@ -62,7 +100,29 @@ const loadCSVData = async (filePath: string): Promise<ParetoPoint[]> => {
 const loadJSONData = async (filePath: string): Promise<any> => {
   try {
     const response = await fetch(filePath);
-    return await response.json();
+    const data = await response.json();
+    
+    // Convert comma-formatted numbers to proper JavaScript numbers
+    const convertNumbers = (obj: any): any => {
+      if (Array.isArray(obj)) {
+        return obj.map(convertNumbers);
+      } else if (obj !== null && typeof obj === 'object') {
+        const result: any = {};
+        for (const key in obj) {
+          result[key] = convertNumbers(obj[key]);
+        }
+        return result;
+      } else if (typeof obj === 'string' && /^-?\d+,\d+$/.test(obj)) {
+        // Convert comma decimal to dot decimal
+        return parseFloat(obj.replace(',', '.'));
+      } else if (typeof obj === 'string' && !isNaN(Number(obj)) && obj !== '') {
+        // Convert regular numeric strings
+        return Number(obj);
+      }
+      return obj;
+    };
+    
+    return convertNumbers(data);
   } catch (error) {
     console.error(`Error loading JSON data from ${filePath}:`, error);
     return [];
@@ -219,6 +279,11 @@ const MORLPage = () => {
   const [popqlParamMetrics, setPopqlParamMetrics] = useState<MetricsData[]>([]);
   const [popqlResultVariants, setPopqlResultVariants] = useState<MOQLVariant[]>([]);
   const [popqlResultMetrics, setPopqlResultMetrics] = useState<MetricsData[]>([]);
+  const [actionsVariants, setActionsVariants] = useState<MOQLVariant[]>([]);
+  const [actionsMetrics, setActionsMetrics] = useState<MetricsData[]>([]);
+  const [rewardsVariants, setRewardsVariants] = useState<MOQLVariant[]>([]);
+  const [rewardsMetrics, setRewardsMetrics] = useState<MetricsData[]>([]);
+
   
   const [isLoading, setIsLoading] = useState(false);
 
@@ -270,10 +335,11 @@ const MORLPage = () => {
           ]);
 
           const variants: MOQLVariant[] = [
-            { name: "QL1", description: "Epsilon: 0.1", color: "#3B82F6", data: ql1Data },
-            { name: "QL2", description: "Epsilon: 0.3", color: "#10B981", data: ql2Data },
-            { name: "QL", description: "Epsilon: 0.5", color: "#8B5CF6", data: qlData }
+            { name: `QL1-${selectedMH}`, description: "Epsilon: 0.1", color: "#3B82F6", data: ql1Data },
+            { name: `QL2-${selectedMH}`, description: "Epsilon: 0.3", color: "#10B981", data: ql2Data },
+            { name: `QL-${selectedMH}`, description: "Epsilon: 0.5", color: "#8B5CF6", data: qlData },
           ];
+          
 
           setPopqlParamVariants(variants);
           setPopqlParamMetrics(metricsData);
@@ -301,8 +367,8 @@ const MORLPage = () => {
           ]);
 
           const variants: MOQLVariant[] = [
-            { name: `QL-${selectedMH}`, description: "PO-PQL inside M-VND", color: "#8B5CF6", data: qlData },
-            { name: selectedMH, description: "Original Metaheuristic", color: "#6B7280", data: mhData }
+            { name: `QL-${selectedMH}`, description: "PO-PQL inside M-VND", color: "#F59E0B", data: qlData },
+            { name: selectedMH, description: "Original Metaheuristic", color: "#8B5CF6", data: mhData }
           ];
 
           setPopqlResultVariants(variants);
@@ -317,6 +383,69 @@ const MORLPage = () => {
 
     loadPOPQLResultData();
   }, [currentPage, selectedTest, selectedMH]);
+
+  // Load Actions Tests data
+useEffect(() => {
+  const loadActionsData = async () => {
+    if (currentPage === "popql" && selectedTest === "actions-tests") {
+      setIsLoading(true);
+      try {
+        const [qlData, ql2Data, metricsData] = await Promise.all([
+          loadCSVData(`/DATA/MORL_page_tests/POPQL_tests/Actions/QL-HMOGVNS.csv`),
+          loadCSVData(`/DATA/MORL_page_tests/POPQL_tests/Actions/QL2-HMOGVNS.csv`),
+          loadJSONData(`/DATA/MORL_page_tests/POPQL_tests/Actions/Actions.json`)
+        ]);
+
+        const variants: MOQLVariant[] = [
+          { name: `QL-HMOGVNS`, description: "Original QL", color: "#3B82F6", data: qlData },
+          { name: `QL2-HMOGVNS`, description: "Alternative QL", color: "#10B981", data: ql2Data },
+        ];
+
+        setActionsVariants(variants);
+        setActionsMetrics(metricsData);
+      } catch (error) {
+        console.error('Error loading Actions data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  loadActionsData();
+}, [currentPage, selectedTest, selectedMH]);
+
+  // Load Rewards Tests data
+  useEffect(() => {
+    const loadRewardsData = async () => {
+      if (currentPage === "popql" && selectedTest === "rewards-tests") {
+        setIsLoading(true);
+        try {
+          const [ql1Data, ql2Data, qlData, metricsData] = await Promise.all([
+            loadCSVData(`/DATA/MORL_page_tests/POPQL_tests/Rewards/QL1-HMOGVNS.csv`),
+            loadCSVData(`/DATA/MORL_page_tests/POPQL_tests/Rewards/QL2-HMOGVNS.csv`),
+            loadCSVData(`/DATA/MORL_page_tests/POPQL_tests/Rewards/QL-${selectedMH}.csv`),
+            loadJSONData(`/DATA/MORL_page_tests/POPQL_tests/Rewards/Rewards.json`)
+          ]);
+
+          const variants: MOQLVariant[] = [
+            { name: `QL1-HMOGVNS`, description: "Reward Variant 1", color: "#3B82F6", data: ql1Data },
+            { name: `QL2-HMOGVNS`, description: "Reward Variant 2", color: "#10B981", data: ql2Data },
+            { name: `QL-HMOGVNS`, description: "Original QL", color: "#8B5CF6", data: qlData },
+          ];
+
+          setRewardsVariants(variants);
+          setRewardsMetrics(metricsData);
+        } catch (error) {
+          console.error('Error loading Rewards data:', error);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadRewardsData();
+  }, [currentPage, selectedTest, selectedMH]);
+
 
   // Main page with two cards
   if (currentPage === "main") {
@@ -632,19 +761,22 @@ const MORLPage = () => {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Metaheuristic</label>
-                <Select value={selectedMH} onValueChange={setSelectedMH}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select metaheuristic" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {metaheuristics.map(m => (
-                      <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              {selectedTest !== "rewards-tests" && selectedTest !== "actions-tests" && selectedTest !== "ql-counts" && (
+                  <div className="space-y-2">
+                  <label className="text-sm font-medium">Metaheuristic</label>
+                  <Select value={selectedMH} onValueChange={setSelectedMH}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select metaheuristic" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {metaheuristics.map(m => (
+                        <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  </div>
+              )}
+             
             </CardContent>
           </Card>
 
@@ -756,18 +888,18 @@ const MORLPage = () => {
                               <TableHead colSpan={3} className="text-center">Exec Time (s)</TableHead>
                             </TableRow>
                             <TableRow className="bg-primary/10 text-primary">
-                              <TableHead>QL1</TableHead>
-                              <TableHead>QL2</TableHead>
-                              <TableHead>QL</TableHead>
-                              <TableHead>QL1</TableHead>
-                              <TableHead>QL2</TableHead>
-                              <TableHead>QL</TableHead>
-                              <TableHead>QL1</TableHead>
-                              <TableHead>QL2</TableHead>
-                              <TableHead>QL</TableHead>
-                              <TableHead>QL1</TableHead>
-                              <TableHead>QL2</TableHead>
-                              <TableHead>QL</TableHead>
+                              <TableHead>QL1-{selectedMH}</TableHead>
+                              <TableHead>QL2-{selectedMH}</TableHead>
+                              <TableHead>QL-{selectedMH}</TableHead>
+                              <TableHead>QL1-{selectedMH}</TableHead>
+                              <TableHead>QL2-{selectedMH}</TableHead>
+                              <TableHead>QL-{selectedMH}</TableHead>
+                              <TableHead>QL1-{selectedMH}</TableHead>
+                              <TableHead>QL2-{selectedMH}</TableHead>
+                              <TableHead>QL-{selectedMH}</TableHead>
+                              <TableHead>QL1-{selectedMH}</TableHead>
+                              <TableHead>QL2-{selectedMH}</TableHead>
+                              <TableHead>QL-{selectedMH}</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
@@ -980,118 +1112,194 @@ const MORLPage = () => {
             )}
 
             {/* Rewards Tests */}
+            
             {selectedTest === "rewards-tests" && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Trophy className="w-5 h-5 text-primary" />
-                Rewards Tests: Metrics (6 Instances)
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="border rounded-lg overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-primary/10 text-primary">
-                      <TableHead rowSpan={2}>Instance</TableHead>
-                      <TableHead rowSpan={2}>Jobs</TableHead>
-                      <TableHead rowSpan={2}>Machines</TableHead>
-                      <TableHead colSpan={3} className="text-center">IGD</TableHead>
-                      <TableHead colSpan={3} className="text-center">SNS</TableHead>
-                      <TableHead colSpan={3} className="text-center">NPS</TableHead>
-                      <TableHead colSpan={3} className="text-center">Exec</TableHead>
-                    </TableRow>
-                    <TableRow className="bg-primary/10 text-primary">
-                      {(["QL-HMOGVNS", "QL1-HMOGVNS", "QL2-HMOGVNS"]).map(n => <TableHead key={`igd-rew-${n}`}>{n}</TableHead>)}
-                      {(["QL-HMOGVNS", "QL1-HMOGVNS", "QL2-HMOGVNS"]).map(n => <TableHead key={`sns-rew-${n}`}>{n}</TableHead>)}
-                      {(["QL-HMOGVNS", "QL1-HMOGVNS", "QL2-HMOGVNS"]).map(n => <TableHead key={`nps-rew-${n}`}>{n}</TableHead>)}
-                      {(["QL-HMOGVNS", "QL1-HMOGVNS", "QL2-HMOGVNS"]).map(n => <TableHead key={`exec-rew-${n}`}>{n}</TableHead>)}
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                        {Array.from({length: 6}, (_, i) => (
-                          <TableRow key={i} className="hover:bg-muted/30">
-                            <TableCell className="font-medium">{i + 1}</TableCell>
-                            <TableCell>30</TableCell>
-                            <TableCell>10</TableCell>
-                            {["QL-HMOGVNS", "QL1-HMOGVNS", "QL2-HMOGVNS"].map(n => (
-                              <TableCell key={`igd-rew-${i}-${n}`}>{(0.01 + i * 0.001).toFixed(3)}</TableCell>
+              <>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Pareto Fronts Comparison</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {isLoading ? (
+                      <div className="h-96 flex items-center justify-center">
+                        <div className="text-center">
+                          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                          <div className="text-muted-foreground">Loading data...</div>
+                        </div>
+                      </div>
+                    ) : rewardsVariants.length > 0 ? (
+                      <ParetoChart variants={rewardsVariants} />
+                    ) : (
+                      <div className="h-96 flex items-center justify-center text-muted-foreground">
+                        No data available
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Metrics Table */}
+                {rewardsMetrics.length > 0 && (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Trophy className="w-5 h-5 text-primary" />
+                        Performance Metrics
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="border rounded-lg overflow-x-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow className="bg-primary/10 text-primary">
+                              <TableHead rowSpan={2}>Instance</TableHead>
+                              <TableHead rowSpan={2}>Jobs</TableHead>
+                              <TableHead rowSpan={2}>Machines</TableHead>
+                              <TableHead colSpan={3} className="text-center">IGD</TableHead>
+                              <TableHead colSpan={3} className="text-center">SNS</TableHead>
+                              <TableHead colSpan={3} className="text-center">NPS</TableHead>
+                              <TableHead colSpan={3} className="text-center">Exec Time (s)</TableHead>
+                            </TableRow>
+                            <TableRow className="bg-primary/10 text-primary">
+                              <TableHead>QL1-HMOGVNS</TableHead>
+                              <TableHead>QL2-HMOGVNS</TableHead>
+                                <TableHead>QL-HMOGVNS</TableHead>
+                              <TableHead>QL1-HMOGVNS</TableHead>
+                              <TableHead>QL2-HMOGVNS</TableHead>
+                              <TableHead>QL-HMOGVNS</TableHead>
+                              <TableHead>QL1-HMOGVNS</TableHead>
+                              <TableHead>QL2-HMOGVNS</TableHead>
+                              <TableHead>QL-HMOGVNS</TableHead>
+                              <TableHead>QL1-HMOGVNS</TableHead>
+                              <TableHead>QL2-HMOGVNS</TableHead>
+                              <TableHead>QL-HMOGVNS</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {rewardsMetrics.map((row, idx) => (
+                              <TableRow key={idx} className="hover:bg-muted/30">
+                                <TableCell className="font-medium">{row.Instance}</TableCell>
+                                <TableCell>{row.No_Jobs}</TableCell>
+                                <TableCell>{row.No_of_machines}</TableCell>
+                                <TableCell>{row.IGD[`QL1-HMOGVNS`]?.toFixed(4) || 'N/A'}</TableCell>
+                                <TableCell>{row.IGD[`QL2-HMOGVNS`]?.toFixed(4) || 'N/A'}</TableCell>
+                                <TableCell>{row.IGD[`QL-HMOGVNS`]?.toFixed(4) || 'N/A'}</TableCell>
+                                <TableCell>{row.SNS[`QL1-HMOGVNS`]?.toFixed(4) || 'N/A'}</TableCell>
+                                <TableCell>{row.SNS[`QL2-HMOGVNS`]?.toFixed(4) || 'N/A'}</TableCell>
+                                <TableCell>{row.SNS[`QL-HMOGVNS`]?.toFixed(4) || 'N/A'}</TableCell>
+                                <TableCell>{row.NPS[`QL1-HMOGVNS`] || 'N/A'}</TableCell>
+                                <TableCell>{row.NPS[`QL2-HMOGVNS`] || 'N/A'}</TableCell>
+                                <TableCell>{row.NPS[`QL-HMOGVNS`] || 'N/A'}</TableCell>
+                                <TableCell>{row["Exec_Time"][`QL1-HMOGVNS`]?.toFixed(3) || 'N/A'}</TableCell>
+                                <TableCell>{row["Exec_Time"][`QL2-HMOGVNS`]?.toFixed(3) || 'N/A'}</TableCell>
+                                <TableCell>{row["Exec_Time"][`QL-HMOGVNS`]?.toFixed(3) || 'N/A'}</TableCell>
+                              </TableRow>
                             ))}
-                            {["QL-HMOGVNS", "QL1-HMOGVNS", "QL2-HMOGVNS"].map(n => (
-                              <TableCell key={`sns-rew-${i}-${n}`}>{(0.8 - i * 0.005).toFixed(3)}</TableCell>
-                            ))}
-                            {["QL-HMOGVNS", "QL1-HMOGVNS", "QL2-HMOGVNS"].map(n => (
-                              <TableCell key={`nps-rew-${i}-${n}`}>{100 - i}</TableCell>
-                            ))}
-                            {["QL-HMOGVNS", "QL1-HMOGVNS", "QL2-HMOGVNS"].map(n => (
-                              <TableCell key={`exec-rew-${i}-${n}`}>{(2 + i * 0.1).toFixed(3)}</TableCell>
-                            ))}
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+                          </TableBody>
+                        </Table>  
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </>
+            )}
 
             {/* Actions Tests */}
+            
             {selectedTest === "actions-tests" && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Actions Tests: Random Operator Sequences</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-1 text-sm">
-                    {generateRandomSequences(9).map((seq, i) => (
-                  <div key={i} className="font-mono">Order {i + 1}: {seq.join(" → ")}</div>
-                ))}
-              </div>
-              <div className="border rounded-lg overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-primary/10 text-primary">
-                      <TableHead rowSpan={2}>Instance</TableHead>
-                      <TableHead rowSpan={2}>Jobs</TableHead>
-                      <TableHead rowSpan={2}>Machines</TableHead>
-                      <TableHead colSpan={2} className="text-center">IGD</TableHead>
-                      <TableHead colSpan={2} className="text-center">SNS</TableHead>
-                      <TableHead colSpan={2} className="text-center">NPS</TableHead>
-                      <TableHead colSpan={2} className="text-center">Exec</TableHead>
-                    </TableRow>
-                    <TableRow className="bg-primary/10 text-primary">
-                      {(["QL-HMOGVNS", "QL2-HMOGVNS"]).map(n => <TableHead key={`igd-act-${n}`}>{n}</TableHead>)}
-                      {(["QL-HMOGVNS", "QL2-HMOGVNS"]).map(n => <TableHead key={`sns-act-${n}`}>{n}</TableHead>)}
-                      {(["QL-HMOGVNS", "QL2-HMOGVNS"]).map(n => <TableHead key={`nps-act-${n}`}>{n}</TableHead>)}
-                      {(["QL-HMOGVNS", "QL2-HMOGVNS"]).map(n => <TableHead key={`exec-act-${n}`}>{n}</TableHead>)}
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                        {Array.from({length: 6}, (_, i) => (
-                          <TableRow key={i} className="hover:bg-muted/30">
-                            <TableCell className="font-medium">{i + 1}</TableCell>
-                            <TableCell>30</TableCell>
-                            <TableCell>10</TableCell>
-                            {["QL-HMOGVNS", "QL2-HMOGVNS"].map(n => (
-                              <TableCell key={`igd-act-${i}-${n}`}>{(0.01 + i * 0.001).toFixed(3)}</TableCell>
+              <>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Pareto Fronts Comparison</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {isLoading ? (
+                      <div className="h-96 flex items-center justify-center">
+                        <div className="text-center">
+                          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                          <div className="text-muted-foreground">Loading data...</div>
+                        </div>
+                      </div>
+                    ) : actionsVariants.length > 0 ? (
+                      <ParetoChart variants={actionsVariants} />
+                    ) : (
+                      <div className="h-96 flex items-center justify-center text-muted-foreground">
+                        No data available
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Random Operator Sequences */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Random Operator Sequences</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="space-y-1 text-sm">
+                      {generateRandomSequences(9).map((seq, i) => (
+                        <div key={i} className="font-mono">Order {i + 1}: {seq.join(" → ")}</div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Metrics Table */}
+                {actionsMetrics.length > 0 && (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Trophy className="w-5 h-5 text-primary" />
+                        Performance Metrics
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="border rounded-lg overflow-x-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow className="bg-primary/10 text-primary">
+                              <TableHead rowSpan={2}>Instance</TableHead>
+                              <TableHead rowSpan={2}>Jobs</TableHead>
+                              <TableHead rowSpan={2}>Machines</TableHead>
+                              <TableHead colSpan={2} className="text-center">IGD</TableHead>
+                              <TableHead colSpan={2} className="text-center">SNS</TableHead>
+                              <TableHead colSpan={2} className="text-center">NPS</TableHead>
+                              <TableHead colSpan={2} className="text-center">Exec Time (s)</TableHead>
+                            </TableRow>
+                            <TableRow className="bg-primary/10 text-primary">
+                              <TableHead>QL-HMOGVNS</TableHead>
+                              <TableHead>QL2-HMOGVNS</TableHead>
+                              <TableHead>QL-HMOGVNS</TableHead>
+                              <TableHead>QL2-HMOGVNS</TableHead>
+                              <TableHead>QL-HMOGVNS</TableHead>
+                              <TableHead>QL2-HMOGVNS</TableHead>
+                              <TableHead>QL-HMOGVNS</TableHead>
+                              <TableHead>QL2-HMOGVNS</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {actionsMetrics.map((row, idx) => (
+                              <TableRow key={idx} className="hover:bg-muted/30">
+                                <TableCell className="font-medium">{row.Instance}</TableCell>
+                                <TableCell>{row.No_Jobs}</TableCell>
+                                <TableCell>{row.No_of_machines}</TableCell>
+                                <TableCell>{row.IGD[`QL-HMOGVNS`]?.toFixed(4) || 'N/A'}</TableCell>
+                                <TableCell>{row.IGD[`QL2-HMOGVNS`]?.toFixed(4) || 'N/A'}</TableCell>
+                                <TableCell>{row.SNS[`QL-HMOGVNS`]?.toFixed(4) || 'N/A'}</TableCell>
+                                <TableCell>{row.SNS[`QL2-HMOGVNS`]?.toFixed(4) || 'N/A'}</TableCell>
+                                <TableCell>{row.NPS[`QL-HMOGVNS`] || 'N/A'}</TableCell>
+                                <TableCell>{row.NPS[`QL2-HMOGVNS`] || 'N/A'}</TableCell>
+                                <TableCell>{row["Exec_Time"][`QL-HMOGVNS`]?.toFixed(3) || 'N/A'}</TableCell>
+                                <TableCell>{row["Exec_Time"][`QL2-HMOGVNS`]?.toFixed(3) || 'N/A'}</TableCell>
+                              </TableRow>
                             ))}
-                            {["QL-HMOGVNS", "QL2-HMOGVNS"].map(n => (
-                              <TableCell key={`sns-act-${i}-${n}`}>{(0.8 - i * 0.005).toFixed(3)}</TableCell>
-                            ))}
-                            {["QL-HMOGVNS", "QL2-HMOGVNS"].map(n => (
-                              <TableCell key={`nps-act-${i}-${n}`}>{100 - i}</TableCell>
-                            ))}
-                            {["QL-HMOGVNS", "QL2-HMOGVNS"].map(n => (
-                              <TableCell key={`exec-act-${i}-${n}`}>{(2 + i * 0.1).toFixed(3)}</TableCell>
-                            ))}
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </>
+            )}
           </div>
       </div>
     </div>

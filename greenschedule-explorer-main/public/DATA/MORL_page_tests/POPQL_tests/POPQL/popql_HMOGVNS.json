@@ -1,0 +1,87 @@
+[
+      {
+        "No_Jobs": "10",
+        "IGD": { "QL-HMOGVNS": 0.0126, "HMOGVNS": 0.0221 },
+        "SNS": { "QL-HMOGVNS": 0.7971, "HMOGVNS": 0.7951 },
+        "NPS": { "QL-HMOGVNS": 46.3, "HMOGVNS": 43 },
+        "Exec_Time": { "QL-HMOGVNS": 2.86, "HMOGVNS": 2.98 }
+      },
+      {
+        "No_Jobs": "20",
+        "IGD": { "QL-HMOGVNS": 0.0065, "HMOGVNS": 0.0119 },
+        "SNS": { "QL-HMOGVNS": 0.8061, "HMOGVNS": 0.7988 },
+        "NPS": { "QL-HMOGVNS": 81.5, "HMOGVNS": 74 },
+        "Exec_Time": { "QL-HMOGVNS": 4.5, "HMOGVNS": 4.72 }
+      },
+      {
+        "No_Jobs": "30",
+        "IGD": { "QL-HMOGVNS": 0.0032, "HMOGVNS": 0.0107 },
+        "SNS": { "QL-HMOGVNS": 0.8157, "HMOGVNS": 0.8044 },
+        "NPS": { "QL-HMOGVNS": 109.4, "HMOGVNS": 91.1 },
+        "Exec_Time": { "QL-HMOGVNS": 5.94, "HMOGVNS": 6.24 }
+      },
+      {
+        "No_Jobs": "40",
+        "IGD": { "QL-HMOGVNS": 0.0037, "HMOGVNS": 0.0099 },
+        "SNS": { "QL-HMOGVNS": 0.8205, "HMOGVNS": 0.8088 },
+        "NPS": { "QL-HMOGVNS": 121.1, "HMOGVNS": 100 },
+        "Exec_Time": { "QL-HMOGVNS": 6.65, "HMOGVNS": 6.95 }
+      },
+      {
+        "No_Jobs": "50",
+        "IGD": { "QL-HMOGVNS": 0.0031, "HMOGVNS": 0.0105 },
+        "SNS": { "QL-HMOGVNS": 0.8231, "HMOGVNS": 0.8105 },
+        "NPS": { "QL-HMOGVNS": 128.8, "HMOGVNS": 104.1 },
+        "Exec_Time": { "QL-HMOGVNS": 9.46, "HMOGVNS": 10.07 }
+      },
+      {
+        "No_Jobs": "60",
+        "IGD": { "QL-HMOGVNS": 0.0024, "HMOGVNS": 0.0116 },
+        "SNS": { "QL-HMOGVNS": 0.8297, "HMOGVNS": 0.8169 },
+        "NPS": { "QL-HMOGVNS": 143.3, "HMOGVNS": 117.3 },
+        "Exec_Time": { "QL-HMOGVNS": 10.23, "HMOGVNS": 10.99 }
+      },
+      {
+        "Instance": "AVG",
+        "IGD": { "QL-HMOGVNS": 0.00525, "HMOGVNS": 0.01278 },
+        "SNS": { "QL-HMOGVNS": 0.81536, "HMOGVNS": 0.80575 },
+        "NPS": { "QL-HMOGVNS": 105.0666, "HMOGVNS": 88.25 },
+        "Exec_Time": { "QL-HMOGVNS": 6.6067, "HMOGVNS": 6.99 }
+      },
+      {
+        "No_Jobs": "100",
+        "IGD": { "QL-HMOGVNS": 0.0479, "HMOGVNS": 0.0508 },
+        "SNS": { "QL-HMOGVNS": 0.7862, "HMOGVNS": 0.7747 },
+        "NPS": { "QL-HMOGVNS": 82, "HMOGVNS": 64.1 },
+        "Exec_Time": { "QL-HMOGVNS": 38.41, "HMOGVNS": 44.99 }
+      },
+      {
+        "No_Jobs": "200",
+        "IGD": { "QL-HMOGVNS": 0.0242, "HMOGVNS": 0.0286 },
+        "SNS": { "QL-HMOGVNS": 0.8012, "HMOGVNS": 0.785 },
+        "NPS": { "QL-HMOGVNS": 115.3, "HMOGVNS": 86.8 },
+        "Exec_Time": { "QL-HMOGVNS": 110.76, "HMOGVNS": 121.37 }
+      },
+      {
+        "No_Jobs": "300",
+        "IGD": { "QL-HMOGVNS": 0.0264, "HMOGVNS": 0.0308 },
+        "SNS": { "QL-HMOGVNS": 0.8064, "HMOGVNS": 0.7913 },
+        "NPS": { "QL-HMOGVNS": 129.9, "HMOGVNS": 88.6 },
+        "Exec_Time": { "QL-HMOGVNS": 197.74, "HMOGVNS": 153.04 }
+      },
+      {
+        "No_Jobs": "400",
+        "IGD": { "QL-HMOGVNS": 0.0141, "HMOGVNS": 0.0217 },
+        "SNS": { "QL-HMOGVNS": 0.8084, "HMOGVNS": 0.7982 },
+        "NPS": { "QL-HMOGVNS": 135, "HMOGVNS": 106.1 },
+        "Exec_Time": { "QL-HMOGVNS": 210.55, "HMOGVNS": 243.46 }
+      },
+      {
+        "Instance": "AVG",
+        "IGD": { "QL-HMOGVNS": 0.02815, "HMOGVNS": 0.032975 },
+        "SNS": { "QL-HMOGVNS": 0.8006, "HMOGVNS": 0.7873 },
+        "NPS": { "QL-HMOGVNS": 115.55, "HMOGVNS": 86.4 },
+        "Exec_Time": { "QL-HMOGVNS": 139.365, "HMOGVNS": 140.715 }
+      }
+    ]
+  

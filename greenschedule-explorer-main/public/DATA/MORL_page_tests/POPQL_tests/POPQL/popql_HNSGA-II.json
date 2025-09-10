@@ -1,0 +1,114 @@
+[
+      {
+        "No_Jobs": "10",
+        "No_Machines": null,
+        "Instance": null,
+        "IGD": { "QL-HNSGA-II": "0.006106267", "HNSGA-II": "0.015666347" },
+        "SNS": { "QL-HNSGA-II": "0.800041135", "HNSGA-II": "0.793285021" },
+        "NPS": { "QL-HNSGA-II": "79.4", "HNSGA-II": "75.825" },
+        "Exec_Time": { "QL-HNSGA-II": "9.37069007", "HNSGA-II": "4.381185544" }
+      },
+      {
+        "No_Jobs": "20",
+        "No_Machines": null,
+        "Instance": null,
+        "IGD": { "QL-HNSGA-II": "0.005520072", "HNSGA-II": "0.007506968" },
+        "SNS": { "QL-HNSGA-II": "0.80788273", "HNSGA-II": "0.799638769" },
+        "NPS": { "QL-HNSGA-II": "118.475", "HNSGA-II": "110.25" },
+        "Exec_Time": { "QL-HNSGA-II": "9.06548204", "HNSGA-II": "5.96248439" }
+      },
+      {
+        "No_Jobs": "30",
+        "No_Machines": null,
+        "Instance": null,
+        "IGD": { "QL-HNSGA-II": "0.002628417", "HNSGA-II": "0.006434231" },
+        "SNS": { "QL-HNSGA-II": "0.812588988", "HNSGA-II": "0.80820029" },
+        "NPS": { "QL-HNSGA-II": "161.375", "HNSGA-II": "145.725" },
+        "Exec_Time": { "QL-HNSGA-II": "18.28520914", "HNSGA-II": "6.746344572" }
+      },
+      {
+        "No_Jobs": "40",
+        "No_Machines": null,
+        "Instance": null,
+        "IGD": { "QL-HNSGA-II": "0.002080811", "HNSGA-II": "0.006273653" },
+        "SNS": { "QL-HNSGA-II": "0.818228825", "HNSGA-II": "0.812011994" },
+        "NPS": { "QL-HNSGA-II": "184.775", "HNSGA-II": "153.575" },
+        "Exec_Time": { "QL-HNSGA-II": "23.12033224", "HNSGA-II": "8.460624355" }
+      },
+      {
+        "No_Jobs": "50",
+        "No_Machines": null,
+        "Instance": null,
+        "IGD": { "QL-HNSGA-II": "0.002469612", "HNSGA-II": "0.005875766" },
+        "SNS": { "QL-HNSGA-II": "0.818477534", "HNSGA-II": "0.813923247" },
+        "NPS": { "QL-HNSGA-II": "197.875", "HNSGA-II": "165.025" },
+        "Exec_Time": { "QL-HNSGA-II": "28.61780092", "HNSGA-II": "10.32951329" }
+      },
+      {
+        "No_Jobs": "60",
+        "No_Machines": null,
+        "Instance": null,
+        "IGD": { "QL-HNSGA-II": "0.002286189", "HNSGA-II": "0.00696195" },
+        "SNS": { "QL-HNSGA-II": "0.822744598", "HNSGA-II": "0.815578003" },
+        "NPS": { "QL-HNSGA-II": "214.85", "HNSGA-II": "162.975" },
+        "Exec_Time": { "QL-HNSGA-II": "30.00430867", "HNSGA-II": "30.07444935" }
+      },
+      {
+        "No_Jobs": null,
+        "No_Machines": null,
+        "Instance": "AVG",
+        "IGD": { "QL-HNSGA-II": "0.003", "HNSGA-II": "0.008" },
+        "SNS": { "QL-HNSGA-II": "0.81", "HNSGA-II": "0.8" },
+        "NPS": { "QL-HNSGA-II": "156.1", "HNSGA-II": "129.8" },
+        "Exec_Time": { "QL-HNSGA-II": "19.7", "HNSGA-II": "10.9" }
+      },
+    
+   
+      {
+        "No_Jobs": "100",
+        "No_Machines": null,
+        "Instance": null,
+        "IGD": { "QL-HNSGA-II": "0.0051", "HNSGA-II": "0.0055" },
+        "SNS": { "QL-HNSGA-II": "0.8", "HNSGA-II": "0.794" },
+        "NPS": { "QL-HNSGA-II": "139.8", "HNSGA-II": "137.13" },
+        "Exec_Time": { "QL-HNSGA-II": "61.9808629", "HNSGA-II": "51.20903463" }
+      },
+      {
+        "No_Jobs": "200",
+        "No_Machines": null,
+        "Instance": null,
+        "IGD": { "QL-HNSGA-II": "0.0037", "HNSGA-II": "0.0039" },
+        "SNS": { "QL-HNSGA-II": "0.807", "HNSGA-II": "0.802" },
+        "NPS": { "QL-HNSGA-II": "171", "HNSGA-II": "171.2" },
+        "Exec_Time": { "QL-HNSGA-II": "98.71062169", "HNSGA-II": "135.447316" }
+      },
+      {
+        "No_Jobs": "300",
+        "No_Machines": null,
+        "Instance": null,
+        "IGD": { "QL-HNSGA-II": "0.0035", "HNSGA-II": "0.0038" },
+        "SNS": { "QL-HNSGA-II": "0.79", "HNSGA-II": "0.8" },
+        "NPS": { "QL-HNSGA-II": "190.4", "HNSGA-II": "190" },
+        "Exec_Time": { "QL-HNSGA-II": "230.9105706", "HNSGA-II": "309.8485646" }
+      },
+      {
+        "No_Jobs": "400",
+        "No_Machines": null,
+        "Instance": null,
+        "IGD": { "QL-HNSGA-II": "0.0029", "HNSGA-II": "0.0027" },
+        "SNS": { "QL-HNSGA-II": "0.81", "HNSGA-II": "0.804902093" },
+        "NPS": { "QL-HNSGA-II": "198.1", "HNSGA-II": "197.73" },
+        "Exec_Time": { "QL-HNSGA-II": "433.6159717", "HNSGA-II": "421.1351622" }
+      },
+      {
+        "No_Jobs": null,
+        "No_Machines": null,
+        "Instance": "AVG",
+        "IGD": { "QL-HNSGA-II": "0.0038", "HNSGA-II": "0.0039" },
+        "SNS": { "QL-HNSGA-II": "0.801", "HNSGA-II": "0.8" },
+        "NPS": { "QL-HNSGA-II": "174.8", "HNSGA-II": "174.01" },
+        "Exec_Time": { "QL-HNSGA-II": "206.3", "HNSGA-II": "229.4" }
+      }
+    
+    ]
+  

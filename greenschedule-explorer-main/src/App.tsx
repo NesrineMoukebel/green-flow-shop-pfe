@@ -19,6 +19,7 @@ import HNSGAIIComponentsPage from "./pages/HNSGAIIComponentsPage";
 import ProblemDataPage from "./pages/ProblemDataPage";
 import AdditionalDataPage from "./pages/AdditionalDataPage";
 import MetaheuristicsComponentsMenuPage from "./pages/MetaheuristicsComponentsMenuPage";
+import SingleObjectivePage from "./pages/SingleObjectivePage";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +45,7 @@ const App = () => (
           <Route path="/multi-objective/data/additional" element={<AdditionalDataPage />} />
           <Route path="/multi-objective/sa-tests" element={<HMOSAComponentsPage />} />
           <Route path="/multi-objective/hnsga-components" element={<HNSGAIIComponentsPage />} />
+          <Route path="/single-objective" element={<SingleObjectivePage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
