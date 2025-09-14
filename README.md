@@ -1,73 +1,94 @@
-# Welcome to your Lovable project
+# Green Flow Shop PFE
 
-## Project info
+A comprehensive multi-objective optimization dashboard for flow shop scheduling problems with energy considerations.
 
-**URL**: https://lovable.dev/projects/dd40b019-1bea-47bd-9ce4-b2925c1e8995
+## 🚀 Live Demo
 
-## How can I edit this code?
+[View Live Demo](https://yourusername.github.io/green-flow-shop-pfe)
 
-There are several ways of editing your application.
+## 📋 Features
 
-**Use Lovable**
+- **Multi-Objective Optimization**: Simultaneous optimization of makespan and energy consumption
+- **Algorithm Comparison**: Compare HNSGA-II, HMOSA, and HMOGVNS algorithms
+- **Interactive Visualizations**: Pareto front analysis and performance metrics
+- **Problem Data Analysis**: VRF benchmark instances and sensitivity analysis
+- **Real-time Charts**: Processing times and algorithm performance visualization
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/dd40b019-1bea-47bd-9ce4-b2925c1e8995) and start prompting.
+## 🛠️ Technologies Used
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Frontend**: React 18 + TypeScript
+- **Styling**: Tailwind CSS + shadcn/ui
+- **Charts**: Recharts
+- **Build Tool**: Vite
+- **Routing**: React Router
 
-**Use your preferred IDE**
+## 🏗️ Installation & Setup
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/green-flow-shop-pfe.git
+   cd green-flow-shop-pfe
+   ```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-Follow these steps:
+3. **Start development server**
+   ```bash
+   npm run dev
+   ```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+4. **Build for production**
+   ```bash
+   npm run build
+   ```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## 📁 Project Structure
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+src/
+├── components/          # Reusable UI components
+├── pages/              # Page components
+├── services/           # Data services
+├── hooks/              # Custom React hooks
+└── lib/                # Utility functions
 ```
 
-**Edit a file directly in GitHub**
+## 🔧 Available Scripts
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
 
-**Use GitHub Codespaces**
+## 📊 Data Structure
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+The application works with:
+- **VRF Benchmark**: Variable Rate Flow shop instances
+- **Energy Profiles**: Time-varying electricity prices
+- **Pareto Data**: Multi-objective optimization results
+- **Performance Metrics**: Algorithm comparison data
 
-## What technologies are used for this project?
+## 🤝 Contributing
 
-This project is built with:
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 📝 License
 
-## How can I deploy this project?
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-Simply open [Lovable](https://lovable.dev/projects/dd40b019-1bea-47bd-9ce4-b2925c1e8995) and click on Share -> Publish.
+## 👥 Authors
 
-## Can I connect a custom domain to my Lovable project?
+- **Your Name** - *Initial work* - [YourGitHub](https://github.com/yourusername)
 
-Yes, you can!
+## 🙏 Acknowledgments
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+- VRF benchmark dataset creators
+- Multi-objective optimization research community
+- React and Vite development teams

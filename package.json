@@ -1,8 +1,9 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "green-flow-shop-pfe",
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://yourusername.github.io/green-flow-shop-pfe",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
