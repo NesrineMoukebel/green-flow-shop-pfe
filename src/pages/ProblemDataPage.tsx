@@ -12,7 +12,7 @@ const ProblemDataPage = () => {
       <div className="w-80 h-screen bg-card border-r border-border p-6 overflow-y-auto sticky top-0">
         {/* Logo Section */}
         <img 
-          src="./DATA/images/LOGO.png" 
+          src="../DATA/images/LOGO.png" 
           alt="Bi-Optima Logo" 
           className="px-auto h-20 w-auto hover:scale-105 transition-transform duration-200 cursor-pointer mb-6" 
           onClick={() => navigate("/")}
@@ -130,7 +130,7 @@ const ProblemDataPage = () => {
 
            {/* Button with spacing below last div */}
             <div className="flex justify-end mt-6">
-            <a href="/DATA/new_data.zip" download>
+            <a href="./DATA/new_data.zip" download>
                 <Button
                 className="bg-purple-600 hover:bg-purple-700 text-white shadow-md transition-all duration-300 hover:shadow-lg hover:scale-105"
                 >

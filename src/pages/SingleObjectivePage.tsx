@@ -456,7 +456,7 @@ const NonPermutationTable = () => {
   React.useEffect(() => {
     const loadData = async () => {
       try {
-        const response = await fetch('/DATA/Conf_papers/non_permu_conf.json');
+        const response = await fetch('./DATA/Conf_papers/non_permu_conf.json');
         const jsonData = await response.json();
         setData(jsonData);
       } catch (error) {
@@ -528,7 +528,7 @@ const PermutationTable = () => {
   React.useEffect(() => {
     const loadData = async () => {
       try {
-        const response = await fetch('/DATA/Conf_papers/permu_conf.json');
+        const response = await fetch('./DATA/Conf_papers/permu_conf.json');
         const jsonData = await response.json();
         setData(jsonData);
       } catch (error) {

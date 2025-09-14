@@ -34,7 +34,7 @@ const SensitivityAnalysisPage = () => {
       
       try {
         // Load Pareto data from DATA_page CSVs
-        const base = "/DATA/DATA_page/Sensitivity_analysis";
+        const base = "../DATA/DATA_page/Sensitivity_analysis";
         const files = [
           { name: 'HNSGA-II-6CW', path: `${base}/NFS_HNSGA_6CW/M20_J200_config_6CW_4.csv` },
           { name: 'HNSGA-II-6CWI', path: `${base}/NFS_HNSGA_6CWI/M20_J200_config_6CWI_4.csv` },
@@ -264,7 +264,7 @@ const SensitivityAnalysisPage = () => {
       <div className="w-80 h-screen bg-card border-r border-border p-6 overflow-y-auto sticky top-0">
         {/* Logo Section */}
         <img 
-          src="./DATA/images/LOGO.png" 
+          src="../DATA/images/LOGO.png" 
           alt="Bi-Optima Logo" 
           className="px-auto h-20 w-auto hover:scale-105 transition-transform duration-200 cursor-pointer mb-6" 
           onClick={() => navigate("/")}

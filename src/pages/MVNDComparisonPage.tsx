@@ -49,8 +49,8 @@ function getAlgorithmPair(scenario: string, mh: string) {
 const loadMVNDCSVData = async (scenario: string, metaheuristic: string) => {
   try {
     const basePath = scenario === "mvnd-vs-standard" 
-      ? "/DATA/VND_tests/M-VNDvsS_VND" 
-      : "/DATA/VND_tests/M-VNDvswithout";
+      ? "../DATA/VND_tests/M-VNDvsS_VND" 
+      : "../DATA/VND_tests/M-VNDvswithout";
     
     const [algA, algB] = getAlgorithmPair(scenario, metaheuristic);
     
@@ -101,8 +101,8 @@ const loadMVNDCSVData = async (scenario: string, metaheuristic: string) => {
 const loadMVNDMetricsData = async (scenario: string, metaheuristic: string) => {
   try {
     const basePath = scenario === "mvnd-vs-standard" 
-      ? "/DATA/VND_tests/M-VNDvsS_VND" 
-      : "/DATA/VND_tests/M-VNDvswithout";
+      ? "../DATA/VND_tests/M-VNDvsS_VND" 
+      : "../DATA/VND_tests/M-VNDvswithout";
     
     const response = await fetch(`${basePath}/${metaheuristic}.json`);
     if (!response.ok) {

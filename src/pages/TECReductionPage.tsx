@@ -277,9 +277,9 @@ const TECReductionPage = () => {
         setIsLoadingRSData(true);
         try {
           const [rs0Data, rs50Data, rs100Data] = await Promise.all([
-            loadCSVData('/DATA/TEC_reducer_page/M5_J10_config_6CW_RS0.csv'),
-            loadCSVData('/DATA/TEC_reducer_page/M5_J10_config_6CW_RS50.csv'),
-            loadCSVData('/DATA/TEC_reducer_page/M5_J10_config_6CW_RS100.csv')
+            loadCSVData('../DATA/TEC_reducer_page/M5_J10_config_6CW_RS0.csv'),
+            loadCSVData('../DATA/TEC_reducer_page/M5_J10_config_6CW_RS50.csv'),
+            loadCSVData('../DATA/TEC_reducer_page/M5_J10_config_6CW_RS100.csv')
           ]);
 
           const variants: RSVariantData[] = [
