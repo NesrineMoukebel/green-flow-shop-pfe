@@ -28,7 +28,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <BrowserRouter basename="/green-flow-shop-pfe">
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/multi-objective" element={<MultiObjectiveMenuPage />} />

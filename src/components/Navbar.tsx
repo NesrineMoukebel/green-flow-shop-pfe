@@ -20,7 +20,7 @@ const Navbar = () => {
       {/* Logo */}
       <div className="flex items-center">
         <img 
-          src="/DATA/images/LOGO.png" 
+          src="./DATA/images/LOGO.png" 
           alt="Bi-Optima Logo" 
           className="h-12 w-auto cursor-pointer" 
           onClick={() => navigate('/')}

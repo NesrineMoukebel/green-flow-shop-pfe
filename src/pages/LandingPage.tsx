@@ -74,7 +74,7 @@ const LandingPage = () => {
             {/* Background Image */}
             <div className="absolute inset-0">
               <img 
-                src="/DATA/images/HeroSection.png" 
+                src="./DATA/images/HeroSection.png" 
                 alt="Hero Background" 
                 className="w-full h-full object-cover" 
               />
