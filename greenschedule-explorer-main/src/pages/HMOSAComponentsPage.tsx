@@ -58,9 +58,7 @@ function buildWeightsSeries(scenario: ScenarioType): WeightPoint[] {
   
   // Different scenarios with different weight patterns
   const scenarios = {
-    scenario1: [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.75, 0.7, 0.65], // ±0.05 steps
-    scenario2: [0.5, 0.58, 0.66, 0.74, 0.82, 0.74, 0.66, 0.58, 0.5, 0.58], // ±0.08 steps
-    scenario3: [0.5, 0.53, 0.56, 0.59, 0.62, 0.59, 0.56, 0.53, 0.5, 0.53] // ±0.03 steps
+    scenario1: [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.85], // ±0.05 steps
   };
   
   const cmaxWeights = scenarios[scenario];
@@ -191,6 +189,19 @@ const HMOSAComponentsPage = () => {
   const [metricsData, setMetricsData] = useState<MetricsData[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+
+  // Determine example text based on scenario and selected MH
+const getParetoExampleText = (scenario: string) => {
+  if (scenario === "restart") {
+    return "Pareto fronts example - Instance 4, 30 jobs, 15 machines";
+    
+  } else if (scenario === "weights") {
+     return "Pareto fronts example - Instance 6, 10 jobs, 5 machines";
+    
+  }
+  return "Pareto fronts example"; // default fallback
+};
 
   // Update weights data when scenario changes
   useEffect(() => {
@@ -408,16 +419,8 @@ const HMOSAComponentsPage = () => {
                 <div className="flex items-center justify-between flex-wrap gap-3">
                   <CardTitle>Dynamic weights in SA</CardTitle>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground">Scenario:</span>
-                    <select
-                      value={scenario}
-                      onChange={(e) => setScenario(e.target.value as ScenarioType)}
-                      className="h-9 px-3 rounded-md border bg-background"
-                    >
-                      <option value="scenario1">Scenario 1 (±0.05 steps)</option>
-                      <option value="scenario2">Scenario 2 (±0.08 steps)</option>
-                      <option value="scenario3">Scenario 3 (±0.03 steps)</option>
-                    </select>
+                    <span className="text-sm text-muted-foreground">Scenario: +0.05 steps</span>
+                    
                   </div>
                 </div>
               </CardHeader>
@@ -445,7 +448,7 @@ const HMOSAComponentsPage = () => {
           {/* Algorithm Comparison - Pareto Fronts */}
           <Card>
             <CardHeader>
-              <CardTitle>Algorithm Comparison - Pareto Fronts</CardTitle>
+              <CardTitle>{getParetoExampleText(test)}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-96">
@@ -466,12 +469,23 @@ const HMOSAComponentsPage = () => {
                       domain={[minTec, maxTec]} 
                       tick={{ fontSize: 12 }} 
                     />
-                    <RTooltip 
-                      cursor={{ strokeDasharray: '3 3' }} 
-                      formatter={(value: any, name: any) => 
-                        [value.toFixed(2), name === 'makespan' ? 'Makespan' : 'TEC']
-                      } 
+                    <RTooltip
+                      cursor={{ strokeDasharray: "3 3" }}
+                      content={({ active, payload }) => {
+                        if (!active || !payload || !payload.length) return null;
+
+                        // Get the first payload object
+                        const point = payload[0].payload;
+
+                        return (
+                          <div className="bg-white p-2 border rounded shadow">
+                            <div>Makespan: {point.makespan.toFixed(2)}</div>
+                            <div>TEC: {point.tec.toFixed(2)}</div>
+                          </div>
+                        );
+                      }}
                     />
+
                     <Legend />
                     {paretoData.map(series => (
                       <Scatter 
@@ -493,24 +507,39 @@ const HMOSAComponentsPage = () => {
     <CardTitle>Algorithm Variants</CardTitle>
   </CardHeader>
   <CardContent>
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {/* HMOSA */}
-      <Card className="p-4 text-center transition-transform duration-300 hover:scale-105 hover:shadow-md">
-        <CardTitle className="text-base mb-2 text-purple-600">HMOSA</CardTitle>
-        <p className="text-sm text-gray-600">Dynamic weights</p>
-      </Card>
+    <div
+      className={`grid grid-cols-1 md:grid-cols-${test === "weights" ? "3" : "2"} gap-4 justify-center`}
+    >
+      {test === "weights" ? (
+        <>
+          <Card className="p-4 text-center transition-transform duration-300 hover:scale-105 hover:shadow-md">
+            <CardTitle className="text-base mb-2 text-purple-600">HMOSA</CardTitle>
+            <p className="text-sm text-gray-600">Dynamic weights</p>
+          </Card>
 
-      {/* V1-HMOSA */}
-      <Card className="p-4 text-center transition-transform duration-300 hover:scale-105 hover:shadow-md">
-        <CardTitle className="text-base mb-2 text-purple-600">V1-HMOSA</CardTitle>
-        <p className="text-sm text-gray-600">0.5 for Cmax, 0.5 for TEC</p>
-      </Card>
+          <Card className="p-4 text-center transition-transform duration-300 hover:scale-105 hover:shadow-md">
+            <CardTitle className="text-base mb-2 text-purple-600">V1-HMOSA</CardTitle>
+            <p className="text-sm text-gray-600">0.5 for Cmax, 0.5 for TEC</p>
+          </Card>
 
-      {/* V2-HMOSA */}
-      <Card className="p-4 text-center transition-transform duration-300 hover:scale-105 hover:shadow-md">
-        <CardTitle className="text-base mb-2 text-purple-600">V2-HMOSA</CardTitle>
-        <p className="text-sm text-gray-600">0.7 for Cmax, 0.3 for TEC</p>
-      </Card>
+          <Card className="p-4 text-center transition-transform duration-300 hover:scale-105 hover:shadow-md">
+            <CardTitle className="text-base mb-2 text-purple-600">V2-HMOSA</CardTitle>
+            <p className="text-sm text-gray-600">0.7 for Cmax, 0.3 for TEC</p>
+          </Card>
+        </>
+      ) : test === "restart" ? (
+        <>
+          <Card className="p-4 text-center transition-transform duration-300 hover:scale-105 hover:shadow-md">
+            <CardTitle className="text-base mb-2 text-purple-600">HMOSA</CardTitle>
+            <p className="text-sm text-gray-600">HMOSA with restart mechanism</p>
+          </Card>
+
+          <Card className="p-4 text-center transition-transform duration-300 hover:scale-105 hover:shadow-md">
+            <CardTitle className="text-base mb-2 text-purple-600">HMOSA-</CardTitle>
+            <p className="text-sm text-gray-600">HMOSA without restart mechanism</p>
+          </Card>
+        </>
+      ) : null}
     </div>
   </CardContent>
 </Card>
@@ -666,6 +695,17 @@ const HMOSAComponentsPage = () => {
                   </TableBody>
                 </Table>
               </div>
+              <div className="mt-4 p-3 bg-muted/30 rounded-lg">
+      <div className="text-sm">
+        <div className="font-medium mb-2">Metric Descriptions:</div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-muted-foreground">
+          <div><strong>IGD (Inverted Generational Distance):</strong> Lower values indicate better convergence to true Pareto front</div>
+          <div><strong>SNS (Spread of Non-dominated Solutions):</strong> Higher values indicate better distribution of solutions</div>
+          <div><strong>NPS (Number of Pareto Solutions):</strong> Higher values indicate more non-dominated solutions found</div>
+          <div><strong>Execution Time:</strong> Lower values indicate faster algorithm performance</div>
+        </div>
+      </div>
+    </div>
             </CardContent>
           </Card>
         </div>

@@ -128,8 +128,8 @@ function bestIndex(arr: number[], type: 'min' | 'max') {
 }
 
 const colors = {
-  A: "#22c55e",
-  B: "#1f2937",
+  A: "#8D70FF",
+  B: "#ef4444",
 };
 
  
@@ -146,6 +146,21 @@ const MVNDComparisonPage = () => {
   useEffect(() => {
     loadData();
   }, []);
+
+
+  // Determine example text based on scenario and selected MH
+const getParetoExampleText = (scenario: string, mh: string) => {
+  if (scenario === "mvnd-vs-standard") {
+    if (mh === "HNSGA-II") return "Pareto fronts example - Instance 1, 60 jobs, 10 machines";
+    if (mh === "HMOGVNS") return "Pareto fronts example - Instance 6, 30 jobs, 10 machines";
+    if (mh === "HMOSA") return "Pareto fronts example - Instance 9, 100 jobs, 20 machines";
+  } else if (scenario === "with-mvnd-vs-without") {
+    if (mh === "HNSGA-II") return "Pareto fronts example - Instance 6, 50 jobs, 15 machines";
+    if (mh === "HMOGVNS") return "Pareto fronts example - Instance 1, 200 jobs, 40 machines";
+    if (mh === "HMOSA") return "Pareto fronts example - Instance 5, 100 jobs, 20 machines";
+  }
+  return "Pareto fronts example"; // default fallback
+};
 
   const loadData = async () => {
     setLoading(true);
@@ -279,7 +294,7 @@ const MVNDComparisonPage = () => {
           <div className="p-6 space-y-8">
             <Card>
               <CardHeader>
-                <CardTitle>Algorithm Comparison - Pareto Fronts</CardTitle>
+                <CardTitle>{getParetoExampleText(scenario, mh)}</CardTitle>
               </CardHeader>
               <CardContent>
                 {loading ? (
@@ -313,13 +328,16 @@ const MVNDComparisonPage = () => {
                           domain={['dataMin', 'dataMax']} 
                           tick={{ fontSize: 12 }} 
                         />
-                        <Tooltip 
-                          cursor={{ strokeDasharray: '3 3' }} 
-                          formatter={(value: any, name: any) => [
-                            (value as number).toFixed(2), 
-                            name === 'makespan' ? 'Makespan' : 'TEC'
-                          ]} 
+                        <Tooltip
+                          cursor={{ strokeDasharray: '3 3' }}
+                          formatter={(value: any, name: any) => {
+                            // 'name' comes from the dataKey
+                            if (name === 'makespan') return [(value as number).toFixed(2), 'Makespan'];
+                            if (name === 'tec') return [(value as number).toFixed(2), 'TEC'];
+                            return [value, name];
+                          }}
                         />
+
                         <Legend />
                         {paretoData.map((algorithm, idx) => (
                           <Scatter 

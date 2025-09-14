@@ -258,7 +258,57 @@ const SensitivityAnalysisPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex">
+      
+      {/* Sidebar - Matching MultiObjectiveSidebar style */}
+      <div className="w-80 h-screen bg-card border-r border-border p-6 overflow-y-auto sticky top-0">
+        {/* Logo Section */}
+        <img 
+          src="/DATA/images/LOGO.png" 
+          alt="Bi-Optima Logo" 
+          className="px-auto h-20 w-auto hover:scale-105 transition-transform duration-200 cursor-pointer mb-6" 
+          onClick={() => navigate("/")}
+        />
+        
+        
+        <Card className="shadow-card">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg">Problem Data</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-sm text-muted-foreground leading-relaxed">
+              <p className="mb-3">
+                Problem data analysis including benchmark extenstion, energy considerations, and machine consumption rates. 
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Data Categories - Styled exactly like Algorithms section */}
+        <Card className="mt-6 shadow-card">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg">Key information</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm">
+            <div className="p-3 bg-muted rounded-md">
+              <div className="font-medium text-accent">6CWD profile</div>
+              <div className="text-muted-foreground">6CWD was created by shifting the 6CW profile by T/2</div>
+            </div>
+            <div className="p-3 bg-muted rounded-md">
+              <div className="font-medium text-accent">6CWI profile</div>
+              <div className="text-muted-foreground">6CWI was created by shifting the 6CW profile by 3T/4</div>
+            </div>
+            <div className="p-3 bg-muted rounded-md">
+              <div className="font-medium text-accent">Sensitivity Analysis</div>
+              <div className="text-muted-foreground">Analysis of how electricity price distributions affect solution quality and performance</div>
+            </div>
+            
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 overflow-auto">
       {/* Header */}
       <div className="border-b border-border bg-card">
         <div className="p-6">
@@ -284,7 +334,7 @@ const SensitivityAnalysisPage = () => {
         </div>
       </div>
 
-      <div className="p-6 space-y-8">
+      <div className="p-6 space-y-8 max-w-6xl mx-auto">
         {/* Price Profiles Histograms */}
         <Card>
           <CardHeader>
@@ -304,7 +354,7 @@ const SensitivityAnalysisPage = () => {
                           className="rounded-t flex items-end justify-center text-white text-xs font-medium px-1"
                           style={{
                             height: `${(price / 0.12) * 120 + 20}px`,
-                            width: `${profile.durationValues[i] * 240}px`,
+                            width: `${profile.durationValues[i] * 200}px`,
                             backgroundColor: profile.color,
                             minWidth: '30px'
                           }}
@@ -327,7 +377,7 @@ const SensitivityAnalysisPage = () => {
         {/* Pareto Fronts Comparison */}
         <Card>
           <CardHeader>
-            <CardTitle>Algorithm Comparison - Pareto Fronts</CardTitle>
+            <CardTitle>Pareto Fronts example - Instance 4 with 200 jobs and 20 machines</CardTitle>
           </CardHeader>
           <CardContent>
             {chartData.length === 0 ? (
@@ -504,7 +554,7 @@ const SensitivityAnalysisPage = () => {
                             <div className="font-medium mb-2">Metric Descriptions:</div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-muted-foreground">
                               <div><strong>IGD (Inverted Generational Distance):</strong> Lower values indicate better convergence to true Pareto front</div>
-                              <div><strong>SNS (Spacing to Nearest Solution):</strong> Higher values indicate better distribution of solutions</div>
+                              <div><strong>SNS (Spread of Non-Dominated Solutions):</strong> Higher values indicate better distribution of solutions</div>
                               <div><strong>NPS (Number of Pareto Solutions):</strong> Higher values indicate more non-dominated solutions found</div>
                               <div><strong>Exec Time (Execution Time):</strong> Lower values indicate faster algorithm performance</div>
                             </div>
@@ -514,6 +564,8 @@ const SensitivityAnalysisPage = () => {
 
         </Card>
       </div>
+      </div>
+      
     </div>
   );
 };

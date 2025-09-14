@@ -120,7 +120,7 @@ const ILPModelTestsPage = () => {
                   ))}
                 </SelectContent>
               </Select>
-              <Button variant="hero" className="w-full">Run Simulation</Button>
+              {/* <Button variant="hero" className="w-full">Run Simulation</Button> */}
             </div>
           </CardContent>
         </Card>
@@ -137,9 +137,7 @@ const ILPModelTestsPage = () => {
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground">Cmax lower bounds are taken from (Benavides & Ritt, 2018).</CardContent>
         </Card>
-        <Button variant="ghost" size="sm" onClick={() => navigate("/multi-objective/meta")} className="mt-4 w-full">
-          <ArrowLeft className="w-4 h-4 mr-2" /> Back to Components
-        </Button>
+        
       </div>
 
       {/* Main */}
@@ -148,6 +146,15 @@ const ILPModelTestsPage = () => {
         <div className="border-b border-border bg-card">
           <div className="p-6">
             <div className="flex items-center gap-4">
+            <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate("/multi-objective")}
+                className="hover:bg-muted"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Menu
+              </Button>
               <div>
                 <h1 className="text-2xl font-bold text-foreground">ILP Model Tests</h1>
                 <p className="text-muted-foreground">Compare ILP model results against proposed algorithms and literature</p>
@@ -164,7 +171,7 @@ const ILPModelTestsPage = () => {
               <CardTitle>ILP Model vs Proposed Algorithms (Cmax)</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="border rounded-lg overflow-x-auto">
+            <div className="border rounded-lg max-h-96 overflow-y-auto overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow className="bg-primary/10 text-primary">
@@ -217,7 +224,7 @@ const ILPModelTestsPage = () => {
               <CardTitle>ILP Model vs Proposed Algorithms (TEC)</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="border rounded-lg overflow-x-auto">
+              <div className="border rounded-lg max-h-96 overflow-y-auto overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow className="bg-primary/10 text-primary">
@@ -270,7 +277,7 @@ const ILPModelTestsPage = () => {
               <CardTitle>Comparison with Literature (Cmax)</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="border rounded-lg overflow-x-auto">
+            <div className="border rounded-lg max-h-96 overflow-y-auto overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow className="bg-primary/10 text-primary">

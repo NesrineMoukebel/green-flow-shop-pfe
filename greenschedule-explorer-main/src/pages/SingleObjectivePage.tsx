@@ -1,8 +1,127 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Settings2, Factory, Cog } from "lucide-react";
+import { ArrowLeft, Settings2, Factory, Cog, BarChart3, GanttChart, BarChart2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import Navbar from "@/components/Navbar";
+import MultiObjectiveSidebar from "@/components/MultiObjectiveSidebar";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+} from "recharts";
+
+
+const gapData = [
+  { instanceLabel: "10_5_1", gap: 0.42 },
+  { instanceLabel: "10_5_2", gap: 0.85 },
+  { instanceLabel: "10_5_3", gap: 2.68 },
+  { instanceLabel: "10_5_4", gap: 2.69 },
+  { instanceLabel: "10_5_5", gap: 4.84 },
+  { instanceLabel: "10_5_6", gap: 5.20 },
+  { instanceLabel: "10_5_7", gap: 3.33 },
+  { instanceLabel: "10_5_8", gap: 7.47 },
+  { instanceLabel: "10_5_9", gap: 6.97 },
+  { instanceLabel: "10_5_10", gap: 2.34 },
+  { instanceLabel: "20_10_1", gap: 6.33 },
+  { instanceLabel: "20_10_2", gap: 48.43 },
+  { instanceLabel: "20_10_3", gap: 8.18 },
+  { instanceLabel: "20_10_4", gap: 50.82 },
+  { instanceLabel: "20_10_5", gap: 5.87 },
+  { instanceLabel: "20_10_6", gap: 9.33 },
+  { instanceLabel: "20_10_7", gap: 4.04 },
+  { instanceLabel: "20_10_8", gap: 6.38 },
+  { instanceLabel: "20_10_9", gap: 5.47 },
+  { instanceLabel: "20_10_10", gap: 6.28 },
+  { instanceLabel: "30_15_1", gap: 7.09 },
+  { instanceLabel: "30_15_2", gap: 45.16 },
+  { instanceLabel: "30_15_3", gap: 8.88 },
+  { instanceLabel: "30_15_4", gap: 46.85 },
+  { instanceLabel: "30_15_5", gap: 46.02 },
+  { instanceLabel: "30_15_6", gap: 13.15 },
+  { instanceLabel: "30_15_7", gap: 7.56 },
+  { instanceLabel: "30_15_8", gap: 51.07 },
+  { instanceLabel: "30_15_9", gap: 10.44 },
+  { instanceLabel: "30_15_10", gap: 48.52 },
+  { instanceLabel: "100_20_1", gap: 4.84 },
+  { instanceLabel: "100_20_2", gap: 3.89 },
+  { instanceLabel: "100_20_3", gap: 5.17 },
+  { instanceLabel: "100_20_4", gap: 4.76 },
+  { instanceLabel: "100_20_5", gap: 5.92 },
+  { instanceLabel: "100_20_6", gap: 3.25 },
+  { instanceLabel: "100_20_7", gap: 4.06 },
+  { instanceLabel: "100_20_8", gap: 6.33 },
+  { instanceLabel: "100_20_9", gap: 5.23 },
+  { instanceLabel: "100_20_10", gap: 4.87 },
+  { instanceLabel: "200_40_1", gap: 4.49 },
+  { instanceLabel: "200_40_2", gap: 2.96 },
+  { instanceLabel: "200_40_3", gap: 5.04 },
+  { instanceLabel: "200_40_4", gap: 3.81 },
+  { instanceLabel: "200_40_5", gap: 6.16 },
+  { instanceLabel: "200_40_6", gap: 2.86 },
+  { instanceLabel: "200_40_7", gap: 2.81 },
+  { instanceLabel: "200_40_8", gap: 3.27 },
+  { instanceLabel: "200_40_9", gap: 2.90 },
+  { instanceLabel: "200_40_10", gap: 4.26 },
+];
+
+
+const improv_data = [
+  {
+    jobs: 10,
+    machines: 5,
+    crossoverQLGA: 9018.4,
+    crossoverGA: 4135.7,
+    mutationQLGA: 4165.2,
+    mutationGA: 2783.3,
+    tecImprovedQLGA: 7.80,
+    tecImprovedGA: 6.10,
+  },
+  {
+    jobs: 20,
+    machines: 10,
+    crossoverQLGA: 8968.4,
+    crossoverGA: 8352.7,
+    mutationQLGA: 4009.4,
+    mutationGA: 5573.1,
+    tecImprovedQLGA: 20.50,
+    tecImprovedGA: 11.40,
+  },
+  {
+    jobs: 30,
+    machines: 15,
+    crossoverQLGA: 8801.5,
+    crossoverGA: 7798.8,
+    mutationQLGA: 4277.8,
+    mutationGA: 5169,
+    tecImprovedQLGA: 22.20,
+    tecImprovedGA: 15.16,
+  },
+  {
+    jobs: 100,
+    machines: 20,
+    crossoverQLGA: 8908.1,
+    crossoverGA: 8759.9,
+    mutationQLGA: 4392.0,
+    mutationGA: 5828.3,
+    tecImprovedQLGA: 26.40,
+    tecImprovedGA: 16.44,
+  },
+  {
+    jobs: 200,
+    machines: 40,
+    crossoverQLGA: 8979.3,
+    crossoverGA: 9003.8,
+    mutationQLGA: 4148.1,
+    mutationGA: 6001.9,
+    tecImprovedQLGA: 28.10,
+    tecImprovedGA: 19.70,
+  },
+];
 
 const SingleObjectivePage = () => {
   const navigate = useNavigate();
@@ -11,8 +130,11 @@ const SingleObjectivePage = () => {
   // Main page with two cards
   if (currentPage === "main") {
     return (
-      <div className="min-h-screen bg-background">
-        {/* Header */}
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex">
+        <MultiObjectiveSidebar />
+
+        <div className="flex-1 overflow-auto">
+          {/* Header */}
         <div className="border-b border-border bg-card">
           <div className="p-6">
             <div className="flex items-center gap-4">
@@ -25,27 +147,29 @@ const SingleObjectivePage = () => {
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Home
               </Button>
-              <div>
+              
+            </div>
+          </div>
+        </div>
+        
+        <div className="p-12 text-center">
                 <h1 className="text-3xl font-bold text-foreground">
                   Single objective optimization in flow shop for TEC minimization under Time-of-use tariffs
                 </h1>
                 <p className="text-muted-foreground">Compare different flow shop approaches for TEC optimization</p>
               </div>
-            </div>
-          </div>
-        </div>
-
+              
         <div className="p-6 space-y-8">
           {/* Main Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Non-Permutation Flow Shop Card */}
-            <Card 
-              className="cursor-pointer hover:shadow-lg transition-shadow"
+            <Card
+              className="cursor-pointer border border-transparent hover:border-purple-500 hover:shadow-xl hover:scale-[1.03] transition-all duration-300 ease-in-out"
               onClick={() => setCurrentPage("non-permutation")}
             >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Factory className="w-5 h-5 text-primary" />
+                  <BarChart2 className="w-5 h-5 text-purple-600 group-hover:text-purple-700 transition-colors" />
                   Non-permutation flow shop
                 </CardTitle>
               </CardHeader>
@@ -56,25 +180,29 @@ const SingleObjectivePage = () => {
               </CardContent>
             </Card>
 
+
             {/* Permutation Flow Shop Card */}
-            <Card 
-              className="cursor-pointer hover:shadow-lg transition-shadow"
-              onClick={() => setCurrentPage("permutation")}
-            >
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Cog className="w-5 h-5 text-primary" />
-                  Permutation flow shop
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Compare QL-GA and GA approaches for permutation flow shop scheduling
-                </p>
-              </CardContent>
-            </Card>
+            <Card
+            className="cursor-pointer border border-transparent hover:border-purple-500 hover:shadow-xl hover:scale-[1.03] transition-all duration-300 ease-in-out"
+            onClick={() => setCurrentPage("permutation")}
+          >
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BarChart3 className="w-5 h-5 text-purple-600 group-hover:text-purple-700 transition-colors" />
+                Permutation flow shop
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">
+                Compare QL-GA and GA approaches for permutation flow shop scheduling
+              </p>
+            </CardContent>
+          </Card>
+
           </div>
         </div>
+        </div>
+        
       </div>
     );
   }
@@ -223,7 +351,92 @@ const SingleObjectivePage = () => {
             </div>
           </div>
 
-          <div className="p-6">
+          
+          <div className="p-6 flex flex-col justify-center items-center gap-8 w-full">
+            <Card className="mt-6 shadow-card">
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold">
+                    Q-learning for paramter control: Crossover and Mutation rates
+                  </CardTitle>
+                  <p className="text-blue-600 text-sm mt-1">
+                    At each iteration, the Q-learning agent chooses the crossover and mutation rates based on the current state of the population: best TEC value, and population diversity.
+                  </p>
+                </CardHeader>
+              </Card>
+            <Card className="shadow-card w-full max-w-5xl">
+              <CardHeader>
+                <CardTitle>Gap (%) by Instance</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-96 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={gapData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis
+                        dataKey="instanceLabel"
+                        angle={-45}
+                        textAnchor="end"
+                        height={70}
+                      />
+                      <YAxis
+                        label={{
+                          value: "Gap (%)",
+                          angle: -90,
+                          position: "insideLeft",
+                        }}
+                      />
+                      <Tooltip
+                        formatter={(value: any) => [`${value}%`, "Gap"]}
+                        labelFormatter={(label: any) => `Instance: ${label}`}
+                      />
+                      <Bar dataKey="gap" fill="#6366f1" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="mx-auto w-full max-w-5xl">
+              <CardHeader>
+                <CardTitle>TEC Results</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto border rounded-lg">
+                  <table className="w-full text-sm text-left border-collapse">
+                    <thead className="bg-muted/50">
+                      <tr>
+                        <th rowSpan={2} className="p-2 border-r">Jobs</th>
+                        <th rowSpan={2} className="p-2 border-r">Machines</th>
+                        <th colSpan={2} className="p-2 border-r text-center">Crossover Count</th>
+                        <th colSpan={2} className="p-2 border-r text-center">Mutation Count</th>
+                        <th colSpan={2} className="p-2 text-center">TEC Improved (%)</th>
+                      </tr>
+                      <tr>
+                        <th className="p-2 border-r">QL-GA</th>
+                        <th className="p-2 border-r">GA</th>
+                        <th className="p-2 border-r">QL-GA</th>
+                        <th className="p-2 border-r">GA</th>
+                        <th className="p-2 border-r">QL-GA</th>
+                        <th className="p-2">GA</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {improv_data.map((row, idx) => (
+                        <tr key={idx} className="hover:bg-muted/30 border-t">
+                          <td className="p-2 border-r">{row.jobs}</td>
+                          <td className="p-2 border-r">{row.machines}</td>
+                          <td className="p-2 border-r">{row.crossoverQLGA}</td>
+                          <td className="p-2 border-r">{row.crossoverGA}</td>
+                          <td className="p-2 border-r">{row.mutationQLGA}</td>
+                          <td className="p-2 border-r">{row.mutationGA}</td>
+                          <td className="p-2 border-r">{row.tecImprovedQLGA}</td>
+                          <td className="p-2">{row.tecImprovedGA}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
             <PermutationTable />
           </div>
         </div>
@@ -345,7 +558,7 @@ const PermutationTable = () => {
         <CardTitle>Performance Results</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="border rounded-lg overflow-x-auto">
+        <div className="border rounded-lg max-h-96 overflow-y-auto overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="bg-muted/50">
@@ -364,11 +577,18 @@ const PermutationTable = () => {
                   <td className="p-3 font-medium border-r">{row.Instance}</td>
                   <td className="p-3 border-r">{row.Num_Jobs}</td>
                   <td className="p-3 border-r">{row.Num_Machines}</td>
-                  <td className="p-3 text-center border-r">{parseFloat(row["QL-GA"]).toFixed(2)}</td>
-                  <td className="p-3 text-center border-r">{parseFloat(row.GA).toFixed(2)}</td>
-                  <td className="p-3 text-center border-r">{parseFloat(row["QL-GA_Exec_Time"]).toFixed(3)}</td>
-
-                  <td className="p-3 text-center">{parseFloat(row.GA_Exec_Time).toFixed(3)}</td>
+                  <td className="p-3 text-center border-r">
+                    {parseFloat(row["QL-GA"]).toFixed(2)}
+                  </td>
+                  <td className="p-3 text-center border-r">
+                    {parseFloat(row.GA).toFixed(2)}
+                  </td>
+                  <td className="p-3 text-center border-r">
+                    {parseFloat(row["QL-GA_Exec_Time"]).toFixed(3)}
+                  </td>
+                  <td className="p-3 text-center">
+                    {parseFloat(row.GA_Exec_Time).toFixed(3)}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -376,6 +596,7 @@ const PermutationTable = () => {
         </div>
       </CardContent>
     </Card>
+
   );
 };
 

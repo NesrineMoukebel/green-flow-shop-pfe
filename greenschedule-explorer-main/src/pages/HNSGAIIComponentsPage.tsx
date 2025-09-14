@@ -173,6 +173,17 @@ const HNSGAIIComponentsPage = () => {
       }).finally(() => setLoading(false));
     }
   };
+// Determine example text based on scenario and selected MH
+const getParetoExampleText = (scenario: string) => {
+  if (scenario === "crossover") {
+    return "Pareto fronts example - Instance 9, 400 jobs, 20 machines";
+    
+  } else if (scenario === "nfs") {
+     return "Pareto fronts example - Instance 9, 30 jobs, 5 machines";
+    
+  }
+  return "Pareto fronts example"; // default fallback
+};
 
   const getBestIndices = (values: number[], metric: string) => {
     if (!values || values.length === 0) return [];
@@ -248,7 +259,7 @@ const HNSGAIIComponentsPage = () => {
               <div className="p-3 bg-muted rounded-md">
                 <div className="font-medium text-accent">Crossover Types</div>
                 <div className="text-muted-foreground">
-                  Compare 2PT-HNSGA-II and PMX-HNSGA-II crossover operators for genetic algorithm performance.
+                  Compare Two-point crossover (2PT-HNSGA-II) and Partially Mapped Crossover (PMX-HNSGA-II) crossover operators for genetic algorithm performance.
                 </div>
               </div>
             ) : (
@@ -309,7 +320,7 @@ const HNSGAIIComponentsPage = () => {
           {/* Algorithm Comparison - Pareto Fronts */}
           <Card>
             <CardHeader>
-              <CardTitle>Algorithm Comparison - Pareto Fronts</CardTitle>
+              <CardTitle>{getParetoExampleText(test)}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-96">
@@ -330,12 +341,22 @@ const HNSGAIIComponentsPage = () => {
                       domain={[minTec, maxTec]} 
                       tick={{ fontSize: 12 }} 
                     />
-                    <RTooltip 
-                      cursor={{ strokeDasharray: '3 3' }} 
-                      formatter={(value: any, name: any) => 
-                        [value.toFixed(2), name === 'makespan' ? 'Makespan' : 'TEC']
-                      } 
+                    <RTooltip
+                      cursor={{ strokeDasharray: '3 3' }}
+                      content={({ active, payload }) => {
+                        if (!active || !payload || !payload.length) return null;
+
+                        const point = payload[0].payload; // the data point
+
+                        return (
+                          <div className="bg-white p-2 border rounded shadow text-sm">
+                            <div>Makespan: {point.makespan.toFixed(2)}</div>
+                            <div>TEC: {point.tec.toFixed(2)}</div>
+                          </div>
+                        );
+                      }}
                     />
+
                     <Legend />
                     {paretoData.map(series => (
                       <Scatter 
@@ -504,6 +525,17 @@ const HNSGAIIComponentsPage = () => {
                   </TableBody>
                 </Table>
               </div>
+              <div className="mt-4 p-3 bg-muted/30 rounded-lg">
+      <div className="text-sm">
+        <div className="font-medium mb-2">Metric Descriptions:</div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-muted-foreground">
+          <div><strong>IGD (Inverted Generational Distance):</strong> Lower values indicate better convergence to true Pareto front</div>
+          <div><strong>SNS (Spread of Non-dominated Solutions):</strong> Higher values indicate better distribution of solutions</div>
+          <div><strong>NPS (Number of Pareto Solutions):</strong> Higher values indicate more non-dominated solutions found</div>
+          <div><strong>Execution Time:</strong> Lower values indicate faster algorithm performance</div>
+        </div>
+      </div>
+    </div>
             </CardContent>
           </Card>
         </div>

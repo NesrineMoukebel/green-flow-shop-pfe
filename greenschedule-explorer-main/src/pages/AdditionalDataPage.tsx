@@ -137,8 +137,49 @@ const AdditionalDataPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex">
+      {/* Sidebar - Matching MultiObjectiveSidebar style */}
+      <div className="w-80 h-screen bg-card border-r border-border p-6 overflow-y-auto sticky top-0">
+        {/* Logo Section */}
+        <img 
+          src="/DATA/images/LOGO.png" 
+          alt="Bi-Optima Logo" 
+          className="px-auto h-20 w-auto hover:scale-105 transition-transform duration-200 cursor-pointer mb-6" 
+          onClick={() => navigate("/")}
+        />
+        
+        
+        <Card className="shadow-card">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg">Problem Data</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-sm text-muted-foreground leading-relaxed">
+              <p className="mb-3">
+                Problem data analysis including benchmark extenstion, energy considerations, and machine consumption rates. 
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Data Categories - Styled exactly like Algorithms section */}
+        <Card className="mt-6 shadow-card">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg">Key information</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm">
+            <div className="p-3 bg-muted rounded-md">
+              <div className="font-medium text-accent">PS & PB</div>
+              <div className="text-muted-foreground">Additional files were added, where machines are heterogeneous in terms of consumption rates</div>
+            </div>
+                       
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 overflow-auto">
+          {/* Header */}
       <div className="border-b border-border bg-card">
         <div className="p-6">
           <div className="flex items-center gap-4">
@@ -463,6 +504,8 @@ const AdditionalDataPage = () => {
           </CardContent>
         </Card>
       </div>
+      </div>
+      
     </div>
   );
 };

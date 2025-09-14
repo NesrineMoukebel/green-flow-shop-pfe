@@ -110,25 +110,30 @@ const SolutionRepresentationPage = () => {
                     </div>
                     
                     {/* Jobs on this machine */}
-                    <div className="relative h-full">
-                      {machine.map(([jobId, startTime], idx) => {
-                        const duration = processingTimes[jobId][machineIdx];
-                        return (
-                          <div
-                            key={idx}
-                            className="absolute border border-black"
-                      style={{
-                              left: `${((startTime) / timeHorizon) * 100}%`,
-                              width: `${(duration / timeHorizon) * 100}%`,
-                              height: '75%',
-                              top: '12.5%',
-                              backgroundColor: jobColors[jobId],
-                              minWidth: '4px'
-                            }}
-                          />
-                        );
-                      })}
-                    </div>
+                      <div className="relative h-full">
+                        {machine.map(([jobId, startTime], idx) => {
+                          const duration = processingTimes[jobId][machineIdx];
+                          const endTime = startTime + duration;
+
+                          return (
+                            <div
+                              key={idx}
+                              className="absolute border border-black"
+                              title={`Job ${jobId + 1} | Start: ${startTime} | End: ${endTime}`}
+                              style={{
+                                left: `${(startTime / timeHorizon) * 100}%`,
+                                width: `${(duration / timeHorizon) * 100}%`,
+                                height: '75%',
+                                top: '12.5%',
+                                backgroundColor: jobColors[jobId],
+                                minWidth: '4px',
+                                cursor: 'pointer'
+                              }}
+                            />
+                          );
+                        })}
+                      </div>
+
                     </div>
                   ))}
               </div>
@@ -237,8 +242,51 @@ const SolutionRepresentationPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="border-b border-border bg-card">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex">
+      {/* Sidebar - Matching MultiObjectiveSidebar style */}
+      <div className="w-80 h-screen bg-card border-r border-border p-6 overflow-y-auto sticky top-0">
+        {/* Logo Section */}
+        <img 
+          src="/DATA/images/LOGO.png" 
+          alt="Bi-Optima Logo" 
+          className="px-auto h-20 w-auto hover:scale-105 transition-transform duration-200 cursor-pointer mb-6" 
+          onClick={() => navigate("/")}
+        />
+        
+        
+        <Card className="shadow-card">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg">Solution representation</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-sm text-muted-foreground leading-relaxed">
+              <p className="mb-3">
+                Visual representation and data structure of a schedule. 
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Data Categories - Styled exactly like Algorithms section */}
+        <Card className="mt-6 shadow-card">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg">Key information</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm">
+            <div className="p-3 bg-muted rounded-md">
+              <div className="font-medium text-accent">Gantt chart</div>
+              <div className="text-muted-foreground">Each solution is represented as a schedule, which is modeled as
+              a mapping from the set of machines M to sequences of job operations</div>
+            </div>
+                       
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 overflow-auto">
+
+      {/* Header */}<div className="border-b border-border bg-card">
         <div className="p-6">
           <div className="flex items-center gap-4">
             <Button
@@ -278,6 +326,7 @@ const SolutionRepresentationPage = () => {
             <ProcessingTimesChart jobs={10} machines={5} instance={1} />
           </CardContent>
         </Card>
+      </div>
       </div>
     </div>
   );

@@ -1,90 +1,143 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import Sidebar from "@/components/Sidebar";
-import ProcessingTimesChart from "@/components/ProcessingTimesChart";
-import AlgorithmChart from "@/components/AlgorithmChart";
-import PerformanceTable from "@/components/PerformanceTable";
-
-interface SimulationConfig {
-  jobs: number;
-  machines: number;
-  instances: number;
-}
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BarChart3, Cpu, Target, Settings } from "lucide-react";
+import Navbar from "@/components/Navbar";
+import MultiObjectiveSidebar from "@/components/MultiObjectiveSidebar";
 
 const MultiObjectivePage = () => {
-  const navigate = useNavigate();
-  const [currentConfig, setCurrentConfig] = useState<SimulationConfig>({
-    jobs: 30,
-    machines: 10,
-    instances: 10
-  });
-  const [isRunning, setIsRunning] = useState(false);
-
-  const handleRun = (config: SimulationConfig) => {
-    setCurrentConfig(config);
-    setIsRunning(true);
-    
-    // Simulate algorithm execution
-    setTimeout(() => {
-      setIsRunning(false);
-    }, 2000);
-  };
 
   return (
-    <div className="min-h-screen bg-background flex">
-      {/* Sidebar */}
-      <Sidebar onRun={handleRun} />
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <Navbar />
+      
+      <div className="flex">
+        {/* Sidebar */}
+        <MultiObjectiveSidebar />
 
-      {/* Main Content */}
-      <div className="flex-1 overflow-auto">
-        {/* Header */}
-        <div className="border-b border-border bg-card">
-          <div className="p-6">
-            <div className="flex items-center justify-between">
+        {/* Main Dashboard Content */}
+        <div className="flex-1 overflow-auto">
+          {/* Dashboard Header */}
+          <div className="bg-white border-b border-gray-200 shadow-sm">
+            <div className="px-8 py-6">
               <div className="flex items-center gap-4">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => navigate("/")}
-                  className="hover:bg-muted"
-                >
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to Home
-                </Button>
                 <div>
-                  <h1 className="text-2xl font-bold text-foreground">
-                    Multi-objective Flow Shop
+                  <h1 className="text-3xl font-bold text-gray-900">
+                    Multi-Objective Analysis Dashboard
                   </h1>
-                  <p className="text-muted-foreground">
-                    Configuration: {currentConfig.jobs} jobs, {currentConfig.machines} machines, {currentConfig.instances} instances
+                  <p className="text-gray-600 mt-1">
+                    Comprehensive analysis tools for multi-objective optimization of non-permutation flow shop scheduling
                   </p>
                 </div>
               </div>
-              {isRunning && (
-                <div className="flex items-center gap-2 text-primary">
-                  <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                  <span className="font-medium">Running simulation...</span>
-                </div>
-              )}
             </div>
           </div>
-        </div>
 
-        {/* Content Sections */}
-        <div className="p-6 space-y-8">
-          {/* Section 1: Processing Times Visualization */}
-          <ProcessingTimesChart 
-            jobs={currentConfig.jobs} 
-            machines={currentConfig.machines} 
-          />
+          {/* Main Content */}
+          <div className="p-8">
+            <div className="max-w-4xl mx-auto">
+              {/* Overview Section */}
+              <Card className="shadow-lg border-0 mb-8">
+                <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100">
+                  <CardTitle className="flex items-center gap-2 text-gray-800">
+                    <BarChart3 className="w-5 h-5" />
+                    Multi-Objective Optimization Overview
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="text-gray-700 leading-relaxed space-y-4">
+                    <p>
+                      The multi-objective analysis section provides comprehensive tools for optimizing 
+                      the non-permutation flow shop scheduling problem with simultaneous consideration 
+                      of makespan and energy consumption objectives.
+                    </p>
+                    <p>
+                      This dashboard offers various analysis modules to explore different aspects of 
+                      the optimization problem, from problem data visualization to advanced algorithm 
+                      comparisons and Pareto front analysis.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
 
-          {/* Section 2: Algorithm Comparison */}
-          <AlgorithmChart />
+              {/* Features Grid */}
+              <div className="grid md:grid-cols-2 gap-6">
+                <Card className="shadow-lg border-0">
+                  <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100">
+                    <CardTitle className="flex items-center gap-2 text-blue-800">
+                      <Target className="w-5 h-5" />
+                      Optimization Objectives
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <div className="space-y-3 text-sm text-gray-700">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        <span><strong>Makespan:</strong> Minimize total completion time</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                        <span><strong>Energy Cost:</strong> Minimize total energy consumption</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                        <span><strong>Pareto Front:</strong> Trade-off analysis between objectives</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
 
-          {/* Section 3: Performance Metrics */}
-          <PerformanceTable />
+                <Card className="shadow-lg border-0">
+                  <CardHeader className="bg-gradient-to-r from-emerald-50 to-emerald-100">
+                    <CardTitle className="flex items-center gap-2 text-emerald-800">
+                      <Cpu className="w-5 h-5" />
+                      Algorithms Available
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <div className="space-y-3 text-sm text-gray-700">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                        <span><strong>HNSGA-II:</strong> Hybrid Non-dominated Sorting GA</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                        <span><strong>HMOSA:</strong> Hybrid Multi-objective SA</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
+                        <span><strong>HMOGVNS:</strong> Hybrid Multi-objective GVNS</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Getting Started */}
+              <Card className="shadow-lg border-0 mt-8">
+                <CardHeader className="bg-gradient-to-r from-purple-50 to-purple-100">
+                  <CardTitle className="flex items-center gap-2 text-purple-800">
+                    <Settings className="w-5 h-5" />
+                    Getting Started
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="text-gray-700 space-y-3">
+                    <p>
+                      Select any analysis option from the sidebar to begin exploring the multi-objective 
+                      optimization results. Each section provides different insights:
+                    </p>
+                    <ul className="list-disc list-inside space-y-2 text-sm">
+                      <li><strong>Problem Data:</strong> Explore benchmark datasets and problem parameters</li>
+                      <li><strong>Solution Representation:</strong> Visualize schedule Gantt charts</li>
+                      <li><strong>Metaheuristics Components:</strong> Analyze algorithm components and heuristics</li>
+                      <li><strong>ILP Model Tests:</strong> Compare with optimal solutions</li>
+                      <li><strong>MORL:</strong> Multi-objective reinforcement learning results</li>
+                      <li><strong>Hybrid MHs Comparison:</strong> Comprehensive algorithm performance analysis</li>
+                    </ul>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </div>
       </div>
     </div>

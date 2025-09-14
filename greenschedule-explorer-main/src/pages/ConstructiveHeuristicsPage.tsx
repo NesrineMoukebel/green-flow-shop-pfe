@@ -15,9 +15,9 @@ const metaheuristics = [
 
 const heuristicVariants = [
   { name: "NFS", color: "#22c55e", label: "NFS" },
-  { name: "NEH", color: "#1f2937", label: "NEH" },
-  { name: "WNEH", color: "#ef4444", label: "WNEH" },
-  { name: "R", color: "#f59e42", label: "Random" },
+  { name: "NEH", color: "#ef4444", label: "NEH" },
+  { name: "WNEH", color: "black", label: "WNEH" },
+  { name: "R", color: "#8D70FF", label: "Random" },
 ];
 
 // Pareto dominance filter
@@ -243,7 +243,7 @@ const ConstructiveHeuristicsPage = () => {
           <div className="p-6 space-y-8">
             <Card>
               <CardHeader>
-                <CardTitle>Algorithm Comparison - Pareto Fronts</CardTitle>
+                <CardTitle>Pareto Fronts example - Instance 8, 30 jobs, 5 machines</CardTitle>
               </CardHeader>
               <CardContent>
                 {loading ? (
@@ -277,22 +277,35 @@ const ConstructiveHeuristicsPage = () => {
                           domain={['dataMin', 'dataMax']} 
                           tick={{ fontSize: 12 }} 
                         />
-                        <Tooltip 
-                          cursor={{ strokeDasharray: '3 3' }} 
-                          formatter={(value: any, name: any) => [
-                            (value as number).toFixed(2), 
-                            name === 'makespan' ? 'Makespan' : 'TEC'
-                          ]} 
-                        />
+                        <Tooltip
+                            cursor={{ strokeDasharray: '3 3' }}
+                            content={({ active, payload }) => {
+                              if (active && payload && payload.length > 0) {
+                                const point = payload[0].payload;
+                                return (
+                                  <div className="bg-white p-2 border rounded shadow">
+                                    <div>Makespan: {point.makespan.toFixed(2)}</div>
+                                    <div>TEC: {point.tec.toFixed(2)}</div>
+                                  </div>
+                                );
+                              }
+                              return null;
+                            }}
+                          />
+
                         <Legend />
+                        // In the Scatter component, fix the color mapping logic:
                         {paretoData.map((algorithm, idx) => {
-                          const variant = heuristicVariants.find(v => algorithm.algorithm.includes(v.name));
+                          // Extract the heuristic name from the algorithm string
+                          const heuristicName = algorithm.algorithm.split('-')[0];
+                          const variant = heuristicVariants.find(v => v.name === heuristicName);
+                          
                           return (
                             <Scatter 
                               key={algorithm.algorithm} 
                               name={algorithm.algorithm} 
                               data={algorithm.points} 
-                              fill={variant?.color || heuristicVariants[idx % heuristicVariants.length].color} 
+                              fill={variant?.color || `hsl(${idx * 90}, 70%, 50%)`} 
                               shape="circle" 
                             />
                           );
@@ -303,6 +316,59 @@ const ConstructiveHeuristicsPage = () => {
                 )}
               </CardContent>
             </Card>
+
+            <Card className="mt-6">
+  <CardHeader>
+    <CardTitle>Algorithm Variants</CardTitle>
+  </CardHeader>
+  <CardContent>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+      {/* NFS */}
+      <Card className="p-2 text-center transition-transform duration-300 hover:scale-105 hover:shadow-md">
+        <CardTitle className="text-sm mb-1 text-purple-600">NFS-{selected}</CardTitle>
+        <p className="text-xs text-gray-600">
+          {selected === "HNSGA-II"
+            ? "20% using NFS heuristic, 80% random"
+            : "Adapted NFS used for initial solution"}
+        </p>
+      </Card>
+
+      {/* NEH */}
+      <Card className="p-2 text-center transition-transform duration-300 hover:scale-105 hover:shadow-md">
+        <CardTitle className="text-sm mb-1 text-purple-600">NEH-{selected}</CardTitle>
+        <p className="text-xs text-gray-600">
+          {selected === "HNSGA-II"
+            ? "20% using adapted NEH heuristic, 80% random"
+            : "Adapted NEH used for initial solution"}
+        </p>
+      </Card>
+
+      {/* WNEH */}
+      <Card className="p-2 text-center transition-transform duration-300 hover:scale-105 hover:shadow-md">
+        <CardTitle className="text-sm mb-1 text-purple-600">WNEH-{selected}</CardTitle>
+        <p className="text-xs text-gray-600">
+          {selected === "HNSGA-II"
+            ? "20% using adapted WNEH heuristic, 80% random"
+            : "Adapted WNEH used for initial solution"}
+        </p>
+      </Card>
+
+      {/* R */}
+      <Card className="p-2 text-center transition-transform duration-300 hover:scale-105 hover:shadow-md">
+        <CardTitle className="text-sm mb-1 text-purple-600">R-{selected}</CardTitle>
+        <p className="text-xs text-gray-600">
+          {selected === "HNSGA-II"
+            ? "100% random"
+            : "Random initial solution used"}
+        </p>
+      </Card>
+    </div>
+  </CardContent>
+</Card>
+
+
+
+
             <Card>
   <CardHeader>
     <CardTitle className="flex items-center gap-2">
@@ -442,7 +508,7 @@ const ConstructiveHeuristicsPage = () => {
       </div>
     </div>
   </CardContent>
-</Card>
+            </Card>
           </div>
         )}
       </div>

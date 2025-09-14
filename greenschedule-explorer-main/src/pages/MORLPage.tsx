@@ -3,9 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowLeft, Trophy, Settings2 } from "lucide-react";
+import { ArrowLeft, Trophy, Settings2, SlidersHorizontal, Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, BarChart, Bar } from "recharts";
+import Navbar from "@/components/Navbar";
 
 // Data types
 interface ParetoPoint {
@@ -246,7 +247,22 @@ const ParetoChart = ({ variants }: { variants: MOQLVariant[] }) => {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="makespan" name="Makespan" type="number" domain={[minMakespan, maxMakespan]} tick={{ fontSize: 12 }} />
           <YAxis dataKey="tec" name="TEC" type="number" domain={[minTec, maxTec]} tick={{ fontSize: 12 }} />
-          <Tooltip cursor={{ strokeDasharray: '3 3' }} formatter={(value: any, name: any) => [value.toFixed(2), name === 'makespan' ? 'Makespan' : 'TEC']} />
+          <Tooltip
+                cursor={{ strokeDasharray: "3 3" }}
+                content={({ active, payload, label }) => {
+                  if (active && payload && payload.length) {
+                    const point = payload[0].payload;
+                    return (
+                      <div className="bg-white p-2 border rounded shadow">
+                        <p>Makespan: {point.makespan.toFixed(2)}</p>
+                        <p>TEC: {point.tec.toFixed(2)}</p>
+                      </div>
+                    );
+                  }
+                  return null;
+                }}
+              />
+
           <Legend />
           {variants.map((variant, idx) => {
             const paretoPoints = variant.data.filter(p => p.isPareto);
@@ -450,86 +466,136 @@ useEffect(() => {
   // Main page with two cards
   if (currentPage === "main") {
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="border-b border-border bg-card">
-        <div className="p-6">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate("/multi-objective")}
-              className="hover:bg-muted"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Menu
-            </Button>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">MORL</h1>
-              <p className="text-muted-foreground">Multi-objective reinforcement learning comparisons</p>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex">
+      {/* Sidebar - Matching MultiObjectiveSidebar style */}
+      <div className="w-80 h-screen bg-card border-r border-border p-6 overflow-y-auto sticky top-0">
+        {/* Logo Section */}
+        <img 
+          src="/DATA/images/LOGO.png" 
+          alt="Bi-Optima Logo" 
+          className="px-auto h-20 w-auto hover:scale-105 transition-transform duration-200 cursor-pointer mb-6" 
+          onClick={() => navigate("/")}
+        />
+        
+        
+        <Card className="shadow-card">
+          <CardHeader className="pb-  4">
+            <CardTitle className="text-lg">Multi-objective Q-learning</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-sm text-muted-foreground leading-relaxed">
+              <p className="mb-3">
+                Tests and experiments with Multi-Objective Q-Learning
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Data Categories - Styled exactly like Algorithms section */}
+        <Card className="mt-6 shadow-card">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg">Key information</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm">
+            <div className="p-3 bg-muted rounded-md">
+              <div className="font-medium text-accent">MOQL approaches</div>
+              <div className="text-muted-foreground">Comparison between different single -and multi policy approaches</div>
+            </div>
+            <div className="p-3 bg-muted rounded-md">
+              <div className="font-medium text-accent">PO-PQL Tests</div>
+              <div className="text-muted-foreground">Tests of PO-PQL on metaheuristics</div>
+            </div>
+            
+                       
+          </CardContent>
+        </Card>
+      </div>
+     
+      {/* Main Content */}
+      <div className="flex-1 overflow-auto">
+        {/* Header */}
+        <div className="bg-white border-b border-gray-200 shadow-sm">
+          <div className="px-8 py-6">
+            <div className="flex items-center gap-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate("/multi-objective")}
+                className="hover:bg-gray-100"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Menu
+              </Button>
+              
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="p-6 space-y-8">
+        <div className="p-8 space-y-8">
+
+        <div className="px-8 py-6 flex flex-col items-center text-center">
+                <h1 className="text-3xl font-bold text-gray-900">Multi-objective RL Dashboard</h1>
+                <p className="text-gray-600 mt-1">Multi-objective reinforcement learning comparisons and analysis</p>
+              </div>
           {/* Main Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* MOQL Comparison Card */}
-            <Card 
-              className="cursor-pointer hover:shadow-lg transition-shadow"
-              onClick={() => setCurrentPage("moql")}
-            >
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Settings2 className="w-5 h-5 text-primary" />
-                  Comparison between MOQL approaches
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Compare different Multi-Objective Q-Learning approaches across metaheuristics
-                </p>
-              </CardContent>
-            </Card>
+            
+                     
+         
+          <Card className="group cursor-pointer border-purple-300/40 hover:border-purple-400 hover:shadow-[0_8px_30px_rgb(127,90,240,0.25)] transition-all duration-300 transform hover:scale-[1.02]">
+            <CardContent className="p-8 text-center space-y-6 bg-gradient-to-br from-purple-50 to-white dark:from-purple-950/20 dark:to-background">
+              <div className="space-y-3">
+                <h3 className="text-xl font-semibold text-purple-700 dark:text-purple-300">MOQL Comparison</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">Compare different Multi-Objective Q-Learning approaches across metaheuristics</p>
+              </div>
+              <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white" onClick={() => setCurrentPage("moql")}>
+                Explore
+              </Button>
+            </CardContent>
+          </Card>
 
-            {/* PO-PQL Tests Card */}
-            <Card 
-              className="cursor-pointer hover:shadow-lg transition-shadow"
-              onClick={() => setCurrentPage("popql")}
-            >
-          <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Trophy className="w-5 h-5 text-primary" />
-                  PO-PQL Tests
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Test Pareto Optimal Pareto Q-Learning parameters and results
-                </p>
-              </CardContent>
-            </Card>
+          <Card className="group cursor-pointer border-purple-300/40 hover:border-purple-400 hover:shadow-[0_8px_30px_rgb(127,90,240,0.25)] transition-all duration-300 transform hover:scale-[1.02]">
+            <CardContent className="p-8 text-center space-y-6 bg-gradient-to-br from-purple-50 to-white dark:from-purple-950/20 dark:to-background">
+              <div className="space-y-3">
+                <h3 className="text-xl font-semibold text-purple-700 dark:text-purple-300">PO-PQL Tests</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">Test Pareto Optimal Pareto Q-Learning parameters and results</p>
+              </div>
+              <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white" onClick={() => setCurrentPage("popql")}>
+                Explore
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
           </div>
         </div>
       </div>
     );
-  }
+     }
 
   // MOQL Comparison Page
   if (currentPage === "moql") {
     return (
-      <div className="min-h-screen bg-background flex">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex">
         {/* Sidebar */}
-        <div className="w-80 h-screen bg-card border-r border-border p-6 overflow-y-auto sticky top-0">
-          <Card className="shadow-card">
+        <div className="w-80 h-screen bg-white border-r border-gray-200 p-6 overflow-y-auto sticky top-0">
+        <img 
+          src="/DATA/images/LOGO.png" 
+          alt="Bi-Optima Logo" 
+          className="px-auto h-20 w-auto hover:scale-105 transition-transform duration-200 cursor-pointer mb-6" 
+          onClick={() => navigate("/")}
+        />
+          <Card className="mt-6 shadow-card">
+          
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center gap-2 text-lg">
                 <Settings2 className="w-5 h-5 text-primary" />
                 Configuration
               </CardTitle>
-          </CardHeader>
+            </CardHeader>
             <CardContent className="space-y-4">
+              
               <div className="space-y-2">
                 <label className="text-sm font-medium">Metaheuristic</label>
                 <Select value={selectedMH} onValueChange={setSelectedMH}>
@@ -545,6 +611,12 @@ useEffect(() => {
             </div>
             </CardContent>
           </Card>
+
+          {/* Logo Section */}
+        
+        
+        
+       
 
           {/* MOQL Approaches Description */}
           <Card className="mt-6 shadow-card">
@@ -567,21 +639,21 @@ useEffect(() => {
         {/* Main Content */}
         <div className="flex-1 overflow-auto">
           {/* Header */}
-          <div className="border-b border-border bg-card">
-            <div className="p-6">
+          <div className="bg-white border-b border-gray-200 shadow-sm">
+            <div className="px-8 py-6">
               <div className="flex items-center gap-4">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => setCurrentPage("main")}
-                  className="hover:bg-muted"
+                  className="hover:bg-gray-100"
                 >
                   <ArrowLeft className="w-4 h-4 mr-2" />
                   Back to Main
                 </Button>
               <div>
-                  <h1 className="text-2xl font-bold text-foreground">MOQL Approaches Comparison</h1>
-                  <p className="text-muted-foreground">Multi-Objective Q-Learning approaches with {selectedMH}</p>
+                  <h1 className="text-3xl font-bold text-gray-900">MOQL Approaches Comparison</h1>
+                  <p className="text-gray-600 mt-1">Multi-Objective Q-Learning approaches with {selectedMH}</p>
                 </div>
               </div>
             </div>
@@ -728,16 +800,19 @@ useEffect(() => {
             )}
           </div>
         </div>
-      </div>
+        </div>
+  
     );
-  }
+  }     
 
   // PO-PQL Tests Page
   if (currentPage === "popql") {
     return (
-      <div className="min-h-screen bg-background flex">
-        {/* Sidebar */}
-        <div className="w-80 h-screen bg-card border-r border-border p-6 overflow-y-auto sticky top-0">
+      <div className="min-h-screen bg-background">
+   
+        <div className="flex">
+          {/* Sidebar */}
+          <div className="w-80 h-screen bg-card border-r border-border p-6 overflow-y-auto sticky top-0">
           <Card className="shadow-card">
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center gap-2 text-lg">
@@ -774,7 +849,7 @@ useEffect(() => {
                       ))}
                     </SelectContent>
                   </Select>
-                  </div>
+                  </div>                
               )}
              
             </CardContent>
@@ -794,9 +869,13 @@ useEffect(() => {
                 <div className="p-3 bg-muted rounded-md">
                   <div className="font-medium text-accent">Epsilon Values</div>
                   <div className="text-muted-foreground">
-                    QL1: 0.1<br/>
-                    QL2: 0.3<br/>
-                    QL: 0.5
+                    - QL-HMOGVNS adopts the epsilon decay<br/>
+                  </div>
+                  <div className="text-muted-foreground">
+                    - QL-HMOSA adopts the epislon decay<br/>
+                  </div>
+                  <div className="text-muted-foreground">
+                    - QL-HNSGA-II adopts the value epsilon = 0.25<br/>
                   </div>
                 </div>
               )}
@@ -864,7 +943,45 @@ useEffect(() => {
             )}
           </CardContent>
         </Card>
+        <Card className="mt-6">
+                <CardHeader>
+                  <CardTitle>Algorithm Variants</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                    {/* NFS */}
+                    <Card className="p-2 text-center transition-transform duration-300 hover:scale-105 hover:shadow-md">
+                      <CardTitle className="text-sm mb-1 text-purple-600">QL1-{selectedMH}</CardTitle>
+                      <p className="text-xs text-gray-600">
+                        {selectedMH === "HNSGA-II"
+                          ? "Epsilon value: 0.2"
+                          : "Epsilon value: 0.2"}
+                      </p>
+                    </Card>
 
+                    {/* NEH */}
+                    <Card className="p-2 text-center transition-transform duration-300 hover:scale-105 hover:shadow-md">
+                      <CardTitle className="text-sm mb-1 text-purple-600">QL2-{selectedMH}</CardTitle>
+                      <p className="text-xs text-gray-600">
+                        {selectedMH === "HNSGA-II"
+                          ? "Epsilon value: decay"
+                          : "Epsilon value: 0.3"}
+                      </p>
+                    </Card>
+
+                    {/* WNEH */}
+                    <Card className="p-2 text-center transition-transform duration-300 hover:scale-105 hover:shadow-md">
+                      <CardTitle className="text-sm mb-1 text-purple-600">QL-{selectedMH}</CardTitle>
+                      <p className="text-xs text-gray-600">
+                        {selectedMH === "HNSGA-II"
+                          ? "Epsilon value: 0.25"
+                          : "Epsilon value: decay"}
+                      </p>
+                    </Card>
+
+                  </div>
+                </CardContent>
+              </Card>
                 {/* Metrics Table */}
                 {popqlParamMetrics.length > 0 && (
                   <Card>
@@ -1301,6 +1418,7 @@ useEffect(() => {
               </>
             )}
           </div>
+        </div>
       </div>
     </div>
   );

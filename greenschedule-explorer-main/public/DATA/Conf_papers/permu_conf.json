@@ -53,7 +53,8 @@
     { "Num_Jobs": "200", "Num_Machines": "40", "Instance": "8", "QL-GA": "40387.4", "GA": "41752.32", "QL-GA_Exec_Time": "174.645843", "GA_Exec_Time": "164.5100844" },
     { "Num_Jobs": "200", "Num_Machines": "40", "Instance": "9", "QL-GA": "40504.52", "GA": "41716.32", "QL-GA_Exec_Time": "170.4252784", "GA_Exec_Time": "160.9410717" },
     { "Num_Jobs": "200", "Num_Machines": "400", "Instance": "10", "QL-GA": "39689.72", "GA": "41457.4", "QL-GA_Exec_Time": "217.4188685", "GA_Exec_Time": "147.884433" },
+
+    { "Num_Jobs": "Average", "Num_Machines": null, "Instance": null, "QL-GA": null, "GA": "", "QL-GA_Exec_Time": "54.9", "GA_Exec_Time": "44.7" }
   
-    { "Num_Jobs": "Average", "Num_Machines": "", "Instance": "", "QL-GA": "", "GA": "", "QL-GA_Exec_Time": "54.9", "GA_Exec_Time": "44.7" }
-  ]
+     ]
   

@@ -7,29 +7,81 @@ const ProblemDataPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="border-b border-border bg-card">
-        <div className="p-6">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate("/multi-objective")}
-              className="hover:bg-muted"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Menu
-            </Button>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Problem Data</h1>
-              <p className="text-muted-foreground">Benchmark, energy considerations, and parameters</p>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex">
+      {/* Sidebar - Matching MultiObjectiveSidebar style */}
+      <div className="w-80 h-screen bg-card border-r border-border p-6 overflow-y-auto sticky top-0">
+        {/* Logo Section */}
+        <img 
+          src="/DATA/images/LOGO.png" 
+          alt="Bi-Optima Logo" 
+          className="px-auto h-20 w-auto hover:scale-105 transition-transform duration-200 cursor-pointer mb-6" 
+          onClick={() => navigate("/")}
+        />
+        
+        
+        <Card className="shadow-card">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg">Problem Data</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-sm text-muted-foreground leading-relaxed">
+              <p className="mb-3">
+                Problem data analysis including benchmark extenstion, energy considerations, and machine consumption rates. 
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Data Categories - Styled exactly like Algorithms section */}
+        <Card className="mt-6 shadow-card">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg">Key information</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm">
+            <div className="p-3 bg-muted rounded-md">
+              <div className="font-medium text-accent">VRF Benchmark</div>
+              <div className="text-muted-foreground">A hard benchmark for flow shop scheduling problems, proven for being the most challenging in the literature</div>
+            </div>
+            <div className="p-3 bg-muted rounded-md">
+              <div className="font-medium text-accent">Time horizon</div>
+              <div className="text-muted-foreground"> The time window in which the scheduling problem is solved</div>
+            </div>
+            <div className="p-3 bg-muted rounded-md">
+              <div className="font-medium text-accent">Sensitivity Analysis</div>
+              <div className="text-muted-foreground">Analysis of how electricity price distributions affect solution quality and performance</div>
+            </div>
+            <div className="p-3 bg-muted rounded-md">
+              <div className="font-medium text-accent">PS and PB Rates</div>
+              <div className="text-muted-foreground">Small (PS) and big (PB) machine consumption rates and comparisons between MHs</div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+      
+      {/* Main Content */}
+      <div className="flex-1 overflow-auto">
+        {/* Header */}
+        <div className="bg-white border-b border-gray-200 shadow-sm">
+          <div className="px-8 py-6">
+            <div className="flex items-center gap-8">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate("/multi-objective")}
+                className="hover:bg-gray-100"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Menu
+              </Button>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">Problem Data</h1>
+                <p className="text-gray-600 mt-1">Benchmark, energy considerations, and parameters</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="p-6 space-y-8 max-w-6xl mx-auto">
+        <div className="p-6 space-y-8 max-w-6xl mx-auto">
         {/* Scheme */}
         <Card>
           <CardHeader>
@@ -37,7 +89,7 @@ const ProblemDataPage = () => {
           </CardHeader>
           <CardContent >
             <div className="flex flex-col items-center gap-4">
-              <div className="px-4 py-2 rounded-md bg-muted text-sm font-medium">VRF benchmark</div>
+              <div className="px-4 py-2 rounded-md bg-muted text-sm font-medium border border-purple-200">VRF benchmark</div>
               {/* Down arrow with head */}
               <svg width="140" height="60" viewBox="0 0 140 60" className="text-purple-600">
                 <defs>
@@ -71,8 +123,8 @@ const ProblemDataPage = () => {
                 </svg>
               </div>
               <div className="flex items-start justify-between gap-16 w-full max-w-md -mt-6">
-                <div className="px-4 py-2 rounded-md bg-muted text-sm font-medium">Time related parameters</div>
-                <div className="px-4 py-2 rounded-md bg-muted text-sm font-medium">Pricing Parameters</div>
+              <div className="px-4 py-2 rounded-md bg-muted text-sm font-medium border border-purple-200">Time related parameters</div>
+                <div className="px-4 py-2 rounded-md bg-muted text-sm font-medium border border-purple-200">Pricing Parameters</div>
               </div>
             </div>
 
@@ -143,7 +195,7 @@ const ProblemDataPage = () => {
                     </CardContent>
                 </Card>
         
-                <Card className="shadow-card">
+        <Card className="shadow-card">
                 <CardHeader>
                     <CardTitle>Example Extended Data - Instance 4 with 10 jobs and 10 machines</CardTitle>
                 </CardHeader>
@@ -258,8 +310,14 @@ const ProblemDataPage = () => {
                   </div>
                 ))}
               </div>
+              
             </div>
-          </CardContent>
+              <div className="flex justify-center mt-2">
+              <p className="text-muted-foreground text-sm leading-relaxed text-center max-w-md">
+                The time horizon is being divided into 6 periods, each with a different price.
+              </p>
+            </div>
+            </CardContent>
         </Card>
 
         {/* Links to sub-pages */}
@@ -289,6 +347,11 @@ const ProblemDataPage = () => {
           </Card>
         </div>
       </div>
+
+      
+      </div>
+      
+      
     </div>
   );
 };
