@@ -1,0 +1,178 @@
+[
+  {
+    "instance": "3",
+    "jobs": 300,
+    "machines": 60,
+    "algorithms": {
+      "NR-HNSGA-II": {
+        "igd": 0.0016,
+        "sns": 0.8053,
+        "nps": 200,
+        "exec_time": 512.0982
+      },
+      "NFS-HNSGA-II": {
+        "igd": 0.0046,
+        "sns": 0.8039,
+        "nps": 227,
+        "exec_time": 1012.0982
+      },
+      "R-HNSGA-II": {
+        "igd": 0.01,
+        "sns": 0.7915,
+        "nps": 160,
+        "exec_time": 398.09
+      }
+    }
+  },
+  {
+    "instance": "10",
+    "jobs": 200,
+    "machines": 40,
+    "algorithms": {
+      "NR-HNSGA-II": {
+        "igd": 0.0033,
+        "sns": 0.8132,
+        "nps": 197,
+        "exec_time": 108.1852
+      },
+      "NFS-HNSGA-II": {
+        "igd": 0.0039,
+        "sns": 0.8248,
+        "nps": 228,
+        "exec_time": 554.7408
+      },
+      "R-HNSGA-II": {
+        "igd": 0.0198,
+        "sns": 0.7927,
+        "nps": 99,
+        "exec_time": 179.083
+      }
+    }
+  },
+  {
+    "instance": "1",
+    "jobs": 100,
+    "machines": 20,
+    "algorithms": {
+      "NR-HNSGA-II": {
+        "igd": 0.0036,
+        "sns": 0.8137,
+        "nps": 198,
+        "exec_time": 166.01
+      },
+      "NFS-HNSGA-II": {
+        "igd": 0.0045,
+        "sns": 0.8071,
+        "nps": 199,
+        "exec_time": 175.9533
+      },
+      "R-HNSGA-II": {
+        "igd": 0.0237,
+        "sns": 0.8057,
+        "nps": 108,
+        "exec_time": 152.76
+      }
+    }
+  },
+  {
+    "instance": "1",
+    "jobs": 100,
+    "machines": 40,
+    "algorithms": {
+      "NR-HNSGA-II": {
+        "igd": 0.0034,
+        "sns": 0.8126,
+        "nps": 148,
+        "exec_time": 260.75
+      },
+      "NFS-HNSGA-II": {
+        "igd": 0.0036,
+        "sns": 0.8026,
+        "nps": 149,
+        "exec_time": 290.7268
+      },
+      "R-HNSGA-II": {
+        "igd": 0.0231,
+        "sns": 0.773,
+        "nps": 61,
+        "exec_time": 259.02
+      }
+    }
+  },
+  {
+    "instance": "8",
+    "jobs": 30,
+    "machines": 5,
+    "algorithms": {
+      "NR-HNSGA-II": {
+        "igd": 0.0026,
+        "sns": 0.8272,
+        "nps": 211,
+        "exec_time": 4.6
+      },
+      "NFS-HNSGA-II": {
+        "igd": 0.0087,
+        "sns": 0.8239,
+        "nps": 190,
+        "exec_time": 4.98
+      },
+      "R-HNSGA-II": {
+        "igd": 0.0412,
+        "sns": 0.7896,
+        "nps": 54,
+        "exec_time": 5.2
+      }
+    }
+  },
+  {
+    "instance": "5",
+    "jobs": 30,
+    "machines": 10,
+    "algorithms": {
+      "NR-HNSGA-II": {
+        "igd": 0.0037,
+        "sns": 0.8025,
+        "nps": 114,
+        "exec_time": 4.3
+      },
+      "NFS-HNSGA-II": {
+        "igd": 0.0031,
+        "sns": 0.7961,
+        "nps": 119,
+        "exec_time": 5.01
+      },
+      "R-HNSGA-II": {
+        "igd": 0.0477,
+        "sns": 0.7548,
+        "nps": 50,
+        "exec_time": 5.7
+      }
+    }
+  },
+  {
+    "instance": "AVG",
+    "jobs": "",
+    "machines": "",
+    "algorithms": {
+      "NR-HNSGA-II": {
+        "igd": 0.003,
+        "sns": 0.812,
+        "nps": 178,
+        "exec_time": 175.99
+      },
+      "NFS-HNSGA-II": {
+        "igd": 0.004,
+        "sns": 0.8,
+        "nps": 185.3,
+        "exec_time": 340.5
+      },
+      "R-HNSGA-II": {
+        "igd": 0.027,
+        "sns": 0.78,
+        "nps": 88.66,
+        "exec_time": 166.64
+      }
+    }
+  }
+  
+]

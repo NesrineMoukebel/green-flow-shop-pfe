@@ -1,0 +1,205 @@
+[
+  {
+    "No_Jobs": 10,
+    "No_of_machines": 15,
+    "Instance": 7,
+    "IGD": {
+      "QL1-HNSGA-II": 0.0384,
+      "QL2-HNSGA-II": 0.0327,
+      "QL3-HNSGA-II": 0.0329,
+      "QL-HNSGA-II": 0.0037
+    },
+    "SNS": {
+      "QL1-HNSGA-II": 0.7912,
+      "QL2-HNSGA-II": 0.7913,
+      "QL3-HNSGA-II": 0.8145,
+      "QL-HNSGA-II": 0.8299
+    },
+    "NPS": {
+      "QL1-HNSGA-II": 57,
+      "QL2-HNSGA-II": 49,
+      "QL3-HNSGA-II": 54,
+      "QL-HNSGA-II": 74
+    },
+    "Exec_Time": {
+      "QL1-HNSGA-II": 10.5515,
+      "QL2-HNSGA-II": 9.8689,
+      "QL3-HNSGA-II": 10.251,
+      "QL-HNSGA-II": 27.2083
+    }
+  },
+  {
+    "No_Jobs": 40,
+    "No_of_machines": 5,
+    "Instance": 10,
+    "IGD": {
+      "QL1-HNSGA-II": 0.0073,
+      "QL2-HNSGA-II": 0.0066,
+      "QL3-HNSGA-II": 0.0051,
+      "QL-HNSGA-II": 0.0042
+    },
+    "SNS": {
+      "QL1-HNSGA-II": 0.8372,
+      "QL2-HNSGA-II": 0.8361,
+      "QL3-HNSGA-II": 0.8264,
+      "QL-HNSGA-II": 0.8422
+    },
+    "NPS": {
+      "QL1-HNSGA-II": 211,
+      "QL2-HNSGA-II": 184,
+      "QL3-HNSGA-II": 135,
+      "QL-HNSGA-II": 213
+    },
+    "Exec_Time": {
+      "QL1-HNSGA-II": 13.6731,
+      "QL2-HNSGA-II": 10.775,
+      "QL3-HNSGA-II": 10.8946,
+      "QL-HNSGA-II": 13.9981
+    }
+  },
+  {
+    "No_Jobs": 60,
+    "No_of_machines": 20,
+    "Instance": 1,
+    "IGD": {
+      "QL1-HNSGA-II": 0.0106,
+      "QL2-HNSGA-II": 0.0054,
+      "QL3-HNSGA-II": 0.007,
+      "QL-HNSGA-II": 0.0017
+    },
+    "SNS": {
+      "QL1-HNSGA-II": 0.7963,
+      "QL2-HNSGA-II": 0.815,
+      "QL3-HNSGA-II": 0.8032,
+      "QL-HNSGA-II": 0.8069
+    },
+    "NPS": {
+      "QL1-HNSGA-II": 142,
+      "QL2-HNSGA-II": 154,
+      "QL3-HNSGA-II": 133,
+      "QL-HNSGA-II": 211
+    },
+    "Exec_Time": {
+      "QL1-HNSGA-II": 44.843,
+      "QL2-HNSGA-II": 59.7002,
+      "QL3-HNSGA-II": 32.7563,
+      "QL-HNSGA-II": 33.2482
+    }
+  },
+  {
+    "No_Jobs": 100,
+    "No_of_machines": 60,
+    "Instance": 2,
+    "IGD": {
+      "QL1-HNSGA-II": 0.0088,
+      "QL2-HNSGA-II": 0.0081,
+      "QL3-HNSGA-II": 0.011,
+      "QL-HNSGA-II": 0.0079
+    },
+    "SNS": {
+      "QL1-HNSGA-II": 0.8033,
+      "QL2-HNSGA-II": 0.8156,
+      "QL3-HNSGA-II": 0.7719,
+      "QL-HNSGA-II": 0.7977
+    },
+    "NPS": {
+      "QL1-HNSGA-II": 106,
+      "QL2-HNSGA-II": 136,
+      "QL3-HNSGA-II": 83,
+      "QL-HNSGA-II": 128
+    },
+    "Exec_Time": {
+      "QL1-HNSGA-II": 111.4651,
+      "QL2-HNSGA-II": 167.0015,
+      "QL3-HNSGA-II": 166.4417,
+      "QL-HNSGA-II": 212.1501
+    }
+  },
+  {
+    "No_Jobs": 300,
+    "No_of_machines": 40,
+    "Instance": 6,
+    "IGD": {
+      "QL1-HNSGA-II": 0.0048,
+      "QL2-HNSGA-II": 0.0059,
+      "QL3-HNSGA-II": 0.0082,
+      "QL-HNSGA-II": 0.0046
+    },
+    "SNS": {
+      "QL1-HNSGA-II": 0.7966,
+      "QL2-HNSGA-II": 0.7997,
+      "QL3-HNSGA-II": 0.8,
+      "QL-HNSGA-II": 0.8006
+    },
+    "NPS": {
+      "QL1-HNSGA-II": 156,
+      "QL2-HNSGA-II": 158,
+      "QL3-HNSGA-II": 156,
+      "QL-HNSGA-II": 182
+    },
+    "Exec_Time": {
+      "QL1-HNSGA-II": 458.7944,
+      "QL2-HNSGA-II": 436.9652,
+      "QL3-HNSGA-II": 353.2053,
+      "QL-HNSGA-II": 290.8277
+    }
+  },
+  {
+    "No_Jobs": 400,
+    "No_of_machines": 20,
+    "Instance": 3,
+    "IGD": {
+      "QL1-HNSGA-II": 0.0033,
+      "QL2-HNSGA-II": 0.0068,
+      "QL3-HNSGA-II": 0.0064,
+      "QL-HNSGA-II": 0.0032
+    },
+    "SNS": {
+      "QL1-HNSGA-II": 0.8212,
+      "QL2-HNSGA-II": 0.8196,
+      "QL3-HNSGA-II": 0.8095,
+      "QL-HNSGA-II": 0.8148
+    },
+    "NPS": {
+      "QL1-HNSGA-II": 215,
+      "QL2-HNSGA-II": 216,
+      "QL3-HNSGA-II": 204,
+      "QL-HNSGA-II": 222
+    },
+    "Exec_Time": {
+      "QL1-HNSGA-II": 267.4132,
+      "QL2-HNSGA-II": 273.5279,
+      "QL3-HNSGA-II": 241.1107,
+      "QL-HNSGA-II": 140.9078
+    }
+  },
+  {
+    "Instance": "AVG",
+    "No_Jobs": null,
+    "No_of_machines": null,
+    "IGD": {
+      "QL1-HNSGA-II": 0.0122,
+      "QL2-HNSGA-II": 0.0109,
+      "QL3-HNSGA-II": 0.0117,
+      "QL-HNSGA-II": 0.004
+    },
+    "SNS": {
+      "QL1-HNSGA-II": 0.807,
+      "QL2-HNSGA-II": 0.812,
+      "QL3-HNSGA-II": 0.804,
+      "QL-HNSGA-II": 0.815
+    },
+    "NPS": {
+      "QL1-HNSGA-II": 147.8,
+      "QL2-HNSGA-II": 149.5,
+      "QL3-HNSGA-II": 127.5,
+      "QL-HNSGA-II": 171.6
+    },
+    "Exec_Time": {
+      "QL1-HNSGA-II": 151.12,
+      "QL2-HNSGA-II": 159.6,
+      "QL3-HNSGA-II": 135.77,
+      "QL-HNSGA-II": 119.7
+    }
+  }
+]

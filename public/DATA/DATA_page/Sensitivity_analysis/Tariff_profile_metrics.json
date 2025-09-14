@@ -1,0 +1,122 @@
+[
+  {
+    "instance": 6,
+    "jobs": 300,
+    "machines": 40,
+    "algorithm": "HNSGA-II-6CWI",
+    "igd": 0.9318,
+    "sns": 0,
+    "nps": 1,
+    "exec_time": 152.44
+  },
+  {
+    "instance": 6,
+    "jobs": 300,
+    "machines": 40,
+    "algorithm": "HNSGA-II-6CW",
+    "igd": 0.1878,
+    "sns": 0.8178,
+    "nps": 169,
+    "exec_time": 579.29
+  },
+  {
+    "instance": 6,
+    "jobs": 300,
+    "machines": 40,
+    "algorithm": "HNSGA-II-6CWD",
+    "igd": 0.145,
+    "sns": 0.7276,
+    "nps": 217,
+    "exec_time": 409.61
+  },
+  {
+    "instance": 4,
+    "jobs": 200,
+    "machines": 20,
+    "algorithm": "HNSGA-II-6CWI",
+    "igd": 0.7071,
+    "sns": 0,
+    "nps": 1,
+    "exec_time": 62.56
+  },
+  {
+    "instance": 4,
+    "jobs": 200,
+    "machines": 20,
+    "algorithm": "HNSGA-II-6CW",
+    "igd": 0.3411,
+    "sns": 0.8139,
+    "nps": 175,
+    "exec_time": 108.35
+  },
+  {
+    "instance": 4,
+    "jobs": 200,
+    "machines": 20,
+    "algorithm": "HNSGA-II-6CWD",
+    "igd": 0.3128,
+    "sns": 0.6969,
+    "nps": 188,
+    "exec_time": 119.67
+  },
+  {
+    "instance": 9,
+    "jobs": 50,
+    "machines": 15,
+    "algorithm": "HNSGA-II-6CWI",
+    "igd": 0.7071,
+    "sns": 0,
+    "nps": 1,
+    "exec_time": 13.6
+  },
+  {
+    "instance": 9,
+    "jobs": 50,
+    "machines": 15,
+    "algorithm": "HNSGA-II-6CW",
+    "igd": 0.3771,
+    "sns": 0.8041,
+    "nps": 140,
+    "exec_time": 16.35
+  },
+  {
+    "instance": 9,
+    "jobs": 50,
+    "machines": 15,
+    "algorithm": "HNSGA-II-6CWD",
+    "igd": 0.3182,
+    "sns": 0.7089,
+    "nps": 181,
+    "exec_time": 5.82
+  },
+  {
+    "instance": 7,
+    "jobs": 20,
+    "machines": 5,
+    "algorithm": "HNSGA-II-6CWI",
+    "igd": 0,
+    "sns": 0,
+    "nps": 1,
+    "exec_time": 2.06
+  },
+  {
+    "instance": 7,
+    "jobs": 20,
+    "machines": 5,
+    "algorithm": "HNSGA-II-6CW",
+    "igd": 0.7449,
+    "sns": 0.8381,
+    "nps": 140,
+    "exec_time": 4.85
+  },
+  {
+    "instance": 7,
+    "jobs": 20,
+    "machines": 5,
+    "algorithm": "HNSGA-II-6CWD",
+    "igd": 0.7037,
+    "sns": 0.7485,
+    "nps": 171,
+    "exec_time": 5.56
+  }
+]

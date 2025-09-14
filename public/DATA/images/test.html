@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quantum Flow Shop Background</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    /* grid lines */
+    .grid {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-image:
+        linear-gradient(to right, rgba(0,0,0,0.1) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0,0,0,0.1) 1px, transparent 1px);
+      background-size: 80px 80px;
+    }
+
+    /* grid dots */
+    .dot {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    /* rounded rectangle shapes */
+    .shape {
+      position: absolute;
+      background: rgba(120, 90, 250, 0.35);
+      border-radius: 40px;
+      animation: float 12s infinite ease-in-out;
+    }
+
+    .shape.small {
+      width: 40px;
+      height: 80px;
+    }
+
+    .shape.medium {
+      width: 60px;
+      height: 120px;
+    }
+
+    .shape.large {
+      width: 100px;
+      height: 200px;
+    }
+
+    /* example positions */
+    .shape1 { top: 20%; left: 15%; animation-duration: 14s; }
+    .shape2 { top: 40%; left: 70%; animation-duration: 18s; }
+    .shape3 { top: 65%; left: 35%; animation-duration: 20s; }
+    .shape4 { top: 30%; left: 50%; animation-duration: 22s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) translateX(0); }
+      50% { transform: translateY(-25px) translateX(15px); }
+    }
+
+    .title {
+      position: relative;
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: black;
+    }
+
+    .highlight {
+      color: #1da1f2;
+    }
+  </style>
+</head>
+<body>
+  <div class="background">
+    <div class="grid"></div>
+
+    <!-- Example dots (you can generate many) -->
+    <div class="dot" style="top:20%; left:20%;"></div>
+    <div class="dot" style="top:40%; left:40%;"></div>
+    <div class="dot" style="top:60%; left:60%;"></div>
+
+    <!-- Shapes -->
+    <div class="shape small shape1"></div>
+    <div class="shape medium shape2"></div>
+    <div class="shape large shape3"></div>
+    <div class="shape medium shape4"></div>
+  </div>
+
+  <div class="title">
+    Quantum-Powered <span class="highlight">Flow Shop Scheduling</span>
+  </div>
+</body>
+</html>

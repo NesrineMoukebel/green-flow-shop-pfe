@@ -1,0 +1,122 @@
+[
+  {
+    "jobs": 10,
+    "machines": 20,
+    "instance": 9,
+    "algorithm": "NSGA-II",
+    "igd": 0.0031,
+    "sns": 0.812,
+    "nps": 72.0,
+    "exec_time": 5.0428
+  },
+  {
+    "jobs": 10,
+    "machines": 20,
+    "instance": 9,
+    "algorithm": "HNSGA-II",
+    "igd": 0.0112,
+    "sns": 0.762,
+    "nps": 76.0,
+    "exec_time": 4.26
+  },
+  {
+    "jobs": 20,
+    "machines": 5,
+    "instance": 7,
+    "algorithm": "NSGA-II",
+    "igd": 0.0055,
+    "sns": 0.8383,
+    "nps": 140.0,
+    "exec_time": 4.8555
+  },
+  {
+    "jobs": 20,
+    "machines": 5,
+    "instance": 7,
+    "algorithm": "HNSGA-II",
+    "igd": 0.0098,
+    "sns": 0.8323,
+    "nps": 130.0,
+    "exec_time": 3.4227
+  },
+  {
+    "jobs": 50,
+    "machines": 15,
+    "instance": 6,
+    "algorithm": "NSGA-II",
+    "igd": 0.002,
+    "sns": 0.8126,
+    "nps": 151.0,
+    "exec_time": 11.4393
+  },
+  {
+    "jobs": 50,
+    "machines": 15,
+    "instance": 6,
+    "algorithm": "HNSGA-II",
+    "igd": 0.009,
+    "sns": 0.824,
+    "nps": 161.0,
+    "exec_time": 9.0242
+  },
+  {
+    "jobs": 200,
+    "machines": 40,
+    "instance": 10,
+    "algorithm": "NSGA-II",
+    "igd": 0.0052,
+    "sns": 0.8131,
+    "nps": 157.0,
+    "exec_time": 110.8783
+  },
+  {
+    "jobs": 200,
+    "machines": 40,
+    "instance": 10,
+    "algorithm": "HNSGA-II",
+    "igd": 0.0084,
+    "sns": 0.7815,
+    "nps": 163.0,
+    "exec_time": 108.1852
+  },
+  {
+    "jobs": 300,
+    "machines": 20,
+    "instance": 5,
+    "algorithm": "NSGA-II",
+    "igd": 0.0022,
+    "sns": 0.7991,
+    "nps": 219.0,
+    "exec_time": 287.1177
+  },
+  {
+    "jobs": 300,
+    "machines": 20,
+    "instance": 5,
+    "algorithm": "HNSGA-II",
+    "igd": 0.0052,
+    "sns": 0.8086,
+    "nps": 160.0,
+    "exec_time": 103.4221
+  },
+  {
+    "jobs": 400,
+    "machines": 20,
+    "instance": 3,
+    "algorithm": "NSGA-II",
+    "igd": 0.0035,
+    "sns": 0.8268,
+    "nps": 213.0,
+    "exec_time": 219.3258
+  },
+  {
+    "jobs": 400,
+    "machines": 20,
+    "instance": 3,
+    "algorithm": "HNSGA-II",
+    "igd": 0.009,
+    "sns": 0.7975,
+    "nps": 300.0,
+    "exec_time": 132.3547
+  }
+]

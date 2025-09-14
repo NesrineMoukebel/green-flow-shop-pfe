@@ -1,0 +1,142 @@
+[
+  {
+    "jobs": 10,
+    "machines": 5,
+    "instance": 5,
+    "algorithm": "HMOSA",
+    "igd": 0.0082,
+    "sns": 0.7925,
+    "nps": 89,
+    "exec_time": 6.9516
+  },
+  {
+    "jobs": 10,
+    "machines": 5,
+    "instance": 5,
+    "algorithm": "HMOSA-",
+    "igd": 0.0129,
+    "sns": 0.7689,
+    "nps": 53,
+    "exec_time": 10.5068
+  },
+  {
+    "jobs": 30,
+    "machines": 15,
+    "instance": 4,
+    "algorithm": "HMOSA",
+    "igd": 0.0011,
+    "sns": 0.8002,
+    "nps": 130,
+    "exec_time": 29.029
+  },
+  {
+    "jobs": 30,
+    "machines": 15,
+    "instance": 4,
+    "algorithm": "HMOSA-",
+    "igd": 0.0211,
+    "sns": 0.7675,
+    "nps": 46,
+    "exec_time": 19.6356
+  },
+  {
+    "jobs": 60,
+    "machines": 20,
+    "instance": 2,
+    "algorithm": "HMOSA",
+    "igd": 0.0005,
+    "sns": 0.786,
+    "nps": 124,
+    "exec_time": 75.12
+  },
+  {
+    "jobs": 60,
+    "machines": 20,
+    "instance": 2,
+    "algorithm": "HMOSA-",
+    "igd": 0.0893,
+    "sns": 0.8702,
+    "nps": 45,
+    "exec_time": 81.5265
+  },
+  {
+    "jobs": 100,
+    "machines": 20,
+    "instance": 9,
+    "algorithm": "HMOSA",
+    "igd": 0.0003,
+    "sns": 0.7879,
+    "nps": 99,
+    "exec_time": 52.8938
+  },
+  {
+    "jobs": 100,
+    "machines": 20,
+    "instance": 9,
+    "algorithm": "HMOSA-",
+    "igd": 0.0808,
+    "sns": 0.5584,
+    "nps": 11,
+    "exec_time": 30.8522
+  },
+  {
+    "jobs": 200,
+    "machines": 40,
+    "instance": 7,
+    "algorithm": "HMOSA",
+    "igd": 0.0024,
+    "sns": 0.8198,
+    "nps": 69,
+    "exec_time": 203.631
+  },
+  {
+    "jobs": 200,
+    "machines": 40,
+    "instance": 7,
+    "algorithm": "HMOSA-",
+    "igd": 0.0892,
+    "sns": 0.7843,
+    "nps": 31,
+    "exec_time": 386.259
+  },
+  {
+    "jobs": 300,
+    "machines": 60,
+    "instance": 4,
+    "algorithm": "HMOSA",
+    "igd": 0.0066,
+    "sns": 0.8097,
+    "nps": 67,
+    "exec_time": 232.39
+  },
+  {
+    "jobs": 300,
+    "machines": 60,
+    "instance": 4,
+    "algorithm": "HMOSA-",
+    "igd": 0.0504,
+    "sns": 0.7513,
+    "nps": 23,
+    "exec_time": 193.533
+  },
+  {
+    "jobs": "AVG",
+    "machines": "",
+    "instance": "",
+    "algorithm": "HMOSA",
+    "igd": 0.0032,
+    "sns": 0.7934,
+    "nps": 96.33,
+    "exec_time": 100.0
+  },
+  {
+    "jobs": "AVG",
+    "machines": "",
+    "instance": "",
+    "algorithm": "HMOSA-",
+    "igd": 0.0573,
+    "sns": 0.756,
+    "nps": 34.83,
+    "exec_time": 120.39
+  }
+]
