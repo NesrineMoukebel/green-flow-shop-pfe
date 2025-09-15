@@ -117,7 +117,7 @@ const loadRestartData = async () => {
     const paretoData: AlgorithmSeries[] = [];
 
     for (const algorithm of algorithms) {
-      const response = await fetch(`../DATA/HMOSA_tests/Restart/${algorithm}.csv`);
+      const response = await fetch(`./DATA/HMOSA_tests/Restart/${algorithm}.csv`);
       if (!response.ok) continue;
       
       const csvText = await response.text();
@@ -132,7 +132,7 @@ const loadRestartData = async () => {
       paretoData.push({ algorithm, points: paretoPoints });
     }
 
-    const metricsResponse = await fetch('../DATA/HMOSA_tests/restart.json');
+    const metricsResponse = await fetch('./DATA/HMOSA_tests/restart.json');
     const flatMetricsData = metricsResponse.ok ? await metricsResponse.json() : [];
     
     // Transform flat data to grouped format
@@ -152,7 +152,7 @@ const loadWeightsData = async () => {
     const paretoData: AlgorithmSeries[] = [];
 
     for (const algorithm of algorithms) {
-      const response = await fetch(`../DATA/HMOSA_tests/dynamic/${algorithm}.csv`);
+      const response = await fetch(`./DATA/HMOSA_tests/dynamic/${algorithm}.csv`);
       if (!response.ok) continue;
       
       const csvText = await response.text();
@@ -167,7 +167,7 @@ const loadWeightsData = async () => {
       paretoData.push({ algorithm, points: paretoPoints });
     }
 
-    const metricsResponse = await fetch('../DATA/HMOSA_tests/dynamicweights.json');
+    const metricsResponse = await fetch('./DATA/HMOSA_tests/dynamicweights.json');
     const flatMetricsData = metricsResponse.ok ? await metricsResponse.json() : [];
     
     // Transform flat data to grouped format

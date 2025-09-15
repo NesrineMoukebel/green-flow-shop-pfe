@@ -317,11 +317,11 @@ const MORLPage = () => {
         setIsLoading(true);
         try {
           const [ql1Data, ql2Data, ql3Data, qlData, metricsData] = await Promise.all([
-            loadCSVData(`../DATA/MORL_page_tests/MOQL_tests/QL1-${selectedMH}.csv`),
-            loadCSVData(`../DATA/MORL_page_tests/MOQL_tests/QL2-${selectedMH}.csv`),
-            loadCSVData(`../DATA/MORL_page_tests/MOQL_tests/QL3-${selectedMH}.csv`),
-            loadCSVData(`../DATA/MORL_page_tests/MOQL_tests/QL-${selectedMH}.csv`),
-            loadJSONData(`../DATA/MORL_page_tests/MOQL_tests/moqlapproaches_${selectedMH}.json`)
+            loadCSVData(`./DATA/MORL_page_tests/MOQL_tests/QL1-${selectedMH}.csv`),
+            loadCSVData(`./DATA/MORL_page_tests/MOQL_tests/QL2-${selectedMH}.csv`),
+            loadCSVData(`./DATA/MORL_page_tests/MOQL_tests/QL3-${selectedMH}.csv`),
+            loadCSVData(`./DATA/MORL_page_tests/MOQL_tests/QL-${selectedMH}.csv`),
+            loadJSONData(`./DATA/MORL_page_tests/MOQL_tests/moqlapproaches_${selectedMH}.json`)
           ]);
 
           const variants: MOQLVariant[] = [
@@ -351,10 +351,10 @@ const MORLPage = () => {
         setIsLoading(true);
         try {
           const [ql1Data, ql2Data, qlData, metricsData] = await Promise.all([
-            loadCSVData(`../DATA/MORL_page_tests/POPQL_tests/param_tests/QL1-${selectedMH}.csv`),
-            loadCSVData(`../DATA/MORL_page_tests/POPQL_tests/param_tests/QL2-${selectedMH}.csv`),
-            loadCSVData(`../DATA/MORL_page_tests/POPQL_tests/param_tests/QL-${selectedMH}.csv`),
-            loadJSONData(`../DATA/MORL_page_tests/POPQL_tests/param_tests/${selectedMH}_popql_param.json`)
+            loadCSVData(`./DATA/MORL_page_tests/POPQL_tests/param_tests/QL1-${selectedMH}.csv`),
+            loadCSVData(`./DATA/MORL_page_tests/POPQL_tests/param_tests/QL2-${selectedMH}.csv`),
+            loadCSVData(`./DATA/MORL_page_tests/POPQL_tests/param_tests/QL-${selectedMH}.csv`),
+            loadJSONData(`./DATA/MORL_page_tests/POPQL_tests/param_tests/${selectedMH}_popql_param.json`)
           ]);
 
           const variants: MOQLVariant[] = [
@@ -384,9 +384,9 @@ const MORLPage = () => {
         setIsLoading(true);
         try {
           const [qlData, mhData, metricsData] = await Promise.all([
-            loadCSVData(`../DATA/MORL_page_tests/POPQL_tests/POPQL/QL-${selectedMH}.csv`),
-            loadCSVData(`../DATA/MORL_page_tests/POPQL_tests/POPQL/${selectedMH}.csv`),
-            loadJSONData(`../DATA/MORL_page_tests/POPQL_tests/POPQL/popql_${selectedMH}.json`)
+            loadCSVData(`./DATA/MORL_page_tests/POPQL_tests/POPQL/QL-${selectedMH}.csv`),
+            loadCSVData(`./DATA/MORL_page_tests/POPQL_tests/POPQL/${selectedMH}.csv`),
+            loadJSONData(`./DATA/MORL_page_tests/POPQL_tests/POPQL/popql_${selectedMH}.json`)
           ]);
 
           const variants: MOQLVariant[] = [
@@ -414,9 +414,9 @@ useEffect(() => {
       setIsLoading(true);
       try {
         const [qlData, ql2Data, metricsData] = await Promise.all([
-          loadCSVData(`../DATA/MORL_page_tests/POPQL_tests/Actions/QL-HMOGVNS.csv`),
-          loadCSVData(`../DATA/MORL_page_tests/POPQL_tests/Actions/QL2-HMOGVNS.csv`),
-          loadJSONData(`../DATA/MORL_page_tests/POPQL_tests/Actions/Actions.json`)
+          loadCSVData(`./DATA/MORL_page_tests/POPQL_tests/Actions/QL-HMOGVNS.csv`),
+          loadCSVData(`./DATA/MORL_page_tests/POPQL_tests/Actions/QL2-HMOGVNS.csv`),
+          loadJSONData(`./DATA/MORL_page_tests/POPQL_tests/Actions/Actions.json`)
         ]);
 
         const variants: MOQLVariant[] = [
@@ -444,10 +444,10 @@ useEffect(() => {
         setIsLoading(true);
         try {
           const [ql1Data, ql2Data, qlData, metricsData] = await Promise.all([
-            loadCSVData(`../DATA/MORL_page_tests/POPQL_tests/Rewards/QL1-HMOGVNS.csv`),
-            loadCSVData(`../DATA/MORL_page_tests/POPQL_tests/Rewards/QL2-HMOGVNS.csv`),
-            loadCSVData(`../DATA/MORL_page_tests/POPQL_tests/Rewards/QL-${selectedMH}.csv`),
-            loadJSONData(`../DATA/MORL_page_tests/POPQL_tests/Rewards/Rewards.json`)
+            loadCSVData(`./DATA/MORL_page_tests/POPQL_tests/Rewards/QL1-HMOGVNS.csv`),
+            loadCSVData(`./DATA/MORL_page_tests/POPQL_tests/Rewards/QL2-HMOGVNS.csv`),
+            loadCSVData(`./DATA/MORL_page_tests/POPQL_tests/Rewards/QL-${selectedMH}.csv`),
+            loadJSONData(`./DATA/MORL_page_tests/POPQL_tests/Rewards/Rewards.json`)
           ]);
 
           const variants: MOQLVariant[] = [
@@ -508,7 +508,7 @@ useEffect(() => {
       <div className="w-80 h-screen bg-card border-r border-border p-6 overflow-y-auto sticky top-0">
         {/* Logo Section */}
         <img 
-          src="../DATA/images/LOGO.png" 
+          src="./DATA/images/LOGO.png" 
           alt="Bi-Optima Logo" 
           className="px-auto h-20 w-auto hover:scale-105 transition-transform duration-200 cursor-pointer mb-6" 
           onClick={() => navigate("/")}
@@ -618,7 +618,7 @@ useEffect(() => {
         {/* Sidebar */}
         <div className="w-80 h-screen bg-white border-r border-gray-200 p-6 overflow-y-auto sticky top-0">
         <img 
-          src="../DATA/images/LOGO.png" 
+          src="./DATA/images/LOGO.png" 
           alt="Bi-Optima Logo" 
           className="px-auto h-20 w-auto hover:scale-105 transition-transform duration-200 cursor-pointer mb-6" 
           onClick={() => navigate("/")}

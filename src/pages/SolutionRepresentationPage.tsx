@@ -247,7 +247,7 @@ const SolutionRepresentationPage = () => {
       <div className="w-80 h-screen bg-card border-r border-border p-6 overflow-y-auto sticky top-0">
         {/* Logo Section */}
         <img 
-          src="../DATA/images/LOGO.png" 
+          src="./DATA/images/LOGO.png" 
           alt="Bi-Optima Logo" 
           className="px-auto h-20 w-auto hover:scale-105 transition-transform duration-200 cursor-pointer mb-6" 
           onClick={() => navigate("/")}

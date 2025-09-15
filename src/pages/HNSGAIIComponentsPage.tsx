@@ -62,7 +62,7 @@ const loadCrossoverData = async () => {
     const paretoData: AlgorithmSeries[] = [];
 
     for (const algorithm of algorithms) {
-      const response = await fetch(`../DATA/NSGA_page_tests/${algorithm.file}`);
+      const response = await fetch(`./DATA/NSGA_page_tests/${algorithm.file}`);
       if (!response.ok) continue;
       
       const csvText = await response.text();
@@ -77,7 +77,7 @@ const loadCrossoverData = async () => {
       paretoData.push({ algorithm: algorithm.name, points: paretoPoints });
     }
 
-    const metricsResponse = await fetch('../DATA/NSGA_page_tests/crossover_types.json');
+    const metricsResponse = await fetch('./DATA/NSGA_page_tests/crossover_types.json');
     const metricsData = metricsResponse.ok ? await metricsResponse.json() : [];
 
     return { paretoData, metricsData };
@@ -98,7 +98,7 @@ const loadNFSData = async () => {
     const paretoData: AlgorithmSeries[] = [];
 
     for (const algorithm of algorithms) {
-      const response = await fetch(`../DATA/NSGA_page_tests/${algorithm.file}`);
+      const response = await fetch(`./DATA/NSGA_page_tests/${algorithm.file}`);
       if (!response.ok) continue;
       
       const csvText = await response.text();
@@ -113,7 +113,7 @@ const loadNFSData = async () => {
       paretoData.push({ algorithm: algorithm.name, points: paretoPoints });
     }
 
-    const metricsResponse = await fetch('../DATA/NSGA_page_tests/nfs_ratio.json');
+    const metricsResponse = await fetch('./DATA/NSGA_page_tests/nfs_ratio.json');
     const metricsData = metricsResponse.ok ? await metricsResponse.json() : [];
 
     return { paretoData, metricsData };

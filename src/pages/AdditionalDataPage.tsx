@@ -36,7 +36,7 @@ const AdditionalDataPage = () => {
 
   useEffect(() => {
     const loadPareto = async () => {
-      const base = "../../DATA/DATA_page";
+      const base = "./DATA/DATA_page";
       const files = [
         { alg: "HMOGVNS" as AlgorithmKey, path: `${base}/M20_J200_config_6CW_PS_1_HMOGVNS.csv` },
         { alg: "HMOSA" as AlgorithmKey, path: `${base}/M20_J200_config_6CW_PS_1_HMOSA.csv` },
@@ -142,7 +142,7 @@ const AdditionalDataPage = () => {
       <div className="w-80 h-screen bg-card border-r border-border p-6 overflow-y-auto sticky top-0">
         {/* Logo Section */}
         <img 
-          src="../../DATA/images/LOGO.png" 
+          src="./DATA/images/LOGO.png" 
           alt="Bi-Optima Logo" 
           className="px-auto h-20 w-auto hover:scale-105 transition-transform duration-200 cursor-pointer mb-6" 
           onClick={() => navigate("/")}

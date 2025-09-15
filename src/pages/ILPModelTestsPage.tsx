@@ -61,7 +61,7 @@ const ILPModelTestsPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("../DATA/ILP_model_tests/" + scenario + ".json");
+        const response = await fetch("./DATA/ILP_model_tests/" + scenario + ".json");
         const data = await response.json();
         if (scenario === "cmax") setRowsCmax(data);
         if (scenario === "tec") setRowsTec(data);

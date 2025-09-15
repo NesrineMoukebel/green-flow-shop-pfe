@@ -45,7 +45,7 @@ export function dominates(fitness1: [number, number], fitness2: [number, number]
 export async function loadProcessingTimes(jobs: number, machines: number, instance: number): Promise<ProcessingTimesData> {
   try {
     const gapFile = `VFR${jobs}_${machines}_${instance}_Gap.txt`;
-    const response = await fetch(`../DATA/new_data/${gapFile}`);
+    const response = await fetch(`./DATA/new_data/${gapFile}`);
     
     if (!response.ok) {
       throw new Error(`Failed to load processing times: ${response.statusText}`);
@@ -121,7 +121,7 @@ export async function loadParetoData(jobs: number, machines: number, instance: n
   for (const algorithm of algorithms) {
     try {
       const fileName = algorithm.getFileName(machines, jobs, '6CW', instance);
-      const response = await fetch(`../DATA/${algorithm.folder}/${fileName}`);
+      const response = await fetch(`./DATA/${algorithm.folder}/${fileName}`);
       
       if (!response.ok) {
         console.warn(`Failed to load ${algorithm.name} data: ${response.statusText}`);
@@ -174,7 +174,7 @@ export async function loadSensitivityAnalysisData(jobs: number, machines: number
   for (const profile of priceProfiles) {
     try {
       const fileName = `M${machines}_J${jobs}_config_${profile.suffix}_${instance}.csv`;
-      const response = await fetch(`../DATA/${profile.folder}/${fileName}`);
+      const response = await fetch(`./DATA/${profile.folder}/${fileName}`);
       
       if (!response.ok) {
         console.warn(`Failed to load ${profile.name} data: ${response.statusText}`);
@@ -243,7 +243,7 @@ function filterDominatedPoints(points: ParetoPoint[]): ParetoPoint[] {
 export async function loadMetricsData(jobs: number, machines: number, instance: number): Promise<MetricsData[]> {
   try {
     // Load the metrics data from the Excel file (converted to JSON)
-    const response = await fetch('../DATA/MH_comparison/metrics_results.json');
+    const response = await fetch('./DATA/MH_comparison/metrics_results.json');
     
     if (!response.ok) {
       console.warn('Failed to load metrics data, using mock data');

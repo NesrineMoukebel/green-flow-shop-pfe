@@ -36,10 +36,10 @@ const getParetoFront = (points: { makespan: number; tec: number }[]) => {
 const loadCSVData = async (metaheuristic: string) => {
   try {
     const files = [
-      { name: "NFS", path: `../DATA/Constructive_heuristics_tests/M5_J30_config_6CW_NFS-${metaheuristic}.csv` },
-      { name: "NEH", path: `../DATA/Constructive_heuristics_tests/M5_J30_config_6CW_NEH-${metaheuristic}.csv` },
-      { name: "WNEH", path: `../DATA/Constructive_heuristics_tests/M5_J30_config_6CW_WNEH_${metaheuristic}.csv` },
-      { name: "R", path: `../DATA/Constructive_heuristics_tests/M5_J30_config_6CW_R-${metaheuristic}.csv` },
+      { name: "NFS", path: `./DATA/Constructive_heuristics_tests/M5_J30_config_6CW_NFS-${metaheuristic}.csv` },
+      { name: "NEH", path: `./DATA/Constructive_heuristics_tests/M5_J30_config_6CW_NEH-${metaheuristic}.csv` },
+      { name: "WNEH", path: `./DATA/Constructive_heuristics_tests/M5_J30_config_6CW_WNEH_${metaheuristic}.csv` },
+      { name: "R", path: `./DATA/Constructive_heuristics_tests/M5_J30_config_6CW_R-${metaheuristic}.csv` },
     ];
 
     const paretoData = [];
@@ -83,7 +83,7 @@ const loadCSVData = async (metaheuristic: string) => {
 // Load metrics JSON data
 const loadMetricsData = async (metaheuristic: string) => {
   try {
-    const response = await fetch(`../DATA/Constructive_heuristics_tests/${metaheuristic}_HEURISTICS.json`);
+    const response = await fetch(`./DATA/Constructive_heuristics_tests/${metaheuristic}_HEURISTICS.json`);
     if (!response.ok) {
       console.warn(`Failed to load metrics for ${metaheuristic}`);
       return [];
