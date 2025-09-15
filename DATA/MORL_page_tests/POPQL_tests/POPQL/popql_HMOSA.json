@@ -42,7 +42,7 @@
         "Exec_Time": { "QL-HMOSA": 31.0828252, "HMOSA": 60.73375496 }
       },
       {
-        "Instance": "AVG",
+        "No_Jobs": "AVG",
         "IGD": { "QL-HMOSA": 0.006, "HMOSA": 0.007 },
         "SNS": { "QL-HMOSA": 0.802, "HMOSA": 0.803 },
         "NPS": { "QL-HMOSA": 113.08, "HMOSA": 119.8 },
@@ -77,7 +77,7 @@
         "Exec_Time": { "QL-HMOSA": 601.95169, "HMOSA": 452.59 }
       },
       {
-        "Instance": "AVG",
+        "No_Jobs": "AVG",
         "IGD": { "QL-HMOSA": 0.024, "HMOSA": 0.026 },
         "SNS": { "QL-HMOSA": 0.77, "HMOSA": 0.776 },
         "NPS": { "QL-HMOSA": 78.23, "HMOSA": 79.2 },

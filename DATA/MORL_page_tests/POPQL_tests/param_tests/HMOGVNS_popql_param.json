@@ -1,7 +1,7 @@
 [
     {
       "No_Jobs": "10",
-      "No_Machines": "5",
+      "No_of_machines": "5",
       "Instance": "7",
       "IGD": { "QL-HMOGVNS": "0,0045", "QL1-HMOGVNS": "0,0074", "QL2-HMOGVNS": "0,0217" },
       "SNS": { "QL-HMOGVNS": "0,802", "QL1-HMOGVNS": "0,7908", "QL2-HMOGVNS": "0,7879" },
@@ -10,7 +10,7 @@
     },
     {
       "No_Jobs": "30",
-      "No_Machines": "15",
+      "No_of_machines": "15",
       "Instance": "8",
       "IGD": { "QL-HMOGVNS": "0,0013", "QL1-HMOGVNS": "0,0076", "QL2-HMOGVNS": "0,0178" },
       "SNS": { "QL-HMOGVNS": "0,8124", "QL1-HMOGVNS": "0,8023", "QL2-HMOGVNS": "0,8023" },
@@ -19,7 +19,7 @@
     },
     {
       "No_Jobs": "60",
-      "No_Machines": "20",
+      "No_of_machines": "20",
       "Instance": "4",
       "IGD": { "QL-HMOGVNS": "0,0019", "QL1-HMOGVNS": "0,0061", "QL2-HMOGVNS": "0,0067" },
       "SNS": { "QL-HMOGVNS": "0,8203", "QL1-HMOGVNS": "0,8217", "QL2-HMOGVNS": "0,8095" },
@@ -28,7 +28,7 @@
     },
     {
       "No_Jobs": "100",
-      "No_Machines": "20",
+      "No_of_machines": "20",
       "Instance": "1",
       "IGD": { "QL-HMOGVNS": "0,0005", "QL1-HMOGVNS": "0,0243", "QL2-HMOGVNS": "0,0942" },
       "SNS": { "QL-HMOGVNS": "0,817", "QL1-HMOGVNS": "0,7875", "QL2-HMOGVNS": "0,7781" },
@@ -37,7 +37,7 @@
     },
     {
       "No_Jobs": "200",
-      "No_Machines": "40",
+      "No_of_machines": "40",
       "Instance": "1",
       "IGD": { "QL-HMOGVNS": "0,0006", "QL1-HMOGVNS": "0,057", "QL2-HMOGVNS": "0,0189" },
       "SNS": { "QL-HMOGVNS": "0,8095", "QL1-HMOGVNS": "0,7784", "QL2-HMOGVNS": "0,7951" },
@@ -46,7 +46,7 @@
     },
     {
       "No_Jobs": "300",
-      "No_Machines": "60",
+      "No_of_machines": "60",
       "Instance": "8",
       "IGD": { "QL-HMOGVNS": "0,0015", "QL1-HMOGVNS": "0,0209", "QL2-HMOGVNS": "0,1646" },
       "SNS": { "QL-HMOGVNS": "0,8185", "QL1-HMOGVNS": "0,8095", "QL2-HMOGVNS": "0,7328" },
@@ -55,7 +55,7 @@
     },
     {
       "No_Jobs": null,
-      "No_Machines": null,
+      "No_of_machines": null,
       "Instance": "AVG",
         "IGD": { "QL-HMOGVNS": "0.001717", "QL1-HMOGVNS": "0.02055", "QL2-HMOGVNS": "0.0540" },
         "SNS": { "QL-HMOGVNS": "0.8133", "QL1-HMOGVNS": "0.7984", "QL2-HMOGVNS": "0.7843" },

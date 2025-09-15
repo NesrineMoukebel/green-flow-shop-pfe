@@ -3,7 +3,7 @@
     { "Instance": "2", "Num_Jobs": "10", "Num_Machines": "5", "TEC": "100.92", "TEC_plus": "100.64", "Exec_Time": "2.7436", "Exec_Time_plus": "2.6572" },
     { "Instance": "3", "Num_Jobs": "10", "Num_Machines": "5", "TEC": "107.56", "TEC_plus": "107.24", "Exec_Time": "2.7347", "Exec_Time_plus": "2.2758" },
     { "Instance": "4", "Num_Jobs": "10", "Num_Machines": "5", "TEC": "104.84", "TEC_plus": "102.88", "Exec_Time": "2.4242", "Exec_Time_plus": "2.5288" },
-    { "Instance": "5", "Num_Jobs": "10", "Num_Machines": "5", "TEC": "106.84", "TEC_plus": "108.44", "Exec_Time": "2.971", "Exec_Time_plus": "2.8155" },
+    { "Instance": "5", "Num_Jobs": "10", "Num_Machines": "5", "TEC": "108.44", "TEC_plus": "106.84", "Exec_Time": "2.971", "Exec_Time_plus": "2.8155" },
     { "Instance": "6", "Num_Jobs": "10", "Num_Machines": "5", "TEC": "115.52", "TEC_plus": "113.76", "Exec_Time": "3.127", "Exec_Time_plus": "2.8182" },
     { "Instance": "7", "Num_Jobs": "10", "Num_Machines": "5", "TEC": "109.92", "TEC_plus": "108.92", "Exec_Time": "2.8287", "Exec_Time_plus": "2.6327" },
     { "Instance": "8", "Num_Jobs": "10", "Num_Machines": "5", "TEC": "100.28", "TEC_plus": "100.12", "Exec_Time": "2.4728", "Exec_Time_plus": "2.6352" },
@@ -52,6 +52,9 @@
     { "Instance": "7", "Num_Jobs": "200", "Num_Machines": "40", "TEC": "25568.16", "TEC_plus": "25079.4", "Exec_Time": "362.6369", "Exec_Time_plus": "240.7147" },
     { "Instance": "8", "Num_Jobs": "200", "Num_Machines": "40", "TEC": "29353.28", "TEC_plus": "28499.24", "Exec_Time": "265.9417", "Exec_Time_plus": "247.5574" },
     { "Instance": "9", "Num_Jobs": "200", "Num_Machines": "40", "TEC": "28754.08", "TEC_plus": "24095.24", "Exec_Time": "262.0607", "Exec_Time_plus": "234.7344" },
-    { "Instance": "10", "Num_Jobs": "200", "Num_Machines": "40", "TEC": "34105.47", "TEC_plus": "30992.27", "Exec_Time": "292.4166", "Exec_Time_plus": "261.6853" }
+    { "Instance": "10", "Num_Jobs": "200", "Num_Machines": "40", "TEC": "34105.47", "TEC_plus": "30992.27", "Exec_Time": "292.4166", "Exec_Time_plus": "261.6853" },
+
+    { "Num_Jobs": "Average", "Num_Machines": null, "Instance": null, "QL-GA": null, "GA": "", "Exec_Time": "105.7", "Exec_Time_plus": "92.78" }
+
   ]
   

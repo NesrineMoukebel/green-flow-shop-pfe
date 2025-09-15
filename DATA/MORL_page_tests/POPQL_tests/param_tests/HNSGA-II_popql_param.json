@@ -1,7 +1,7 @@
 [
   {
     "No_Jobs": "400",
-    "No_Machines": "20",
+    "No_of_machines": "20",
     "Instance": "1",
     "IGD": { "QL-HNSGA-II": "0.0026", "QL1-HNSGA-II": "0.0061", "QL2-HNSGA-II": "0.0063" },
     "SNS": { "QL-HNSGA-II": "0.8199", "QL1-HNSGA-II": "0.8202", "QL2-HNSGA-II": "0.8173" },
@@ -10,7 +10,7 @@
   },
   {
     "No_Jobs": "300",
-    "No_Machines": "40",
+    "No_of_machines": "40",
     "Instance": "10",
     "IGD": { "QL-HNSGA-II": "0.0021", "QL1-HNSGA-II": "0.0082", "QL2-HNSGA-II": "0.007" },
     "SNS": { "QL-HNSGA-II": "0.8092", "QL1-HNSGA-II": "0.8069", "QL2-HNSGA-II": "0.7961" },
@@ -19,7 +19,7 @@
   },
   {
     "No_Jobs": "200",
-    "No_Machines": "60",
+    "No_of_machines": "60",
     "Instance": "7",
     "IGD": { "QL-HNSGA-II": "0.0073", "QL1-HNSGA-II": "0.006", "QL2-HNSGA-II": "0.0047" },
     "SNS": { "QL-HNSGA-II": "0.8059", "QL1-HNSGA-II": "0.7966", "QL2-HNSGA-II": "0.7825" },
@@ -28,7 +28,7 @@
   },
   {
     "No_Jobs": "50",
-    "No_Machines": "20",
+    "No_of_machines": "20",
     "Instance": "8",
     "IGD": { "QL-HNSGA-II": "0.0034", "QL1-HNSGA-II": "0.0053", "QL2-HNSGA-II": "0.0077" },
     "SNS": { "QL-HNSGA-II": "0.8047", "QL1-HNSGA-II": "0.8083", "QL2-HNSGA-II": "0.8047" },
@@ -37,7 +37,7 @@
   },
   {
     "No_Jobs": "40",
-    "No_Machines": "15",
+    "No_of_machines": "15",
     "Instance": "2",
     "IGD": { "QL-HNSGA-II": "0.0042", "QL1-HNSGA-II": "0.0072", "QL2-HNSGA-II": "0.005" },
     "SNS": { "QL-HNSGA-II": "0.816", "QL1-HNSGA-II": "0.8119", "QL2-HNSGA-II": "0.8066" },
@@ -46,7 +46,7 @@
   },
   {
     "No_Jobs": "10",
-    "No_Machines": "5",
+    "No_of_machines": "5",
     "Instance": "3",
     "IGD": { "QL-HNSGA-II": "0.0101", "QL1-HNSGA-II": "0.0104", "QL2-HNSGA-II": "0.0132" },
     "SNS": { "QL-HNSGA-II": "0.8168", "QL1-HNSGA-II": "0.8045", "QL2-HNSGA-II": "0.7689" },
@@ -55,7 +55,7 @@
   },
   {
     "No_Jobs": "AVG",
-    "No_Machines": "",
+    "No_of_machines": "",
     "Instance": "",
     "IGD": { "QL-HNSGA-II": "0.004", "QL1-HNSGA-II": "0.0072", "QL2-HNSGA-II": "0.0073" },
     "SNS": { "QL-HNSGA-II": "0.812", "QL1-HNSGA-II": "0.8", "QL2-HNSGA-II": "0.796" },

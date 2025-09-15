@@ -1,0 +1,32 @@
+[
+  {
+    "jobs": 20,
+    "machines": 10,
+    "instance": 1,
+    "algorithm": "V1-HMOSA",
+    "igd": 0.0017,
+    "sns": 0.8201,
+    "nps": 90.0,
+    "exec_time": 1654.32
+  },
+  {
+    "jobs": 20,
+    "machines": 10,
+    "instance": 2,
+    "algorithm": "V1-HMOSA",
+    "igd": 0.0020,
+    "sns": 0.8167,
+    "nps": 87.0,
+    "exec_time": 1687.45
+  },
+  {
+    "jobs": 20,
+    "machines": 10,
+    "instance": 3,
+    "algorithm": "V1-HMOSA",
+    "igd": 0.0018,
+    "sns": 0.8189,
+    "nps": 89.0,
+    "exec_time": 1676.78
+  }
+]
