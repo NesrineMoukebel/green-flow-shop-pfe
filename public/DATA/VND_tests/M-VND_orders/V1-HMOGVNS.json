@@ -1,0 +1,32 @@
+[
+  {
+    "jobs": 20,
+    "machines": 10,
+    "instance": 1,
+    "algorithm": "V1-HMOGVNS",
+    "igd": 0.0015,
+    "sns": 0.8234,
+    "nps": 92.0,
+    "exec_time": 1773.02
+  },
+  {
+    "jobs": 20,
+    "machines": 10,
+    "instance": 2,
+    "algorithm": "V1-HMOGVNS",
+    "igd": 0.0021,
+    "sns": 0.8156,
+    "nps": 88.0,
+    "exec_time": 1802.45
+  },
+  {
+    "jobs": 20,
+    "machines": 10,
+    "instance": 3,
+    "algorithm": "V1-HMOGVNS",
+    "igd": 0.0018,
+    "sns": 0.8198,
+    "nps": 90.0,
+    "exec_time": 1795.33
+  }
+]

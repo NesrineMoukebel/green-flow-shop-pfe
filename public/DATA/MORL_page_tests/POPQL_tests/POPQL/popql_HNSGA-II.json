@@ -54,9 +54,9 @@
         "Exec_Time": { "QL-HNSGA-II": "30.00430867", "HNSGA-II": "30.07444935" }
       },
       {
-        "No_Jobs": null,
+        
         "No_Machines": null,
-        "Instance": "AVG",
+        "No_Jobs": "AVG",
         "IGD": { "QL-HNSGA-II": "0.003", "HNSGA-II": "0.008" },
         "SNS": { "QL-HNSGA-II": "0.81", "HNSGA-II": "0.8" },
         "NPS": { "QL-HNSGA-II": "156.1", "HNSGA-II": "129.8" },
@@ -101,9 +101,9 @@
         "Exec_Time": { "QL-HNSGA-II": "433.6159717", "HNSGA-II": "421.1351622" }
       },
       {
-        "No_Jobs": null,
+      
         "No_Machines": null,
-        "Instance": "AVG",
+        "No_Jobs": "AVG",
         "IGD": { "QL-HNSGA-II": "0.0038", "HNSGA-II": "0.0039" },
         "SNS": { "QL-HNSGA-II": "0.801", "HNSGA-II": "0.8" },
         "NPS": { "QL-HNSGA-II": "174.8", "HNSGA-II": "174.01" },

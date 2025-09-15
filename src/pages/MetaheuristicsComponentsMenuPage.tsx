@@ -12,6 +12,7 @@ const MetaheuristicsComponentsMenuPage = () => {
     { title: "TEC Reduction Operator", description: "Reducer behavior and shift strategies", route: "/multi-objective/tec-reduction" },
     { title: "HMOSA Components Tests", description: "Restart and weights analyses", route: "/multi-objective/sa-tests" },
     { title: "HNSGA-II Components Tests", description: "Crossover types and NFS ratio tests", route: "/multi-objective/hnsga-components" },
+    { title: "HMOGVNS Tests", description: "Shaking procedures analysis and performance", route: "/multi-objective/hmogvns-tests" },
   ];
 
   return (
@@ -66,6 +67,10 @@ const MetaheuristicsComponentsMenuPage = () => {
             <div className="p-3 bg-muted rounded-md">
               <div className="font-medium text-accent">HNSGA-II components tests</div>
               <div className="text-muted-foreground">Testing components of HNSGA-II: Crossover types and NFS ratio</div>
+            </div>
+            <div className="p-3 bg-muted rounded-md">
+              <div className="font-medium text-accent">HMOGVNS tests</div>
+              <div className="text-muted-foreground">Testing shaking procedures in HMOGVNS: Hamming distance and performance analysis</div>
             </div>
                        
           </CardContent>

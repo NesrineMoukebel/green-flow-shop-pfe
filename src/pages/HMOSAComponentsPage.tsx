@@ -524,7 +524,7 @@ const getParetoExampleText = (scenario: string) => {
 
           <Card className="p-4 text-center transition-transform duration-300 hover:scale-105 hover:shadow-md">
             <CardTitle className="text-base mb-2 text-purple-600">V2-HMOSA</CardTitle>
-            <p className="text-sm text-gray-600">0.7 for Cmax, 0.3 for TEC</p>
+            <p className="text-sm text-gray-600">0.3 for Cmax, 0.7 for TEC</p>
           </Card>
         </>
       ) : test === "restart" ? (

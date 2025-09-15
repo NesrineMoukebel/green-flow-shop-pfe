@@ -479,4 +479,3 @@ const getParetoExampleText = (scenario: string, mh: string) => {
 };
 
 export default MVNDComparisonPage;
-

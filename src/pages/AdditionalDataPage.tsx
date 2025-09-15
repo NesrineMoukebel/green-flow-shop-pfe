@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowLeft, Trophy } from "lucide-react";
+import { ArrowLeft, Calculator, Trophy } from "lucide-react";
 import { ResponsiveContainer, ScatterChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Scatter } from "recharts";
 import { dominates } from "@/services/dataService";
 
@@ -278,56 +278,64 @@ const AdditionalDataPage = () => {
 
             <Card className="shadow-card">
                 <CardHeader>
-                    <CardTitle className="font-poppins text-lg">
-                    New formula for TEC
-                    </CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <Calculator className="w-5 h-5 text-primary" />
+                    New Formula for TEC
+                  </CardTitle>
                 </CardHeader>
-                <CardContent className="flex flex-col items-center justify-center gap-4">
-                    <div className="text-xl font-bold text-black font-poppins text-center">
-                    <em>
-                        TEC ={" "}
-                        <span
-                        className="cursor-help hover:text-purple-600 transition-colors"
-                        title="i ∈ N: job index"
-                        >
-                        &sum;<sub>i∈N</sub>
-                        </span>{" "}
-                        <span
-                        className="cursor-help hover:text-purple-600 transition-colors"
-                        title="j ∈ M: machine index"
-                        >
-                        &sum;<sub>j∈M</sub>
-                        </span>{" "}
-                        <span
-                        className="cursor-help hover:text-purple-600 transition-colors"
-                        title="k ∈ K: period index"
-                        >
-                        &sum;<sub>k∈K</sub>
-                        </span>{" "}
-                        <span
-                        className="cursor-help hover:text-purple-600 transition-colors"
-                        title="σₖ: price"
-                        >
-                        &sigma;<sub>k</sub>
-                        </span>{" "}
-                        ×{" "}
-                        <span
-                        className="cursor-help hover:text-purple-600 transition-colors"
-                        title="xᵢⱼₖ: time spent by the job in the period"
-                        >
-                        x<sub>ijk</sub>
-                        </span>{" "}
-                        ×{" "}
-                        <span
-                        className="cursor-help hover:text-purple-600 transition-colors"
-                        title="rate: machine rate"
-                        >
-                        rate
-                        </span>
-                    </em>
+                <CardContent>
+                  <div className="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-lg">
+                    <div className="text-white mb-4 font-semibold text-center">TEC Calculation</div>
+                    <div className="space-y-2 text-center">
+                      <div>
+                        <em>
+                          TEC ={" "}
+                          <span
+                            className="cursor-help hover:text-green-300 transition-colors"
+                            title="i ∈ N: job index"
+                          >
+                            &sum;<sub>i∈N</sub>
+                          </span>{" "}
+                          <span
+                            className="cursor-help hover:text-green-300 transition-colors"
+                            title="j ∈ M: machine index"
+                          >
+                            &sum;<sub>j∈M</sub>
+                          </span>{" "}
+                          <span
+                            className="cursor-help hover:text-green-300 transition-colors"
+                            title="k ∈ K: period index"
+                          >
+                            &sum;<sub>k∈K</sub>
+                          </span>{" "}
+                          <span
+                            className="cursor-help hover:text-green-300 transition-colors"
+                            title="σₖ: price"
+                          >
+                            &sigma;<sub>k</sub>
+                          </span>{" "}
+                          ×{" "}
+                          <span
+                            className="cursor-help hover:text-green-300 transition-colors"
+                            title="xᵢⱼₖ: time spent by the job in the period"
+                          >
+                            x<sub>ijk</sub>
+                          </span>{" "}
+                          ×{" "}
+                          <span
+                            className="cursor-help hover:text-green-300 transition-colors"
+                            title="rate: machine rate"
+                          >
+                            rate
+                          </span>
+                        </em>
+                      </div>
+                      
                     </div>
+                  </div>
                 </CardContent>
-                </Card>
+              </Card>
+
 
                 {/* Example PS File */}
                 <Card className="shadow-card">

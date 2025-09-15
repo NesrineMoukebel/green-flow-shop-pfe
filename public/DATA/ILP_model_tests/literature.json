@@ -1,0 +1,13 @@
+[
+    { "instance": 1, "jobs": 10, "machines": 40, "gapHNSGA": 1.0879, "gapHMOGVNS": 4.4708, "gapHMOSA": 4.6377 },
+    { "instance": 2, "jobs": 20, "machines": 40, "gapHNSGA": 3.3357, "gapHMOGVNS": 7.7499, "gapHMOSA": 7.4735 },
+    { "instance": 3, "jobs": 30, "machines": 40, "gapHNSGA": 4.3891, "gapHMOGVNS": 8.0268, "gapHMOSA": 8.0823 },
+    { "instance": 4, "jobs": 40, "machines": 40, "gapHNSGA": 4.4688, "gapHMOGVNS": 8.1585, "gapHMOSA": 9.0125 },
+    { "instance": 5, "jobs": 50, "machines": 40, "gapHNSGA": 4.4213, "gapHMOGVNS": 7.8429, "gapHMOSA": 8.1071 },
+    { "instance": 6, "jobs": 60, "machines": 40, "gapHNSGA": 4.3899, "gapHMOGVNS": 7.9843, "gapHMOSA": 7.5457 },
+    { "instance": 7, "jobs": 100, "machines": 30, "gapHNSGA": 18.6351, "gapHMOGVNS": 53.9876, "gapHMOSA": 50.4368 },
+    { "instance": 8, "jobs": 200, "machines": 30, "gapHNSGA": 16.9484, "gapHMOGVNS": 43.4265, "gapHMOSA": 50.5051 },
+    { "instance": 9, "jobs": 300, "machines": 30, "gapHNSGA": 14.9686, "gapHMOGVNS": 47.1677, "gapHMOSA": 41.2646 },
+    { "instance": 10, "jobs": 400, "machines": 30, "gapHNSGA": 13.8333, "gapHMOGVNS": 31.4707, "gapHMOSA": 48.4653 }
+  ]
+  

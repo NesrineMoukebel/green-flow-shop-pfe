@@ -219,18 +219,25 @@ function buildBarData(values: readonly number[]) {
 
 // Actions tests sequences
 const actionOps = operators;
-function generateRandomSequences(num: number) {
-  const seqs: string[][] = [];
-  for (let i = 0; i < num; i++) {
-    const arr = [...actionOps];
-    for (let j = arr.length - 1; j > 0; j--) {
-      const k = Math.floor(Math.random() * (j + 1));
-      [arr[j], arr[k]] = [arr[k], arr[j]];
-    }
-    seqs.push(arr);
-  }
-  return seqs;
-}
+const operatorColors: Record<string, string> = {
+  "Swap": "bg-purple-100/30 text-purple-700", 
+  "Cost-aware swap": "bg-pink-100/30 text-pink-700",
+  "Insertion": "bg-blue-100/30 text-blue-700",
+  "Cost-aware insertion": "bg-green-100/30 text-green-700",
+  "Cost-aware machine sequence swap": "bg-yellow-100/30 text-yellow-700",
+};
+
+const possibleOrders: string[][] = [
+  ["Cost-aware machine sequence swap", "Insertion", "Swap", "Cost-aware swap", "Cost-aware insertion"],
+  ["Insertion", "Cost-aware machine sequence swap", "Swap", "Cost-aware swap", "Cost-aware insertion"],
+  ["Cost-aware machine sequence swap", "Insertion", "Swap", "Cost-aware swap", "Cost-aware insertion"],
+  ["Swap", "Insertion", "Cost-aware machine sequence swap", "Cost-aware swap", "Cost-aware insertion"],
+  ["Insertion", "Cost-aware insertion", "Swap", "Cost-aware swap", "Cost-aware machine sequence swap"],
+  ["Cost-aware machine sequence swap", "Swap", "Insertion", "Cost-aware swap", "Cost-aware insertion"],
+  ["Cost-aware machine sequence swap", "Insertion", "Cost-aware swap", "Swap", "Cost-aware insertion"],
+  ["Cost-aware machine sequence swap", "Cost-aware swap", "Insertion", "Swap", "Cost-aware insertion"],
+  ["Swap", "Cost-aware swap", "Insertion", "Cost-aware insertion", "Cost-aware machine sequence swap"],
+];
 
 // Pareto Chart Component
 const ParetoChart = ({ variants }: { variants: MOQLVariant[] }) => {
@@ -463,6 +470,36 @@ useEffect(() => {
   }, [currentPage, selectedTest, selectedMH]);
 
 
+  // Determine example text based on scenario and selected MH
+  const getParetoExampleText = (scenario: string, mh: string) => {
+    if (scenario === "moql") {
+      if (mh === "HNSGA-II") return "Pareto fronts example - Instance 1, 60 jobs, 20 machines";
+      if (mh === "HMOGVNS") return "Pareto fronts example - Instance 4, 200 jobs, 20 machines";
+      if (mh === "HMOSA") return "Pareto fronts example - Instance 8, 30 jobs, 10 machines";
+
+    } else if (scenario === "po-pql-params") {
+      if (mh === "HNSGA-II") return "Pareto fronts example - Instance 1, 400 jobs, 20 machines";
+      if (mh === "HMOGVNS") return "Pareto fronts example - Instance 9, 100 jobs, 20 machines";
+      if (mh === "HMOSA") return "Pareto fronts example - Instance 7, 300 jobs, 60 machines";
+    }
+    else if (scenario === "po-pql-results") {
+      if (mh === "HNSGA-II") return "Pareto fronts example - Instance 7, 30 jobs, 20 machines";
+      if (mh === "HMOGVNS") return "Pareto fronts example - Instance 9, 200 jobs, 40 machines";
+      if (mh === "HMOSA") return "Pareto fronts example - Instance 8, 300 jobs, 40 machines";
+    }
+    else if (scenario === "rewards-tests") {
+      
+      if (mh === "HMOGVNS") return "Pareto fronts example - Instance 9, 100 jobs, 20 machines";
+      
+    }
+    else if (scenario === "actions-tests") {
+     
+      if (mh === "HMOGVNS") return "Pareto fronts example - Instance 7, 300 jobs, 60 machines";
+     
+    }
+    
+    return "Pareto fronts example"; // default fallback
+  };
   // Main page with two cards
   if (currentPage === "main") {
   return (
@@ -764,11 +801,11 @@ useEffect(() => {
                                return (
                                  <TableCell
                                    key={`${metric}-${idx}-${approach.name}`}
-                                   className={`text-center ${isBest ? "bg-purple-100 font-bold text-purple-600" : ""} ${i === 0 ? "border-l border-border" : ""}`}
+                                   className={`text-center ${isBest ? "bg-primary/10 font-bold text-primary" : ""} ${i === 0 ? "border-l border-border" : ""}`}
                                  >
                                    {formatted}
                                    {isBest && (
-                                     <Trophy className="w-3 h-3 inline ml-1 text-purple-600" />
+                                     <Trophy className="w-3 h-3 inline ml-1 text-primary" />
                                    )}
                                  </TableCell>
                                );
@@ -786,10 +823,10 @@ useEffect(() => {
                  <div className="text-sm">
                    <div className="font-medium mb-2">Metric Descriptions:</div>
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-muted-foreground">
-                     <div><strong>IGD (Inverted Generational Distance):</strong> Lower values = better convergence</div>
-                     <div><strong>SNS (Spacing to Nearest Solution):</strong> Higher values = better diversity</div>
-                     <div><strong>NPS (Number of Pareto Solutions):</strong> Higher values = more non-dominated solutions</div>
-                     <div><strong>Exec Time:</strong> Lower values = faster performance</div>
+                     <div><strong>IGD (Inverted Generational Distance):</strong> Lower values indicate better convergence to true Pareto front</div>
+                     <div><strong>SNS (Spread of Non-Dominated Solutions):</strong> Higher values indicate better distribution of solutions</div>
+                     <div><strong>NPS (Number of Pareto Solutions):</strong> Higher values indicate more non-dominated solutions found</div>
+                     <div><strong>Exec Time (Execution Time):</strong> Lower values indicate faster algorithm performance</div>
                    </div>
                  </div>
                </div>
@@ -885,6 +922,39 @@ useEffect(() => {
                   <div className="text-muted-foreground">Pareto Optimal Pareto Q-Learning integrated with Multi-Variable Neighborhood Descent</div>
                 </div>
               )}
+              {selectedTest === "rewards-tests" && (
+                <div className="flex flex-col gap-4">
+                  
+                <div className="p-3 bg-muted rounded-md">
+                  <div className="font-medium text-accent">QL-HMOGVNS</div>
+                  <div className="text-muted-foreground">Uses the Normalized Relative Improvement Reward</div>
+                </div>
+                <div className="p-3 bg-muted rounded-md">
+                  <div className="font-medium text-accent">QL1-HMOGVNS</div>
+                  <div className="text-muted-foreground">Uses Direct Improvement Reward</div>
+                  </div>
+
+                  <div className="p-3 bg-muted rounded-md">
+                  <div className="font-medium text-accent">QL2-HMOGVNS</div>
+                  <div className="text-muted-foreground">Uses Inverse Normalized Reward</div>
+                  </div>
+                </div>
+
+              )}
+              {selectedTest === "actions-tests" && (
+                <div className="flex flex-col gap-4">
+                  
+                <div className="p-3 bg-muted rounded-md">
+                  <div className="font-medium text-accent">QL-HMOGVNS</div>
+                  <div className="text-muted-foreground">The action is to choose one operator from the set of operators within M-VND</div>
+                </div>
+                <div className="p-3 bg-muted rounded-md">
+                  <div className="font-medium text-accent">QL2-HMOGVNS</div>
+                  <div className="text-muted-foreground">The action is to choose a sequence of operators within M-VND</div>
+                  </div>
+                </div>
+
+              )}
             </CardContent>
           </Card>
         </div>
@@ -924,7 +994,7 @@ useEffect(() => {
               <>
                 <Card>
                   <CardHeader>
-                    <CardTitle>Pareto Fronts Comparison</CardTitle>
+                    <CardTitle>{getParetoExampleText(selectedTest, selectedMH)}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     {isLoading ? (
@@ -995,52 +1065,140 @@ useEffect(() => {
                       <div className="border rounded-lg overflow-x-auto">
                         <Table>
                           <TableHeader>
-                            <TableRow className="bg-primary/10 text-primary">
-                              <TableHead rowSpan={2}>Instance</TableHead>
-                              <TableHead rowSpan={2}>Jobs</TableHead>
-                              <TableHead rowSpan={2}>Machines</TableHead>
-                              <TableHead colSpan={3} className="text-center">IGD</TableHead>
-                              <TableHead colSpan={3} className="text-center">SNS</TableHead>
-                              <TableHead colSpan={3} className="text-center">NPS</TableHead>
-                              <TableHead colSpan={3} className="text-center">Exec Time (s)</TableHead>
+                            <TableRow className="bg-muted/50">
+                              <TableHead rowSpan={2} className="font-semibold align-middle border-r">Instance</TableHead>
+                              <TableHead rowSpan={2} className="font-semibold align-middle border-r">Jobs</TableHead>
+                              <TableHead rowSpan={2} className="font-semibold align-middle border-r">Machines</TableHead>
+                              <TableHead colSpan={3} className="text-center font-semibold border-b border-l">IGD</TableHead>
+                              <TableHead colSpan={3} className="text-center font-semibold border-b border-l">SNS</TableHead>
+                              <TableHead colSpan={3} className="text-center font-semibold border-b border-l">NPS</TableHead>
+                              <TableHead colSpan={3} className="text-center font-semibold border-b border-l">Exec Time (s)</TableHead>
                             </TableRow>
-                            <TableRow className="bg-primary/10 text-primary">
-                              <TableHead>QL1-{selectedMH}</TableHead>
-                              <TableHead>QL2-{selectedMH}</TableHead>
-                              <TableHead>QL-{selectedMH}</TableHead>
-                              <TableHead>QL1-{selectedMH}</TableHead>
-                              <TableHead>QL2-{selectedMH}</TableHead>
-                              <TableHead>QL-{selectedMH}</TableHead>
-                              <TableHead>QL1-{selectedMH}</TableHead>
-                              <TableHead>QL2-{selectedMH}</TableHead>
-                              <TableHead>QL-{selectedMH}</TableHead>
-                              <TableHead>QL1-{selectedMH}</TableHead>
-                              <TableHead>QL2-{selectedMH}</TableHead>
-                              <TableHead>QL-{selectedMH}</TableHead>
+                            <TableRow className="bg-muted/30">
+                              <TableHead className="text-center border-l border-border">QL1-{selectedMH}</TableHead>
+                              <TableHead className="text-center">QL2-{selectedMH}</TableHead>
+                              <TableHead className="text-center">QL-{selectedMH}</TableHead>
+                              <TableHead className="text-center border-l border-border">QL1-{selectedMH}</TableHead>
+                              <TableHead className="text-center">QL2-{selectedMH}</TableHead>
+                              <TableHead className="text-center">QL-{selectedMH}</TableHead>
+                              <TableHead className="text-center border-l border-border">QL1-{selectedMH}</TableHead>
+                              <TableHead className="text-center">QL2-{selectedMH}</TableHead>
+                              <TableHead className="text-center">QL-{selectedMH}</TableHead>
+                              <TableHead className="text-center border-l border-border">QL1-{selectedMH}</TableHead>
+                              <TableHead className="text-center">QL2-{selectedMH}</TableHead>
+                              <TableHead className="text-center">QL-{selectedMH}</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
-                            {popqlParamMetrics.map((row, idx) => (
-                              <TableRow key={idx} className="hover:bg-muted/30">
-                                <TableCell className="font-medium">{row.Instance}</TableCell>
-                                <TableCell>{row.No_Jobs}</TableCell>
-                                <TableCell>{row.No_of_machines}</TableCell>
-                                <TableCell>{row.IGD[`QL1-${selectedMH}`]?.toFixed(4) || 'N/A'}</TableCell>
-                                <TableCell>{row.IGD[`QL2-${selectedMH}`]?.toFixed(4) || 'N/A'}</TableCell>
-                                <TableCell>{row.IGD[`QL-${selectedMH}`]?.toFixed(4) || 'N/A'}</TableCell>
-                                <TableCell>{row.SNS[`QL1-${selectedMH}`]?.toFixed(4) || 'N/A'}</TableCell>
-                                <TableCell>{row.SNS[`QL2-${selectedMH}`]?.toFixed(4) || 'N/A'}</TableCell>
-                                <TableCell>{row.SNS[`QL-${selectedMH}`]?.toFixed(4) || 'N/A'}</TableCell>
-                                <TableCell>{row.NPS[`QL1-${selectedMH}`] || 'N/A'}</TableCell>
-                                <TableCell>{row.NPS[`QL2-${selectedMH}`] || 'N/A'}</TableCell>
-                                <TableCell>{row.NPS[`QL-${selectedMH}`] || 'N/A'}</TableCell>
-                                <TableCell>{row["Exec_Time"][`QL1-${selectedMH}`]?.toFixed(3) || 'N/A'}</TableCell>
-                                <TableCell>{row["Exec_Time"][`QL2-${selectedMH}`]?.toFixed(3) || 'N/A'}</TableCell>
-                                <TableCell>{row["Exec_Time"][`QL-${selectedMH}`]?.toFixed(3) || 'N/A'}</TableCell>
-                              </TableRow>
-                            ))}
+                            {popqlParamMetrics.map((row, idx) => {
+                              // Compute best values per metric row
+                              const approaches = [`QL1-${selectedMH}`, `QL2-${selectedMH}`, `QL-${selectedMH}`];
+                              const bestValues: Record<string, number> = {};
+                              
+                              ["IGD", "SNS", "NPS", "Exec_Time"].forEach(metric => {
+                                let values = approaches
+                                  .map(approach => row[metric][approach])
+                                  .filter(v => typeof v === "number");
+                                
+                                if (values.length > 0) {
+                                  // IGD, Exec_Time → minimize | SNS, NPS → maximize
+                                  bestValues[metric] =
+                                    metric === "IGD" || metric === "Exec_Time"
+                                      ? Math.min(...values)
+                                      : Math.max(...values);
+                                }
+                              });
+                              
+                              return (
+                                <TableRow key={idx} className="hover:bg-muted/30">
+                                  <TableCell className="border-r font-medium">{row.Instance}</TableCell>
+                                  <TableCell className="border-r">{row.No_Jobs}</TableCell>
+                                  <TableCell className="border-r">{row.No_of_machines}</TableCell>
+                                  
+                                  {/* IGD */}
+                                  {approaches.map((approach, i) => {
+                                    const value = row.IGD[approach];
+                                    const formatted = typeof value === "number" ? value.toFixed(4) : "N/A";
+                                    const isBest = typeof value === "number" && value === bestValues["IGD"];
+                                    
+                                    return (
+                                      <TableCell
+                                        key={`igd-${i}`}
+                                        className={`text-center ${isBest ? "bg-primary/10 font-bold text-primary" : ""} ${i === 0 ? "border-l border-border" : ""}`}
+                                      >
+                                        {formatted}
+                                        {isBest && <Trophy className="w-3 h-3 inline ml-1 text-primary" />}
+                                      </TableCell>
+                                    );
+                                  })}
+                                  
+                                  {/* SNS */}
+                                  {approaches.map((approach, i) => {
+                                    const value = row.SNS[approach];
+                                    const formatted = typeof value === "number" ? value.toFixed(4) : "N/A";
+                                    const isBest = typeof value === "number" && value === bestValues["SNS"];
+                                    
+                                    return (
+                                      <TableCell
+                                        key={`sns-${i}`}
+                                        className={`text-center ${isBest ? "bg-primary/10 font-bold text-primary" : ""} ${i === 0 ? "border-l border-border" : ""}`}
+                                      >
+                                        {formatted}
+                                        {isBest && <Trophy className="w-3 h-3 inline ml-1 text-primary" />}
+                                      </TableCell>
+                                    );
+                                  })}
+                                  
+                                  {/* NPS */}
+                                  {approaches.map((approach, i) => {
+                                    const value = row.NPS[approach];
+                                    const formatted = value || "N/A";
+                                    const isBest = typeof value === "number" && value === bestValues["NPS"];
+                                    
+                                    return (
+                                      <TableCell
+                                        key={`nps-${i}`}
+                                        className={`text-center ${isBest ? "bg-primary/10 font-bold text-primary" : ""} ${i === 0 ? "border-l border-border" : ""}`}
+                                      >
+                                        {formatted}
+                                        {isBest && <Trophy className="w-3 h-3 inline ml-1 text-primary" />}
+                                      </TableCell>
+                                    );
+                                  })}
+                                  
+                                  {/* Exec Time */}
+                                  {approaches.map((approach, i) => {
+                                    const value = row["Exec_Time"][approach];
+                                    const formatted = typeof value === "number" ? value.toFixed(3) : "N/A";
+                                    const isBest = typeof value === "number" && value === bestValues["Exec_Time"];
+                                    
+                                    return (
+                                      <TableCell
+                                        key={`exec-${i}`}
+                                        className={`text-center ${isBest ? "bg-primary/10 font-bold text-primary" : ""} ${i === 0 ? "border-l border-border" : ""}`}
+                                      >
+                                        {formatted}
+                                        {isBest && <Trophy className="w-3 h-3 inline ml-1 text-primary" />}
+                                      </TableCell>
+                                    );
+                                  })}
+                                </TableRow>
+                              );
+                            })}
                           </TableBody>
                         </Table>
+                      </div>
+                      
+                      <div className="mt-4 p-3 bg-muted/30 rounded-lg">
+                        <div className="text-sm">
+                          <div className="font-medium mb-2">Metric Descriptions:</div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-muted-foreground">
+                            <div><strong>IGD (Inverted Generational Distance):</strong> Lower values indicate better convergence to true Pareto front</div>
+                            <div><strong>SNS (Spread of Non-Dominated Solutions):</strong> Higher values indicate better distribution of solutions</div>
+                            <div><strong>NPS (Number of Pareto Solutions):</strong> Higher values indicate more non-dominated solutions found</div>
+                            <div><strong>Exec Time (Execution Time):</strong> Lower values indicate faster algorithm performance</div>
+                          </div>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
@@ -1053,7 +1211,7 @@ useEffect(() => {
               <>
                 <Card>
                   <CardHeader>
-                    <CardTitle>Pareto Fronts Comparison</CardTitle>
+                    <CardTitle>{getParetoExampleText(selectedTest, selectedMH)}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     {isLoading ? (
@@ -1085,45 +1243,133 @@ useEffect(() => {
                     <CardContent>
                       <div className="border rounded-lg overflow-x-auto">
                         <Table>
-                          <TableHeader>
-                            <TableRow className="bg-primary/10 text-primary">
-                              <TableHead rowSpan={2}>Instance</TableHead>
-                              <TableHead rowSpan={2}>Jobs</TableHead>
-                              <TableHead rowSpan={2}>Machines</TableHead>
-                              <TableHead colSpan={2} className="text-center">IGD</TableHead>
-                              <TableHead colSpan={2} className="text-center">SNS</TableHead>
-                              <TableHead colSpan={2} className="text-center">NPS</TableHead>
-                              <TableHead colSpan={2} className="text-center">Exec Time (s)</TableHead>
-                            </TableRow>
-                            <TableRow className="bg-primary/10 text-primary">
-                              <TableHead>QL-{selectedMH}</TableHead>
-                              <TableHead>{selectedMH}</TableHead>
-                              <TableHead>QL-{selectedMH}</TableHead>
-                              <TableHead>{selectedMH}</TableHead>
-                              <TableHead>QL-{selectedMH}</TableHead>
-                              <TableHead>{selectedMH}</TableHead>
-                              <TableHead>QL-{selectedMH}</TableHead>
-                              <TableHead>{selectedMH}</TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            {popqlResultMetrics.map((row, idx) => (
+                        <TableHeader>
+                          <TableRow className="bg-muted/50">
+                            <TableHead rowSpan={2} className="font-semibold align-middle border-r">Jobs</TableHead>
+                            <TableHead colSpan={2} className="text-center font-semibold border-b border-l">IGD</TableHead>
+                            <TableHead colSpan={2} className="text-center font-semibold border-b border-l">SNS</TableHead>
+                            <TableHead colSpan={2} className="text-center font-semibold border-b border-l">NPS</TableHead>
+                            <TableHead colSpan={2} className="text-center font-semibold border-b border-l">Exec Time (s)</TableHead>
+                          </TableRow>
+                          <TableRow className="bg-muted/30">
+                            <TableHead className="text-center border-l border-border">QL-{selectedMH}</TableHead>
+                            <TableHead className="text-center">{selectedMH}</TableHead>
+                            <TableHead className="text-center border-l border-border">QL-{selectedMH}</TableHead>
+                            <TableHead className="text-center">{selectedMH}</TableHead>
+                            <TableHead className="text-center border-l border-border">QL-{selectedMH}</TableHead>
+                            <TableHead className="text-center">{selectedMH}</TableHead>
+                            <TableHead className="text-center border-l border-border">QL-{selectedMH}</TableHead>
+                            <TableHead className="text-center">{selectedMH}</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {popqlResultMetrics.map((row, idx) => {
+                            const approaches = [`QL-${selectedMH}`, selectedMH];
+                            const bestValues: Record<string, number> = {};
+
+                            ["IGD", "SNS", "NPS", "Exec_Time"].forEach(metric => {
+                              const values = approaches
+                                .map(approach => row[metric][approach])
+                                .filter(v => typeof v === "number");
+
+                              if (values.length > 0) {
+                                bestValues[metric] =
+                                  metric === "IGD" || metric === "Exec_Time"
+                                    ? Math.min(...values)
+                                    : Math.max(...values);
+                              }
+                            });
+
+                            return (
                               <TableRow key={idx} className="hover:bg-muted/30">
-                                <TableCell className="font-medium">{row.Instance}</TableCell>
-                                <TableCell>{row.No_Jobs}</TableCell>
-                                <TableCell>{row.No_of_machines}</TableCell>
-                                <TableCell>{row.IGD[`QL-${selectedMH}`]?.toFixed(4) || 'N/A'}</TableCell>
-                                <TableCell>{row.IGD[selectedMH]?.toFixed(4) || 'N/A'}</TableCell>
-                                <TableCell>{row.SNS[`QL-${selectedMH}`]?.toFixed(4) || 'N/A'}</TableCell>
-                                <TableCell>{row.SNS[selectedMH]?.toFixed(4) || 'N/A'}</TableCell>
-                                <TableCell>{row.NPS[`QL-${selectedMH}`] || 'N/A'}</TableCell>
-                                <TableCell>{row.NPS[selectedMH] || 'N/A'}</TableCell>
-                                <TableCell>{row["Exec_Time"][`QL-${selectedMH}`]?.toFixed(3) || 'N/A'}</TableCell>
-                                <TableCell>{row["Exec_Time"][selectedMH]?.toFixed(3) || 'N/A'}</TableCell>
+                                {/* Jobs */}
+                                <TableCell className="border-r font-medium">{row.No_Jobs}</TableCell>
+
+                                {/* IGD */}
+                                {approaches.map((approach, i) => {
+                                  const value = row.IGD[approach];
+                                  const formatted = typeof value === "number" ? value.toFixed(4) : "N/A";
+                                  const isBest = typeof value === "number" && value === bestValues["IGD"];
+
+                                  return (
+                                    <TableCell
+                                      key={`igd-${i}`}
+                                      className={`text-center ${isBest ? "bg-primary/10 font-bold text-primary" : ""} ${i === 0 ? "border-l border-border" : ""}`}
+                                    >
+                                      {formatted}
+                                      {isBest && <Trophy className="w-3 h-3 inline ml-1 text-primary" />}
+                                    </TableCell>
+                                  );
+                                })}
+
+                                {/* SNS */}
+                                {approaches.map((approach, i) => {
+                                  const value = row.SNS[approach];
+                                  const formatted = typeof value === "number" ? value.toFixed(4) : "N/A";
+                                  const isBest = typeof value === "number" && value === bestValues["SNS"];
+
+                                  return (
+                                    <TableCell
+                                      key={`sns-${i}`}
+                                      className={`text-center ${isBest ? "bg-primary/10 font-bold text-primary" : ""} ${i === 0 ? "border-l border-border" : ""}`}
+                                    >
+                                      {formatted}
+                                      {isBest && <Trophy className="w-3 h-3 inline ml-1 text-primary" />}
+                                    </TableCell>
+                                  );
+                                })}
+
+                                {/* NPS */}
+                                {approaches.map((approach, i) => {
+                                  const value = row.NPS[approach];
+                                  const formatted = value || "N/A";
+                                  const isBest = typeof value === "number" && value === bestValues["NPS"];
+
+                                  return (
+                                    <TableCell
+                                      key={`nps-${i}`}
+                                      className={`text-center ${isBest ? "bg-primary/10 font-bold text-primary" : ""} ${i === 0 ? "border-l border-border" : ""}`}
+                                    >
+                                      {formatted}
+                                      {isBest && <Trophy className="w-3 h-3 inline ml-1 text-primary" />}
+                                    </TableCell>
+                                  );
+                                })}
+
+                                {/* Exec Time */}
+                                {approaches.map((approach, i) => {
+                                  const value = row["Exec_Time"][approach];
+                                  const formatted = typeof value === "number" ? value.toFixed(3) : "N/A";
+                                  const isBest = typeof value === "number" && value === bestValues["Exec_Time"];
+
+                                  return (
+                                    <TableCell
+                                      key={`exec-${i}`}
+                                      className={`text-center ${isBest ? "bg-primary/10 font-bold text-primary" : ""} ${i === 0 ? "border-l border-border" : ""}`}
+                                    >
+                                      {formatted}
+                                      {isBest && <Trophy className="w-3 h-3 inline ml-1 text-primary" />}
+                                    </TableCell>
+                                  );
+                                })}
                               </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
+                            );
+                          })}
+                        </TableBody>
+                      </Table>
+
+                      </div>
+                      
+                      <div className="mt-4 p-3 bg-muted/30 rounded-lg">
+                        <div className="text-sm">
+                          <div className="font-medium mb-2">Metric Descriptions:</div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-muted-foreground">
+                            <div><strong>IGD (Inverted Generational Distance):</strong> Lower values indicate better convergence to true Pareto front</div>
+                            <div><strong>SNS (Spread of Non-Dominated Solutions):</strong> Higher values indicate better distribution of solutions</div>
+                            <div><strong>NPS (Number of Pareto Solutions):</strong> Higher values indicate more non-dominated solutions found</div>
+                            <div><strong>Exec Time (Execution Time):</strong> Lower values indicate faster algorithm performance</div>
+                          </div>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
@@ -1145,7 +1391,8 @@ useEffect(() => {
               <p className="text-sm text-blue-700 dark:text-blue-300">
                 For the <strong>No QL</strong> approach, the best indicator of operator
                 efficiency was <strong>the number of times each operator improved the solution</strong>, 
-                highlighting the importance of tracking improvement frequency as a performance measure.
+                highlighting the importance of tracking improvement frequency as a performance measure. 
+                The tests were conducted on 30 instances of the VRF benchmark.
               </p>
             </CardContent>
           </Card>
@@ -1234,7 +1481,7 @@ useEffect(() => {
               <>
                 <Card>
                   <CardHeader>
-                    <CardTitle>Pareto Fronts Comparison</CardTitle>
+                    <CardTitle>{getParetoExampleText(selectedTest, "HMOGVNS")}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     {isLoading ? (
@@ -1267,52 +1514,140 @@ useEffect(() => {
                       <div className="border rounded-lg overflow-x-auto">
                         <Table>
                           <TableHeader>
-                            <TableRow className="bg-primary/10 text-primary">
-                              <TableHead rowSpan={2}>Instance</TableHead>
-                              <TableHead rowSpan={2}>Jobs</TableHead>
-                              <TableHead rowSpan={2}>Machines</TableHead>
-                              <TableHead colSpan={3} className="text-center">IGD</TableHead>
-                              <TableHead colSpan={3} className="text-center">SNS</TableHead>
-                              <TableHead colSpan={3} className="text-center">NPS</TableHead>
-                              <TableHead colSpan={3} className="text-center">Exec Time (s)</TableHead>
+                            <TableRow className="bg-muted/50">
+                              <TableHead rowSpan={2} className="font-semibold align-middle border-r">Instance</TableHead>
+                              <TableHead rowSpan={2} className="font-semibold align-middle border-r">Jobs</TableHead>
+                              <TableHead rowSpan={2} className="font-semibold align-middle border-r">Machines</TableHead>
+                              <TableHead colSpan={3} className="text-center font-semibold border-b border-l">IGD</TableHead>
+                              <TableHead colSpan={3} className="text-center font-semibold border-b border-l">SNS</TableHead>
+                              <TableHead colSpan={3} className="text-center font-semibold border-b border-l">NPS</TableHead>
+                              <TableHead colSpan={3} className="text-center font-semibold border-b border-l">Exec Time (s)</TableHead>
                             </TableRow>
-                            <TableRow className="bg-primary/10 text-primary">
-                              <TableHead>QL1-HMOGVNS</TableHead>
-                              <TableHead>QL2-HMOGVNS</TableHead>
-                                <TableHead>QL-HMOGVNS</TableHead>
-                              <TableHead>QL1-HMOGVNS</TableHead>
-                              <TableHead>QL2-HMOGVNS</TableHead>
-                              <TableHead>QL-HMOGVNS</TableHead>
-                              <TableHead>QL1-HMOGVNS</TableHead>
-                              <TableHead>QL2-HMOGVNS</TableHead>
-                              <TableHead>QL-HMOGVNS</TableHead>
-                              <TableHead>QL1-HMOGVNS</TableHead>
-                              <TableHead>QL2-HMOGVNS</TableHead>
-                              <TableHead>QL-HMOGVNS</TableHead>
+                            <TableRow className="bg-muted/30">
+                              <TableHead className="text-center border-l border-border">QL1-HMOGVNS</TableHead>
+                              <TableHead className="text-center">QL2-HMOGVNS</TableHead>
+                              <TableHead className="text-center">QL-HMOGVNS</TableHead>
+                              <TableHead className="text-center border-l border-border">QL1-HMOGVNS</TableHead>
+                              <TableHead className="text-center">QL2-HMOGVNS</TableHead>
+                              <TableHead className="text-center">QL-HMOGVNS</TableHead>
+                              <TableHead className="text-center border-l border-border">QL1-HMOGVNS</TableHead>
+                              <TableHead className="text-center">QL2-HMOGVNS</TableHead>
+                              <TableHead className="text-center">QL-HMOGVNS</TableHead>
+                              <TableHead className="text-center border-l border-border">QL1-HMOGVNS</TableHead>
+                              <TableHead className="text-center">QL2-HMOGVNS</TableHead>
+                              <TableHead className="text-center">QL-HMOGVNS</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
-                            {rewardsMetrics.map((row, idx) => (
-                              <TableRow key={idx} className="hover:bg-muted/30">
-                                <TableCell className="font-medium">{row.Instance}</TableCell>
-                                <TableCell>{row.No_Jobs}</TableCell>
-                                <TableCell>{row.No_of_machines}</TableCell>
-                                <TableCell>{row.IGD[`QL1-HMOGVNS`]?.toFixed(4) || 'N/A'}</TableCell>
-                                <TableCell>{row.IGD[`QL2-HMOGVNS`]?.toFixed(4) || 'N/A'}</TableCell>
-                                <TableCell>{row.IGD[`QL-HMOGVNS`]?.toFixed(4) || 'N/A'}</TableCell>
-                                <TableCell>{row.SNS[`QL1-HMOGVNS`]?.toFixed(4) || 'N/A'}</TableCell>
-                                <TableCell>{row.SNS[`QL2-HMOGVNS`]?.toFixed(4) || 'N/A'}</TableCell>
-                                <TableCell>{row.SNS[`QL-HMOGVNS`]?.toFixed(4) || 'N/A'}</TableCell>
-                                <TableCell>{row.NPS[`QL1-HMOGVNS`] || 'N/A'}</TableCell>
-                                <TableCell>{row.NPS[`QL2-HMOGVNS`] || 'N/A'}</TableCell>
-                                <TableCell>{row.NPS[`QL-HMOGVNS`] || 'N/A'}</TableCell>
-                                <TableCell>{row["Exec_Time"][`QL1-HMOGVNS`]?.toFixed(3) || 'N/A'}</TableCell>
-                                <TableCell>{row["Exec_Time"][`QL2-HMOGVNS`]?.toFixed(3) || 'N/A'}</TableCell>
-                                <TableCell>{row["Exec_Time"][`QL-HMOGVNS`]?.toFixed(3) || 'N/A'}</TableCell>
-                              </TableRow>
-                            ))}
+                            {rewardsMetrics.map((row, idx) => {
+                              // Compute best values per metric row
+                              const approaches = ["QL1-HMOGVNS", "QL2-HMOGVNS", "QL-HMOGVNS"];
+                              const bestValues: Record<string, number> = {};
+                              
+                              ["IGD", "SNS", "NPS", "Exec_Time"].forEach(metric => {
+                                let values = approaches
+                                  .map(approach => row[metric][approach])
+                                  .filter(v => typeof v === "number");
+                                
+                                if (values.length > 0) {
+                                  // IGD, Exec_Time → minimize | SNS, NPS → maximize
+                                  bestValues[metric] =
+                                    metric === "IGD" || metric === "Exec_Time"
+                                      ? Math.min(...values)
+                                      : Math.max(...values);
+                                }
+                              });
+                              
+                              return (
+                                <TableRow key={idx} className="hover:bg-muted/30">
+                                  <TableCell className="border-r font-medium">{row.Instance}</TableCell>
+                                  <TableCell className="border-r">{row.No_Jobs}</TableCell>
+                                  <TableCell className="border-r">{row.No_of_machines}</TableCell>
+                                  
+                                  {/* IGD */}
+                                  {approaches.map((approach, i) => {
+                                    const value = row.IGD[approach];
+                                    const formatted = typeof value === "number" ? value.toFixed(4) : "N/A";
+                                    const isBest = typeof value === "number" && value === bestValues["IGD"];
+                                    
+                                    return (
+                                      <TableCell
+                                        key={`igd-${i}`}
+                                        className={`text-center ${isBest ? "bg-primary/10 font-bold text-primary" : ""} ${i === 0 ? "border-l border-border" : ""}`}
+                                      >
+                                        {formatted}
+                                        {isBest && <Trophy className="w-3 h-3 inline ml-1 text-primary" />}
+                                      </TableCell>
+                                    );
+                                  })}
+                                  
+                                  {/* SNS */}
+                                  {approaches.map((approach, i) => {
+                                    const value = row.SNS[approach];
+                                    const formatted = typeof value === "number" ? value.toFixed(4) : "N/A";
+                                    const isBest = typeof value === "number" && value === bestValues["SNS"];
+                                    
+                                    return (
+                                      <TableCell
+                                        key={`sns-${i}`}
+                                        className={`text-center ${isBest ? "bg-primary/10 font-bold text-primary" : ""} ${i === 0 ? "border-l border-border" : ""}`}
+                                      >
+                                        {formatted}
+                                        {isBest && <Trophy className="w-3 h-3 inline ml-1 text-primary" />}
+                                      </TableCell>
+                                    );
+                                  })}
+                                  
+                                  {/* NPS */}
+                                  {approaches.map((approach, i) => {
+                                    const value = row.NPS[approach];
+                                    const formatted = value || "N/A";
+                                    const isBest = typeof value === "number" && value === bestValues["NPS"];
+                                    
+                                    return (
+                                      <TableCell
+                                        key={`nps-${i}`}
+                                        className={`text-center ${isBest ? "bg-primary/10 font-bold text-primary" : ""} ${i === 0 ? "border-l border-border" : ""}`}
+                                      >
+                                        {formatted}
+                                        {isBest && <Trophy className="w-3 h-3 inline ml-1 text-primary" />}
+                                      </TableCell>
+                                    );
+                                  })}
+                                  
+                                  {/* Exec Time */}
+                                  {approaches.map((approach, i) => {
+                                    const value = row["Exec_Time"][approach];
+                                    const formatted = typeof value === "number" ? value.toFixed(3) : "N/A";
+                                    const isBest = typeof value === "number" && value === bestValues["Exec_Time"];
+                                    
+                                    return (
+                                      <TableCell
+                                        key={`exec-${i}`}
+                                        className={`text-center ${isBest ? "bg-primary/10 font-bold text-primary" : ""} ${i === 0 ? "border-l border-border" : ""}`}
+                                      >
+                                        {formatted}
+                                        {isBest && <Trophy className="w-3 h-3 inline ml-1 text-primary" />}
+                                      </TableCell>
+                                    );
+                                  })}
+                                </TableRow>
+                              );
+                            })}
                           </TableBody>
                         </Table>  
+                      </div>
+                      
+                      <div className="mt-4 p-3 bg-muted/30 rounded-lg">
+                        <div className="text-sm">
+                          <div className="font-medium mb-2">Metric Descriptions:</div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-muted-foreground">
+                            <div><strong>IGD (Inverted Generational Distance):</strong> Lower values indicate better convergence to true Pareto front</div>
+                            <div><strong>SNS (Spread of Non-Dominated Solutions):</strong> Higher values indicate better distribution of solutions</div>
+                            <div><strong>NPS (Number of Pareto Solutions):</strong> Higher values indicate more non-dominated solutions found</div>
+                            <div><strong>Exec Time (Execution Time):</strong> Lower values indicate faster algorithm performance</div>
+                          </div>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
@@ -1324,9 +1659,35 @@ useEffect(() => {
             
             {selectedTest === "actions-tests" && (
               <>
+              {/* Random Operator Sequences */}
+              <Card>
+                  <CardHeader>
+                    <CardTitle>Operator Sequences</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="space-y-2 text-sm">
+                      {possibleOrders.map((seq, i) => (
+                        <div key={i} className="flex flex-wrap items-center gap-2 font-mono">
+                          <span className="text-gray-500">Order {i + 1}:</span>
+                          {seq.map((op, j) => (
+                            <span
+                            key={j}
+                            className={`inline-block px-3 py-1 rounded-xl text-xs font-semibold border transform transition-transform duration-200 hover:scale-105 ${operatorColors[op]}`}
+                          >
+                            {op}
+                          </span>
+                          
+                          
+                            
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
                 <Card>
                   <CardHeader>
-                    <CardTitle>Pareto Fronts Comparison</CardTitle>
+                    <CardTitle>{getParetoExampleText(selectedTest, "HMOGVNS")}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     {isLoading ? (
@@ -1346,20 +1707,7 @@ useEffect(() => {
                   </CardContent>
                 </Card>
 
-                {/* Random Operator Sequences */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Random Operator Sequences</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="space-y-1 text-sm">
-                      {generateRandomSequences(9).map((seq, i) => (
-                        <div key={i} className="font-mono">Order {i + 1}: {seq.join(" → ")}</div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-
+                
                 {/* Metrics Table */}
                 {actionsMetrics.length > 0 && (
                   <Card>
@@ -1373,44 +1721,136 @@ useEffect(() => {
                       <div className="border rounded-lg overflow-x-auto">
                         <Table>
                           <TableHeader>
-                            <TableRow className="bg-primary/10 text-primary">
-                              <TableHead rowSpan={2}>Instance</TableHead>
-                              <TableHead rowSpan={2}>Jobs</TableHead>
-                              <TableHead rowSpan={2}>Machines</TableHead>
-                              <TableHead colSpan={2} className="text-center">IGD</TableHead>
-                              <TableHead colSpan={2} className="text-center">SNS</TableHead>
-                              <TableHead colSpan={2} className="text-center">NPS</TableHead>
-                              <TableHead colSpan={2} className="text-center">Exec Time (s)</TableHead>
+                            <TableRow className="bg-muted/50">
+                              <TableHead rowSpan={2} className="font-semibold align-middle border-r">Instance</TableHead>
+                              <TableHead rowSpan={2} className="font-semibold align-middle border-r">Jobs</TableHead>
+                              <TableHead rowSpan={2} className="font-semibold align-middle border-r">Machines</TableHead>
+                              <TableHead colSpan={2} className="text-center font-semibold border-b border-l">IGD</TableHead>
+                              <TableHead colSpan={2} className="text-center font-semibold border-b border-l">SNS</TableHead>
+                              <TableHead colSpan={2} className="text-center font-semibold border-b border-l">NPS</TableHead>
+                              <TableHead colSpan={2} className="text-center font-semibold border-b border-l">Exec Time (s)</TableHead>
                             </TableRow>
-                            <TableRow className="bg-primary/10 text-primary">
-                              <TableHead>QL-HMOGVNS</TableHead>
-                              <TableHead>QL2-HMOGVNS</TableHead>
-                              <TableHead>QL-HMOGVNS</TableHead>
-                              <TableHead>QL2-HMOGVNS</TableHead>
-                              <TableHead>QL-HMOGVNS</TableHead>
-                              <TableHead>QL2-HMOGVNS</TableHead>
-                              <TableHead>QL-HMOGVNS</TableHead>
-                              <TableHead>QL2-HMOGVNS</TableHead>
+                            <TableRow className="bg-muted/30">
+                              <TableHead className="text-center border-l border-border">QL-HMOGVNS</TableHead>
+                              <TableHead className="text-center">QL2-HMOGVNS</TableHead>
+                              <TableHead className="text-center border-l border-border">QL-HMOGVNS</TableHead>
+                              <TableHead className="text-center">QL2-HMOGVNS</TableHead>
+                              <TableHead className="text-center border-l border-border">QL-HMOGVNS</TableHead>
+                              <TableHead className="text-center">QL2-HMOGVNS</TableHead>
+                              <TableHead className="text-center border-l border-border">QL-HMOGVNS</TableHead>
+                              <TableHead className="text-center">QL2-HMOGVNS</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
-                            {actionsMetrics.map((row, idx) => (
-                              <TableRow key={idx} className="hover:bg-muted/30">
-                                <TableCell className="font-medium">{row.Instance}</TableCell>
-                                <TableCell>{row.No_Jobs}</TableCell>
-                                <TableCell>{row.No_of_machines}</TableCell>
-                                <TableCell>{row.IGD[`QL-HMOGVNS`]?.toFixed(4) || 'N/A'}</TableCell>
-                                <TableCell>{row.IGD[`QL2-HMOGVNS`]?.toFixed(4) || 'N/A'}</TableCell>
-                                <TableCell>{row.SNS[`QL-HMOGVNS`]?.toFixed(4) || 'N/A'}</TableCell>
-                                <TableCell>{row.SNS[`QL2-HMOGVNS`]?.toFixed(4) || 'N/A'}</TableCell>
-                                <TableCell>{row.NPS[`QL-HMOGVNS`] || 'N/A'}</TableCell>
-                                <TableCell>{row.NPS[`QL2-HMOGVNS`] || 'N/A'}</TableCell>
-                                <TableCell>{row["Exec_Time"][`QL-HMOGVNS`]?.toFixed(3) || 'N/A'}</TableCell>
-                                <TableCell>{row["Exec_Time"][`QL2-HMOGVNS`]?.toFixed(3) || 'N/A'}</TableCell>
-                              </TableRow>
-                            ))}
+                            {actionsMetrics.map((row, idx) => {
+                              // Compute best values per metric row
+                              const approaches = ["QL-HMOGVNS", "QL2-HMOGVNS"];
+                              const bestValues: Record<string, number> = {};
+                              
+                              ["IGD", "SNS", "NPS", "Exec_Time"].forEach(metric => {
+                                let values = approaches
+                                  .map(approach => row[metric][approach])
+                                  .filter(v => typeof v === "number");
+                                
+                                if (values.length > 0) {
+                                  // IGD, Exec_Time → minimize | SNS, NPS → maximize
+                                  bestValues[metric] =
+                                    metric === "IGD" || metric === "Exec_Time"
+                                      ? Math.min(...values)
+                                      : Math.max(...values);
+                                }
+                              });
+                              
+                              return (
+                                <TableRow key={idx} className="hover:bg-muted/30">
+                                  <TableCell className="border-r font-medium">{row.Instance}</TableCell>
+                                  <TableCell className="border-r">{row.No_Jobs}</TableCell>
+                                  <TableCell className="border-r">{row.No_of_machines}</TableCell>
+                                  
+                                  {/* IGD */}
+                                  {approaches.map((approach, i) => {
+                                    const value = row.IGD[approach];
+                                    const formatted = typeof value === "number" ? value.toFixed(4) : "N/A";
+                                    const isBest = typeof value === "number" && value === bestValues["IGD"];
+                                    
+                                    return (
+                                      <TableCell
+                                        key={`igd-${i}`}
+                                        className={`text-center ${isBest ? "bg-primary/10 font-bold text-primary" : ""} ${i === 0 ? "border-l border-border" : ""}`}
+                                      >
+                                        {formatted}
+                                        {isBest && <Trophy className="w-3 h-3 inline ml-1 text-primary" />}
+                                      </TableCell>
+                                    );
+                                  })}
+                                  
+                                  {/* SNS */}
+                                  {approaches.map((approach, i) => {
+                                    const value = row.SNS[approach];
+                                    const formatted = typeof value === "number" ? value.toFixed(4) : "N/A";
+                                    const isBest = typeof value === "number" && value === bestValues["SNS"];
+                                    
+                                    return (
+                                      <TableCell
+                                        key={`sns-${i}`}
+                                        className={`text-center ${isBest ? "bg-primary/10 font-bold text-primary" : ""} ${i === 0 ? "border-l border-border" : ""}`}
+                                      >
+                                        {formatted}
+                                        {isBest && <Trophy className="w-3 h-3 inline ml-1 text-primary" />}
+                                      </TableCell>
+                                    );
+                                  })}
+                                  
+                                  {/* NPS */}
+                                  {approaches.map((approach, i) => {
+                                    const value = row.NPS[approach];
+                                    const formatted = value || "N/A";
+                                    const isBest = typeof value === "number" && value === bestValues["NPS"];
+                                    
+                                    return (
+                                      <TableCell
+                                        key={`nps-${i}`}
+                                        className={`text-center ${isBest ? "bg-primary/10 font-bold text-primary" : ""} ${i === 0 ? "border-l border-border" : ""}`}
+                                      >
+                                        {formatted}
+                                        {isBest && <Trophy className="w-3 h-3 inline ml-1 text-primary" />}
+                                      </TableCell>
+                                    );
+                                  })}
+                                  
+                                  {/* Exec Time */}
+                                  {approaches.map((approach, i) => {
+                                    const value = row["Exec_Time"][approach];
+                                    const formatted = typeof value === "number" ? value.toFixed(3) : "N/A";
+                                    const isBest = typeof value === "number" && value === bestValues["Exec_Time"];
+                                    
+                                    return (
+                                      <TableCell
+                                        key={`exec-${i}`}
+                                        className={`text-center ${isBest ? "bg-primary/10 font-bold text-primary" : ""} ${i === 0 ? "border-l border-border" : ""}`}
+                                      >
+                                        {formatted}
+                                        {isBest && <Trophy className="w-3 h-3 inline ml-1 text-primary" />}
+                                      </TableCell>
+                                    );
+                                  })}
+                                </TableRow>
+                              );
+                            })}
                           </TableBody>
                         </Table>
+                      </div>
+                      
+                      <div className="mt-4 p-3 bg-muted/30 rounded-lg">
+                        <div className="text-sm">
+                          <div className="font-medium mb-2">Metric Descriptions:</div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-muted-foreground">
+                            <div><strong>IGD (Inverted Generational Distance):</strong> Lower values indicate better convergence to true Pareto front</div>
+                            <div><strong>SNS (Spread of Non-Dominated Solutions):</strong> Higher values indicate better distribution of solutions</div>
+                            <div><strong>NPS (Number of Pareto Solutions):</strong> Higher values indicate more non-dominated solutions found</div>
+                            <div><strong>Exec Time (Execution Time):</strong> Lower values indicate faster algorithm performance</div>
+                          </div>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>

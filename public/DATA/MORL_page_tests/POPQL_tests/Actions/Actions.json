@@ -1,7 +1,7 @@
 [
     {
       "No_Jobs": "20",
-      "No_Machines": "5",
+      "No_of_machines": "5",
       "Instance": "4",
       "IGD": { "QL-HMOGVNS": "0.0048", "QL2-HMOGVNS": "0.0191" },
       "SNS": { "QL-HMOGVNS": "0.7915", "QL2-HMOGVNS": "0.7913" },
@@ -10,7 +10,7 @@
     },
     {
       "No_Jobs": "30",
-      "No_Machines": "15",
+      "No_of_machines": "15",
       "Instance": "8",
       "IGD": { "QL-HMOGVNS": "0.0001", "QL2-HMOGVNS": "0.0146" },
       "SNS": { "QL-HMOGVNS": "0.8124", "QL2-HMOGVNS": "0.804" },
@@ -19,7 +19,7 @@
     },
     {
       "No_Jobs": "60",
-      "No_Machines": "20",
+      "No_of_machines": "20",
       "Instance": "2",
       "IGD": { "QL-HMOGVNS": "0.0007", "QL2-HMOGVNS": "0.0065" },
       "SNS": { "QL-HMOGVNS": "0.8249", "QL2-HMOGVNS": "0.8048" },
@@ -28,7 +28,7 @@
     },
     {
       "No_Jobs": "100",
-      "No_Machines": "20",
+      "No_of_machines": "20",
       "Instance": "9",
       "IGD": { "QL-HMOGVNS": "0.0004", "QL2-HMOGVNS": "0.0554" },
       "SNS": { "QL-HMOGVNS": "0.8043", "QL2-HMOGVNS": "0.8001" },
@@ -37,7 +37,7 @@
     },
     {
       "No_Jobs": "200",
-      "No_Machines": "40",
+      "No_of_machines": "40",
       "Instance": "2",
       "IGD": { "QL-HMOGVNS": "0", "QL2-HMOGVNS": "0.2523" },
       "SNS": { "QL-HMOGVNS": "0.8073", "QL2-HMOGVNS": "0.6876" },
@@ -46,7 +46,7 @@
     },
     {
       "No_Jobs": "300",
-      "No_Machines": "60",
+      "No_of_machines": "60",
       "Instance": "7",
       "IGD": { "QL-HMOGVNS": "0.0005", "QL2-HMOGVNS": "0.0609" },
       "SNS": { "QL-HMOGVNS": "0.8181", "QL2-HMOGVNS": "0.7826" },
@@ -55,7 +55,7 @@
     },
     {
       "No_Jobs": null,
-      "No_Machines": null,
+      "No_of_machines": null,
       "Instance": "AVG",
       "IGD": { "QL-HMOGVNS": "0.00108", "QL2-HMOGVNS": "0.0681" },
       "SNS": { "QL-HMOGVNS": "0.8098", "QL2-HMOGVNS": "0.7784" },

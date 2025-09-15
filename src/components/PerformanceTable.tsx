@@ -109,7 +109,7 @@ const PerformanceTable = ({ jobs = 30, machines = 10, instance = 1 }: Performanc
                 <TableHead colSpan={1} className="text-center font-semibold border-b">
                   SNS
                   <div className="text-xs font-normal text-muted-foreground">
-                    Spacing to Nearest Solution
+                    Spread of Non-dominated solutions
                   </div>
                 </TableHead>
                 <TableHead colSpan={1} className="text-center font-semibold border-b">
@@ -158,7 +158,7 @@ const PerformanceTable = ({ jobs = 30, machines = 10, instance = 1 }: Performanc
             <div className="font-medium mb-2">Metric Descriptions:</div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-muted-foreground">
               <div><strong>IGD (Inverted Generational Distance):</strong> Lower values indicate better convergence to true Pareto front</div>
-              <div><strong>SNS (Spacing to Nearest Solution):</strong> Higher values indicate better distribution of solutions</div>
+              <div><strong>SNS (Spread of Non-dominated solutions):</strong> Higher values indicate better spread of solutions</div>
               <div><strong>NPS (Number of Pareto Solutions):</strong> Higher values indicate more non-dominated solutions found</div>
               <div><strong>Exec Time (Execution Time):</strong> Lower values indicate faster algorithm performance</div>
             </div>

@@ -16,6 +16,7 @@ import ILPModelTestsPage from "./pages/ILPModelTestsPage";
 import MORLPage from "./pages/MORLPage";
 import HMOSAComponentsPage from "./pages/HMOSAComponentsPage";
 import HNSGAIIComponentsPage from "./pages/HNSGAIIComponentsPage";
+import HMOGVNSTestsPage from "./pages/HMOGVNSTestsPage";
 import ProblemDataPage from "./pages/ProblemDataPage";
 import AdditionalDataPage from "./pages/AdditionalDataPage";
 import MetaheuristicsComponentsMenuPage from "./pages/MetaheuristicsComponentsMenuPage";
@@ -45,6 +46,7 @@ const App = () => (
           <Route path="/multi-objective/data/additional" element={<AdditionalDataPage />} />
           <Route path="/multi-objective/sa-tests" element={<HMOSAComponentsPage />} />
           <Route path="/multi-objective/hnsga-components" element={<HNSGAIIComponentsPage />} />
+          <Route path="/multi-objective/hmogvns-tests" element={<HMOGVNSTestsPage />} />
           <Route path="/single-objective" element={<SingleObjectivePage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

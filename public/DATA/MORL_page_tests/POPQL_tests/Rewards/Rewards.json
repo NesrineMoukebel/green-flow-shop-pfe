@@ -1,7 +1,7 @@
 [
     {
       "No_Jobs": 20,
-      "No_Machines": 15,
+      "No_of_machines": 15,
       "Instance": 2,
       "IGD": { "QL-HMOGVNS": 0.0041, "QL1-HMOGVNS": 0.0398, "QL2-HMOGVNS": 0.0064 },
       "SNS": { "QL-HMOGVNS": 0.8048, "QL1-HMOGVNS": 0.7757, "QL2-HMOGVNS": 0.8032 },
@@ -10,7 +10,7 @@
     },
     {
       "No_Jobs": 40,
-      "No_Machines": 10,
+      "No_of_machines": 10,
       "Instance": 4,
       "IGD": { "QL-HMOGVNS": 0.0029, "QL1-HMOGVNS": 0.0071, "QL2-HMOGVNS": 0.0039 },
       "SNS": { "QL-HMOGVNS": 0.8278, "QL1-HMOGVNS": 0.8177, "QL2-HMOGVNS": 0.8216 },
@@ -19,7 +19,7 @@
     },
     {
       "No_Jobs": 60,
-      "No_Machines": 20,
+      "No_of_machines": 20,
       "Instance": 9,
       "IGD": { "QL-HMOGVNS": 0.0016, "QL1-HMOGVNS": 0.007, "QL2-HMOGVNS": 0.0123 },
       "SNS": { "QL-HMOGVNS": 0.8306, "QL1-HMOGVNS": 0.8194, "QL2-HMOGVNS": 0.8165 },
@@ -28,7 +28,7 @@
     },
     {
       "No_Jobs": 100,
-      "No_Machines": 20,
+      "No_of_machines": 20,
       "Instance": 9,
       "IGD": { "QL-HMOGVNS": 0.0015, "QL1-HMOGVNS": 0.0412, "QL2-HMOGVNS": 0.0158 },
       "SNS": { "QL-HMOGVNS": 0.8043, "QL1-HMOGVNS": 0.7943, "QL2-HMOGVNS": 0.8011 },
@@ -37,7 +37,7 @@
     },
     {
       "No_Jobs": 200,
-      "No_Machines": 40,
+      "No_of_machines": 40,
       "Instance": 5,
       "IGD": { "QL-HMOGVNS": 0.0015, "QL1-HMOGVNS": 0.0352, "QL2-HMOGVNS": 0.033 },
       "SNS": { "QL-HMOGVNS": 0.7953, "QL1-HMOGVNS": 0.7905, "QL2-HMOGVNS": 0.8069 },
@@ -46,7 +46,7 @@
     },
     {
       "No_Jobs": 300,
-      "No_Machines": 60,
+      "No_of_machines": 60,
       "Instance": 8,
       "IGD": { "QL-HMOGVNS": 0.0031, "QL1-HMOGVNS": 0.0062, "QL2-HMOGVNS": 0.0042 },
       "SNS": { "QL-HMOGVNS": 0.8185, "QL1-HMOGVNS": 0.802, "QL2-HMOGVNS": 0.8112 },
@@ -55,7 +55,7 @@
     },
     {
       "No_Jobs": null,
-      "No_Machines": null,
+      "No_of_machines": null,
       "Instance": "AVG",
       "IGD": { "QL-HMOGVNS": 0.00245, "QL1-HMOGVNS": 0.02275, "QL2-HMOGVNS": 0.0126 },
       "SNS": { "QL-HMOGVNS": 0.8136, "QL1-HMOGVNS": 0.7999, "QL2-HMOGVNS": 0.8101 },
