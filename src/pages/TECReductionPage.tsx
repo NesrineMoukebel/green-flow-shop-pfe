@@ -261,7 +261,7 @@ const IndividualParetoChart = ({ variant }: { variant: RSVariantData }) => {
 
 const TECReductionPage = () => {
   const navigate = useNavigate();
-  const [selectedTest, setSelectedTest] = useState("tec-gap");
+  const [selectedTest, setSelectedTest] = useState("tec-reduction");
   const [showSorting, setShowSorting] = useState(false);
   const [showLS, setShowLS] = useState(false);
   const [showRS, setShowRS] = useState(false);
@@ -503,9 +503,10 @@ const TECReductionPage = () => {
                   <SelectValue placeholder="Select test type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="tec-gap">TEC Gaps before</SelectItem>
+                  
                   <SelectItem value="tec-reduction">TEC Reduction Process</SelectItem>
                   <SelectItem value="rs-probability">Right Shift Probability</SelectItem>
+                  <SelectItem value="tec-gap">TEC Gaps before</SelectItem>
                 </SelectContent>
               </Select>
             </div>

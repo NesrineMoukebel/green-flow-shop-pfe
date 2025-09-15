@@ -130,7 +130,7 @@ const ProblemDataPage = () => {
 
            {/* Button with spacing below last div */}
             <div className="flex justify-end mt-6">
-            <a href="./DATA/new_data.zip" download>
+            <a href="../DATA/new_data.zip" download>
                 <Button
                 className="bg-purple-600 hover:bg-purple-700 text-white shadow-md transition-all duration-300 hover:shadow-lg hover:scale-105"
                 >
