@@ -357,7 +357,7 @@ const AdditionalDataPage = () => {
                 {/* Example PB File */}
                 <Card className="shadow-card">
                 <CardHeader>
-                    <CardTitle>Example PS File - Instance 8 with 60 jobs and 15 machines</CardTitle>
+                    <CardTitle>Example PB File - Instance 8 with 60 jobs and 15 machines</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="bg-gray-900 font-mono p-4 rounded-lg overflow-auto text-sm">

@@ -526,7 +526,7 @@ const TECReductionPage = () => {
               </div>
               <div className="p-3 bg-muted rounded-md">
                 <div className="font-medium text-accent">Left Shift (LS)</div>
-                <div className="text-muted-foreground">Shifts jobs to earlier time slots to reduce energy cost</div>
+                <div className="text-muted-foreground">Shifts jobs to earlier time slots to reduce makespan and energy cost</div>
               </div>
               <div className="p-3 bg-muted rounded-md">
                 <div className="font-medium text-accent">Right Shift (RS)</div>

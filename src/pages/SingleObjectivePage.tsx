@@ -447,7 +447,7 @@ const SingleObjectivePage = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground mb-6">
-                  The agent selects one local search procedure within <span className="font-semibold">VNS</span>
+                  The agent selects one local search operator within <span className="font-semibold">VNS</span>
                 </p>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

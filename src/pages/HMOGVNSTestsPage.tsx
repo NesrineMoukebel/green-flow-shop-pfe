@@ -19,9 +19,9 @@ const HMOGVNSTestsPage = () => {
     ];
   // shaking procedures
   const shakingProcedures = [
-    { name: "Machine sequence swap (N5)", hammingDistance: 33.87463127, deltaCmax: 22.57155314, deltaTEC: 2.14953597 },
-    { name: "Three-machine sequence reordering (N6)", hammingDistance: 73.02831858, deltaCmax: 40.09341339, deltaTEC: 4.19394308 },
-    { name: "Subsequence inversion (N7)", hammingDistance: 117.5676991, deltaCmax: 40.43796059, deltaTEC: 5.065323166 }
+    { name: "Machine sequence swap", hammingDistance: 33.87463127, deltaCmax: 22.57155314, deltaTEC: 2.14953597 },
+    { name: "Three-machine sequence reordering", hammingDistance: 73.02831858, deltaCmax: 40.09341339, deltaTEC: 4.19394308 },
+    { name: "Subsequence inversion", hammingDistance: 117.5676991, deltaCmax: 40.43796059, deltaTEC: 5.065323166 }
   ];
 
   const exampleResults = [
@@ -133,27 +133,29 @@ const HMOGVNSTestsPage = () => {
                 </Card>
           {/* Hamming Distance Formula Card */}
           <Card className="shadow-card">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calculator className="w-5 h-5 text-primary" />
-                Hamming Distance Formula
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-lg">
-                <div className="text-white mb-4 font-semibold">Hamming Distance Calculation</div>
-                <div className="space-y-2">
-                  <div>H(S₁, S₂) = Σᵢ₌₁ⁿ |S₁[i] - S₂[i]|</div>
-                  <div className="text-gray-400 text-sm mt-4">
-                    Where:
-                    <br />• S₁, S₂ are two solutions
-                    <br />• n is the number of positions
-                    <br />• H(S₁, S₂) represents the total difference between solutions
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+  <CardHeader>
+    <CardTitle className="flex items-center gap-2">
+      <Calculator className="w-5 h-5 text-primary" />
+      Hamming Distance Formula
+    </CardTitle>
+  </CardHeader>
+  <CardContent>
+    <div className="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-lg">
+      <div className="text-white mb-4 font-semibold">Hamming Distance Calculation</div>
+      <div className="space-y-2">
+        <div>H(S1, S2) = Σ<sub>i=1</sub><sup>n</sup> 1 (S1[i] ≠ S2[i])</div>
+        <div className="text-gray-400 text-sm mt-4">
+          Where:
+          <br />• S1, S2 are two sequences
+          <br />• n is the number of positions
+          <br />• The sum counts 1 when S1[i] and S2[i] are different, 0 otherwise
+        </div>
+      </div>
+    </div>
+  </CardContent>
+</Card>
+
+
 
           {/* Shaking Procedures Results Table */}
           <Card className="shadow-card">
@@ -166,9 +168,8 @@ const HMOGVNSTestsPage = () => {
             <CardContent>
               <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                 <p className="text-sm text-blue-800">
-                  The table below shows the results of the three shaking procedures applied in M-VND. 
-                  Delta Cmax and Delta TEC represent the percentage change in the schedule's fitness 
-                  (makespan and total energy consumption) after applying each operator.
+                The table below presents the mean results of the three shaking procedures used in M-VND, computed over the 360 benchmark instances.
+                The Hamming distance reflects the degree of diversification introduced in the schedule, while ΔCmax and ΔTEC represent the average percentage change in makespan and total energy consumption, respectively, after applying each operator.
                 </p>
               </div>
               

@@ -202,7 +202,7 @@ const ConstructiveHeuristicsPage = () => {
             </div>
             <div className="p-3 bg-muted rounded-md">
               <div className="font-medium text-accent">Weighted NEH</div>
-              <div className="text-muted-foreground">Adapted version of NEH for NPFS, where it is is applied to each machine</div>
+              <div className="text-muted-foreground">Adapted version of Weighted NEH for NPFS, where it is is applied to each machine</div>
             </div>
             <div className="p-3 bg-muted rounded-md">
               <div className="font-medium text-accent">NFS Heuristic</div>

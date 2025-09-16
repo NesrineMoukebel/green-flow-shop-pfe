@@ -144,7 +144,7 @@ const ProblemDataPage = () => {
 
         <Card className="shadow-card">
                     <CardHeader>
-                        <CardTitle>Example PS File - Instance 4 with 10 jobs and 10 machines</CardTitle>
+                        <CardTitle>Example Processing Times File - Instance 4 with 10 jobs and 10 machines</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="bg-gray-900 font-mono p-4 rounded-lg overflow-auto text-sm">

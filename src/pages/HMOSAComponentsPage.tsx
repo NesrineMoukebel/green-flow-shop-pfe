@@ -354,7 +354,7 @@ const getParetoExampleText = (scenario: string) => {
               <div className="p-3 bg-muted rounded-md">
                 <div className="font-medium text-accent">Restart Mechanism</div>
                 <div className="text-muted-foreground">
-                  Restart restarts the temperature schedule when search stagnates, improving exploration.
+                A restart mechanism resets the search from a random non-dominated solution after RstIter number of consecutive iterations without improvement, boosting diversification and avoiding premature convergence.
                 </div>
               </div>
             ) : (
@@ -362,7 +362,7 @@ const getParetoExampleText = (scenario: string) => {
                 <div className="p-3 bg-muted rounded-md">
                   <div className="font-medium text-accent">Dynamic Weights</div>
                   <div className="text-muted-foreground">
-                    Dynamic weights shift focus between Cmax and TEC over iterations; fixed keeps them constant.
+                  Dynamic weights gradually adjust the focus between Cmax and TEC over iterations, while fixed weights keep the balance constant.
                   </div>
                 </div>
                 <div className="p-3 bg-muted rounded-md">

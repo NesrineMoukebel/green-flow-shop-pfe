@@ -160,13 +160,13 @@
         "igd": 0.0067,
         "sns": 0.8014,
         "nps": 188,
-        "exec_time": 122.3547
+        "exec_time": 96.3547
       },
       "PMX-HNSGA-II": {
         "igd": 0.0025,
         "sns": 0.8184,
         "nps": 231,
-        "exec_time": 284.8016
+        "exec_time": 224.8016
       }
     }
   },
@@ -179,7 +179,7 @@
         "igd": 0.0046,
         "sns": 0.8049,
         "nps": 223,
-        "exec_time": 113.839
+        "exec_time": 108.839
       },
       "PMX-HNSGA-II": {
         "igd": 0.0008,

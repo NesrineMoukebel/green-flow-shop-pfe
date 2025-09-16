@@ -539,7 +539,7 @@ const LandingPage = () => {
                     Single-objective Flow Shop
                   </h3>
                   <p className="text-muted-foreground leading-relaxed">
-                    Optimize for a single objective such as makespan or energy consumption
+                    Optimize a single objective such as total energy cost
                   </p>
                 </div>
                 <Button 
@@ -572,7 +572,7 @@ const LandingPage = () => {
                     Multi-objective Flow Shop
                   </h3>
                   <p className="text-muted-foreground leading-relaxed">
-                    Balance multiple objectives including makespan, energy, and sustainability
+                    Balance multiple objectives including makespan and total energy cost
                   </p>
                 </div>
                 <Button

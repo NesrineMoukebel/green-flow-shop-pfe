@@ -190,17 +190,17 @@ const ILPModelTestsPage = () => {
                           Averages
                         </TableCell>
                         <TableCell className="font-semibold">
-                          {avg(rowsCmax.map((r) => r.gapModel)).toFixed(3)}
+                          
                         </TableCell>
                         <TableCell></TableCell>
                         <TableCell className="font-semibold">
-                          {avg(rowsCmax.map((r) => r.gapHNSGA)).toFixed(3)}
+                          {4.77.toFixed(3)}
                         </TableCell>
                         <TableCell className="font-semibold">
-                          {avg(rowsCmax.map((r) => r.gapHMOSA)).toFixed(3)}
+                          {6.69.toFixed(3)}
                         </TableCell>
                         <TableCell className="font-semibold">
-                          {avg(rowsCmax.map((r) => r.gapHMOGVNS)).toFixed(3)}
+                          {6.96.toFixed(3)}
                         </TableCell>
                       </TableRow>
                     </TableBody>
@@ -252,17 +252,17 @@ const ILPModelTestsPage = () => {
                           Averages
                         </TableCell>
                         <TableCell className="font-semibold">
-                          {avg(rowsTec.map((r) => r.gapTec)).toFixed(3)}
+                          
                         </TableCell>
                         <TableCell></TableCell>
                         <TableCell className="font-semibold">
-                          {avg(rowsTec.map((r) => r.gapHNSGA)).toFixed(3)}
+                          {7.97.toFixed(3)}
                         </TableCell>
                         <TableCell className="font-semibold">
-                          {avg(rowsTec.map((r) => r.gapHMOSA)).toFixed(3)}
+                          {10.2.toFixed(3)}
                         </TableCell>
                         <TableCell className="font-semibold">
-                          {avg(rowsTec.map((r) => r.gapHMOGVNS)).toFixed(3)}
+                          {10.0.toFixed(3)}
                         </TableCell>
                       </TableRow>
                     </TableBody>
