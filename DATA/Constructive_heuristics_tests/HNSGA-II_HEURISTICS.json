@@ -116,7 +116,7 @@
     "algorithm": "R-HNSGA-II",
     "igd": 0.0399,
     "sns": 0.7897,
-    "nps": 54.0,
+    "nps": 104.0,
     "exec_time": 5.2
   },
   {
@@ -156,7 +156,7 @@
     "algorithm": "R-HNSGA-II",
     "igd": 0.0444,
     "sns": 0.7553,
-    "nps": 48.0,
+    "nps": 68.0,
     "exec_time": 5.7
   }
 ]
